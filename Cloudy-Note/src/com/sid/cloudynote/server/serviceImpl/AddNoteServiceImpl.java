@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.sid.cloudynote.server.service.Impl;
+package com.sid.cloudynote.server.serviceImpl;
 
 import javax.jdo.PersistenceManager;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.Note;
+import com.sid.cloudynote.client.model.Note;
 import com.sid.cloudynote.client.service.AddNoteService;
 import com.sid.cloudynote.server.PMF;
 

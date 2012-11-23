@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2011 hou_jiong@163.com, MyWeb Project
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,10 +22,7 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import com.sid.cloudynote.client.Note;
-
-
-
+import com.sid.cloudynote.client.model.Note;
 
 public class Provider {
 

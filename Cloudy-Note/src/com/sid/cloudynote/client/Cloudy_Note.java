@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
+import com.sid.cloudynote.client.model.Note;
 import com.sid.cloudynote.client.service.AddNoteService;
 import com.sid.cloudynote.client.service.AddNoteServiceAsync;
 import com.sid.cloudynote.client.service.GetNoteService;

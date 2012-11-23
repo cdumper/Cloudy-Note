@@ -9,7 +9,7 @@
 
 	<servlet>
 		<servlet-name>AddNoteService</servlet-name>
-		<servlet-class>com.sid.cloudynote.server.service.Impl.AddNoteServiceImpl</servlet-class>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.AddNoteServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -19,7 +19,7 @@
 
 	<servlet>
 		<servlet-name>GetNoteService</servlet-name>
-		<servlet-class>com.sid.cloudynote.server.service.Impl.GetNoteServiceImpl</servlet-class>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.GetNoteServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -29,7 +29,7 @@
 	
 	<servlet>
 		<servlet-name>GetNotesListService</servlet-name>
-		<servlet-class>com.sid.cloudynote.server.service.Impl.GetNotesListServiceImpl</servlet-class>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.GetNotesListServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

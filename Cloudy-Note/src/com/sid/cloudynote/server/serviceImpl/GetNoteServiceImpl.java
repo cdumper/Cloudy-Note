@@ -1,4 +1,4 @@
-package com.sid.cloudynote.server.service.Impl;
+package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.Note;
+import com.sid.cloudynote.client.model.Note;
 import com.sid.cloudynote.client.service.GetNoteService;
 import com.sid.cloudynote.server.PMF;
 
