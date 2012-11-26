@@ -1,4 +1,4 @@
-package com.sid.cloudynote.client;
+package com.sid.cloudynote.client.view;
 
 import java.util.List;
 
