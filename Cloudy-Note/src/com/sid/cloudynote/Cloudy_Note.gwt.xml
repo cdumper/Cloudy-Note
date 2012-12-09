@@ -13,6 +13,7 @@
 
 	<!-- Other module inherits -->
 	<inherits name='com.axeiya.gwtckeditor.Gwtckeditor' />
+	<inherits name="com.resmarksystems.AppEngineDataTypes"/>
 	<!-- Specify the app entry point class. -->
 	<entry-point class='com.sid.cloudynote.client.view.Cloudy_Note' />
 	<!-- Specify the paths for translatable code -->

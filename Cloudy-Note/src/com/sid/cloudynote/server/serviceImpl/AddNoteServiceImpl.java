@@ -31,7 +31,7 @@ public class AddNoteServiceImpl extends RemoteServiceServlet implements AddNoteS
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			pm.makePersistent(new Note(title,content));
+			pm.makePersistent(new Note(title,content,null,null));
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();

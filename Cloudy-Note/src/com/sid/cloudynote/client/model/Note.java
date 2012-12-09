@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -8,26 +9,32 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.datastore.Key;
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
-public class Note implements Serializable{
-	private static final long serialVersionUID = 1L;
+public class Note implements Serializable, INote{
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Long id;
+	private Key key;
 	@Persistent
 	private String title;
 	@Persistent
 	private String content;
+	@Persistent
+	private NoteProperty property;
+	@Persistent
+	private List<Attachment> attachments;
 
-	
 	public Note() {
 		super();
 	}
 
-	public Note(String title, String content) {
+	public Note(String title, String content, NoteProperty property,
+			List<Attachment> attachments) {
 		this.title = title;
 		this.content = content;
-
+		this.property = property;
+		this.attachments = attachments;
 	}
 
 	public String getTitle() {
@@ -38,7 +45,16 @@ public class Note implements Serializable{
 		return content;
 	}
 
-	public Long getKey() {
-		return id;
+	public Key getKey() {
+		return key;
+	}
+
+	@Override
+	public NoteProperty getProperty() {
+		return this.property;
+	}
+
+	public List<Attachment> getAttachments() {
+		return this.attachments;
 	}
 }
