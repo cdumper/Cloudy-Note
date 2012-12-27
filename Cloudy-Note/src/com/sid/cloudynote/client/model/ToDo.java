@@ -39,4 +39,10 @@ public class ToDo implements Serializable, INote{
 		return null;
 	}
 
+	@Override
+	public Key getKey() {
+		// TODO Auto-generated method stub
+		return key;
+	}
+
 }

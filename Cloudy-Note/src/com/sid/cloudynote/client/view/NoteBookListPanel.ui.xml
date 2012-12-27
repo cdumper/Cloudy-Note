@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.notebooksPanel {
+			border-top: 1px solid #999;
+			border-left: 1px solid #999;
+			border-right: 1px solid #999;
+			border-bottom: 1px solid #999;
+			padding: 20px 40px 20px 10px;
+		}
+	</ui:style>
+	<g:HTMLPanel styleName='{style.notebooksPanel}'>
+		<g:Tree ui:field="noteBooksTree" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

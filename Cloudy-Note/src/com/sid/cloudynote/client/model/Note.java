@@ -27,6 +27,8 @@ public class Note implements Serializable, INote{
 
 	public Note() {
 		super();
+		this.title = "new note";
+		this.content = "content";
 	}
 
 	public Note(String title, String content, NoteProperty property,
