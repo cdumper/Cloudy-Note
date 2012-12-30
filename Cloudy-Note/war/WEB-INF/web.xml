@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                     http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<!-- Servlets -->
 
@@ -26,7 +26,7 @@
 		<servlet-name>GetNoteService</servlet-name>
 		<url-pattern>/cloudy_note/getNote</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>GetNotesListService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.GetNotesListServiceImpl</servlet-class>
@@ -35,6 +35,26 @@
 	<servlet-mapping>
 		<servlet-name>GetNotesListService</servlet-name>
 		<url-pattern>/cloudy_note/getNotesList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>NoteService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.NoteServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>NoteService</servlet-name>
+		<url-pattern>/cloudy_note/noteService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>NotebookService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.NotebookServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>NotebookService</servlet-name>
+		<url-pattern>/cloudy_note/notebookService</url-pattern>
 	</servlet-mapping>
 
 	<servlet>

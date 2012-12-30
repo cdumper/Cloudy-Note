@@ -17,7 +17,7 @@ package com.sid.cloudynote.server.serviceImpl;
 import javax.jdo.PersistenceManager;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.model.Note;
+import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.service.AddNoteService;
 import com.sid.cloudynote.server.PMF;
 
@@ -31,7 +31,7 @@ public class AddNoteServiceImpl extends RemoteServiceServlet implements AddNoteS
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			pm.makePersistent(new Note(title,content,null,null));
+			pm.makePersistent(new InfoNote(title,content,null,null));
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();

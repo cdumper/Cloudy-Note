@@ -1,7 +1,5 @@
 package com.sid.cloudynote.client.model;
 
-import java.io.Serializable;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -12,7 +10,7 @@ import com.google.appengine.api.datastore.Key;
 
 
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
-public class ToDo implements Serializable, INote{
+public class ToDo extends Note{
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
 	private Key key;

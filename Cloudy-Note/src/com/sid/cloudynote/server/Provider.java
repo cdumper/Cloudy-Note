@@ -22,7 +22,7 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import com.sid.cloudynote.client.model.Note;
+import com.sid.cloudynote.client.model.InfoNote;
 
 public class Provider {
 
@@ -74,7 +74,7 @@ public class Provider {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			Note newNote = new Note(title, content,null,null);
+			InfoNote newNote = new InfoNote(title, content,null,null);
 			pm.makePersistent(newNote);
 			pm.currentTransaction().commit();
 			out.print("OK");
@@ -98,11 +98,11 @@ public class Provider {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			Query query = pm.newQuery(Note.class);
-			List<Note> execute = (List<Note>) query.execute("root");
-			List<Note> NoteList = execute;
+			Query query = pm.newQuery(InfoNote.class);
+			List<InfoNote> execute = (List<InfoNote>) query.execute("root");
+			List<InfoNote> NoteList = execute;
 			if (NoteList.iterator().hasNext()) {
-				for (Note e : NoteList) {
+				for (InfoNote e : NoteList) {
 					out.print("<Title>");
 					out.print(e.getTitle());
 					out.print("<Content>");

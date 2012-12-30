@@ -1,18 +1,27 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:cn="urn:import:com.sid.cloudynote.client.view" 
+	xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
 	<ui:style>
 		.editPanel {
 			border-top: 1px solid #999;
 			border-left: 1px solid #999;
 			border-right: 1px solid #999;
 			border-bottom: 1px solid #999;
-			padding: 20px 40px 20px 10px;
+		}
+		.title {
+			background-color: #CCC;
+			border-bottom: 1px solid #000;
 		}
 	</ui:style>
 	
-	<g:HTMLPanel styleName="{style.editPanel}">
-		Hello,
-		<g:Button ui:field="button" />
-	</g:HTMLPanel>
+	<g:DockLayoutPanel styleName="{style.editPanel}" unit="PCT">
+		<g:north size="20">
+			<cn:TitleBar ui:field='titleBar'/>
+		</g:north>
+		<g:center>
+			<ck:CKEditor ui:field='ckeditor'/>
+		</g:center>
+	</g:DockLayoutPanel>
 </ui:UiBinder> 

@@ -2,16 +2,12 @@ package com.sid.cloudynote.client.view;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
@@ -45,10 +41,10 @@ public class Cloudy_Note implements EntryPoint {
 	@UiField
 	EditPanel editPanel;
 
-	// private TextBox titleTextBox = new TextBox();
-	// private CKEditor ckeditor = new CKEditor();
-	// private Button sendButton = new Button("Send");
-	// private final SplitLayoutPanel notePanel = new SplitLayoutPanel();
+//	 private TextBox titleTextBox = new TextBox();
+//	 private CKEditor ckeditor = new CKEditor();
+//	 private Button sendButton = new Button("Send");
+//	 private final SplitLayoutPanel notePanel = new SplitLayoutPanel();
 
 	/**
 	 * This is the entry point method.
