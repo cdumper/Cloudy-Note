@@ -20,6 +20,7 @@ public class Notebook implements Serializable{
 	
 	public Notebook() {
 		super();
+		this.name = "new notebook";
 	}
 
 	public Notebook(String name) {

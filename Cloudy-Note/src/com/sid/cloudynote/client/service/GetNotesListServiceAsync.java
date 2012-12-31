@@ -3,8 +3,8 @@ package com.sid.cloudynote.client.service;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sid.cloudynote.client.model.INote;
+import com.sid.cloudynote.client.model.InfoNote;
 
 public interface GetNotesListServiceAsync {
-	void getNoteList(AsyncCallback<List<INote>> callback);
+	void getNoteList(AsyncCallback<List<InfoNote>> callback);
 }

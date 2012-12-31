@@ -15,8 +15,11 @@
 package com.sid.cloudynote.client.service;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.sid.cloudynote.client.model.InfoNote;
 
 @RemoteServiceRelativePath("addNote")
 public interface AddNoteService extends RemoteService {
 	void addNote(String title,String content);
+
+	void addInfoNote(InfoNote note);
 }

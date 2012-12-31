@@ -21,10 +21,9 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.sid.cloudynote.client.model.INote;
 import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.service.NoteService;
-import com.sid.cloudynote.client.service.NoteServiceAsync;
+import com.sid.cloudynote.client.service.InfoNoteService;
+import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 
 public class NoteListPanel extends ResizeComposite {
 	private static NoteListPanelUiBinder uiBinder = GWT
@@ -33,10 +32,10 @@ public class NoteListPanel extends ResizeComposite {
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListPanel> {
 	}
 
-	public static final ProvidesKey<INote> KEY_PROVIDER = new ProvidesKey<INote>() {
+	public static final ProvidesKey<InfoNote> KEY_PROVIDER = new ProvidesKey<InfoNote>() {
 		@Override
-		public Object getKey(INote INote) {
-			return INote == null ? null : INote.getTitle();
+		public Object getKey(InfoNote Note) {
+			return Note == null ? null : Note.getTitle();
 		}
 	};
 
@@ -44,9 +43,9 @@ public class NoteListPanel extends ResizeComposite {
 		ImageResource home();
 	}
 
-	private ListDataProvider<INote> dataProvider = new ListDataProvider<INote>();
+	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
 
-	static class NoteCell extends AbstractCell<INote> {
+	static class NoteCell extends AbstractCell<InfoNote> {
 		private final String imageHtml;
 
 		public NoteCell(ImageResource image) {
@@ -54,9 +53,9 @@ public class NoteListPanel extends ResizeComposite {
 		}
 
 		@Override
-		public void render(Context context, INote INote, SafeHtmlBuilder sb) {
+		public void render(Context context, InfoNote Note, SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
-			if (INote == null) {
+			if (Note == null) {
 				return;
 			}
 
@@ -69,9 +68,9 @@ public class NoteListPanel extends ResizeComposite {
 
 			// Add the name and address.
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
-			sb.appendEscaped(INote.getTitle());
+			sb.appendEscaped(Note.getTitle());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(INote.getContent());
+			sb.appendEscaped(Note.getContent());
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}
@@ -88,7 +87,7 @@ public class NoteListPanel extends ResizeComposite {
 	// @UiField
 	// RangeLabelPager rangeLabelPager;
 
-	private CellList<INote> cellList;
+	private CellList<InfoNote> cellList;
 
 	public NoteListPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -96,20 +95,13 @@ public class NoteListPanel extends ResizeComposite {
 
 		NoteCell noteCell = new NoteCell(images.home());
 
-		cellList = new CellList<INote>(noteCell, KEY_PROVIDER);
+		cellList = new CellList<InfoNote>(noteCell, KEY_PROVIDER);
 		cellList.setPageSize(30);
 		cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
 		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
-		// List<INote> notes = new ArrayList<INote>();
-		// for (int i = 0; i < 50; i++) {
-		// notes.add(new INote());
-		// }
-		//
-		// cellList.setRowCount(notes.size(), true);
-		// cellList.setRowData(notes);
 
 		// Add a selection model so we can select cells.
-		final SingleSelectionModel<INote> selectionModel = new SingleSelectionModel<INote>(
+		final SingleSelectionModel<InfoNote> selectionModel = new SingleSelectionModel<InfoNote>(
 				KEY_PROVIDER);
 		cellList.setSelectionModel(selectionModel);
 
@@ -129,10 +121,9 @@ public class NoteListPanel extends ResizeComposite {
 	}
 
 	private void loadNotes() {
-		// List<INote> notes = dataProvider.getList();
-		NoteServiceAsync service = (NoteServiceAsync) GWT
-				.create(NoteService.class);
-		AsyncCallback<List<INote>> callback = new AsyncCallback<List<INote>>() {
+		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
+				.create(InfoNoteService.class);
+		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -141,17 +132,14 @@ public class NoteListPanel extends ResizeComposite {
 			}
 
 			@Override
-			public void onSuccess(List<INote> result) {
-				List<INote> notes = dataProvider.getList();
+			public void onSuccess(List<InfoNote> result) {
+				List<InfoNote> notes = dataProvider.getList();
 				if (result.size() != 0) {
-					for (INote INote : result) {
-						System.out.println(INote.getTitle());
-						notes.addAll(result);
-					}
+					notes.addAll(result);
 				} else {
 					for (int i = 0; i < 50; i++) {
-						notes.add(new InfoNote("INote" + i, "content " + i, null,
-								null));
+						notes.add(new InfoNote("Note" + i, "content " + i,
+								null, null));
 					}
 					System.out.println("No notes exist!");
 				}
@@ -159,13 +147,5 @@ public class NoteListPanel extends ResizeComposite {
 
 		};
 		service.getPaginationData(callback);
-//		List<INote> notes = dataProvider.getList();
-//		NoteServiceImpl service = new NoteServiceImpl();
-//		List<INote> results = service.getPaginationData().getResultList();
-//		System.out.println(results.size());
-//		notes.addAll(results);
-		// for (int i = 0; i < 50; i++) {
-		// notes.add(new INote("INote"+i,"content "+i,null,null));
-		// }
 	}
 }

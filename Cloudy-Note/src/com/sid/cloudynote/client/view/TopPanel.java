@@ -20,6 +20,7 @@ public class TopPanel extends Composite {
 
   @UiField Anchor signOutLink;
   @UiField Anchor aboutLink;
+  @UiField SearchPanel searchPanel;
 
   public TopPanel() {
     initWidget(binder.createAndBindUi(this));

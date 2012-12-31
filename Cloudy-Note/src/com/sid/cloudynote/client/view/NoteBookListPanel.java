@@ -15,8 +15,6 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.INote;
-import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.model.Notebook;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
@@ -46,17 +44,18 @@ public class NoteBookListPanel extends Composite {
 		// @Source("noimage.png")
 		// ImageResource treeLeaf();
 	}
-	
+
 	private TreeItem allNotes;
 	private TreeItem tags;
-	
+
 	public NoteBookListPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		Images images = GWT.create(Images.class);
 
-		allNotes = new TreeItem(imageItemHTML(images.home(),
-				"All Notes"));
-//		loadNotebooks();
+		// allNotes = new TreeItem(imageItemHTML(images.home(),
+		// "All Notes"));
+		allNotes = new TreeItem(new TreeRootItem(images.home(), "All Notes"));
+		loadNotebooks();
 		allNotes.addItem("1");
 		addImageItem(allNotes, "Inbox", images.inbox());
 		addImageItem(allNotes, "Drafts", images.drafts());
@@ -105,8 +104,8 @@ public class NoteBookListPanel extends Composite {
 		return AbstractImagePrototype.create(imageProto).getHTML() + " "
 				+ title;
 	}
-	
-	private void loadNotebooks(){
+
+	private void loadNotebooks() {
 		NotebookServiceAsync service = (NotebookServiceAsync) GWT
 				.create(NotebookService.class);
 		AsyncCallback<List<Notebook>> callback = new AsyncCallback<List<Notebook>>() {
@@ -122,13 +121,11 @@ public class NoteBookListPanel extends Composite {
 				if (result.size() != 0) {
 					for (Notebook notebook : result) {
 						allNotes.addItem(new TreeItem(notebook.getName()));
-						System.out.println(notebook.getName());
 					}
 				} else {
 					System.out.println("No notebooks exist!");
 				}
 			}
-
 		};
 		service.getPaginationData(callback);
 	}

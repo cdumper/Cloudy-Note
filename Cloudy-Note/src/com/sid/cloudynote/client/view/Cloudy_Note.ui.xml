@@ -4,7 +4,7 @@
   xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
 
   <g:DockLayoutPanel unit='PCT'>
-    <g:north size='10'>
+    <g:north size='15'>
       <cn:TopPanel ui:field='topPanel' />
     </g:north>
     

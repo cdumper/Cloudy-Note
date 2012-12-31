@@ -21,9 +21,15 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	public void add(Notebook entity) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
+			pm.currentTransaction().begin();
 			pm.makePersistent(entity);
+			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
 			pm.close();
 		}
 	}
@@ -72,28 +78,31 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Notebook> getPaginationData(String filter, String ordering,
-			long firstResult, long maxResult) {
+	public List<Notebook> getPaginationData(String filter,
+			String ordering, long firstResult, long maxResult) {
+		List<Notebook> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		List<Notebook> list = new ArrayList<Notebook>();
 		try {
+			pm.currentTransaction().begin();
 			Query query = GSQLUtil.getSelectSqlStr(pm, Notebook.class, filter,
 					ordering, firstResult, maxResult);
 			Object obj = query.execute();
 			if (obj != null) {
-				list = (List<Notebook>) obj;
-				// 不调用list.size()方法，那么调用pm.close()后，再次使用list会出现Object Manager
-				// has been closed Exception
-				list.size();
+				result = (List<Notebook>) obj;
+				result = new ArrayList<Notebook>(pm.detachCopyAll(result));
+				result.size();
 			} else {
-				list = new ArrayList<Notebook>();
+				result = new ArrayList<Notebook>();
 			}
 
 		} catch (Exception e) {
 		} finally {
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
 			pm.close();
 		}
-		return list;
+		return result;
 	}
 
 	/**
@@ -122,8 +131,8 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	 * @author kyle
 	 */
 	@Override
-	public List<Notebook> getPaginationData(String filter, long firstResult,
-			long maxResult) {
+	public List<Notebook> getPaginationData(String filter,
+			long firstResult, long maxResult) {
 		return getPaginationData(filter, null, firstResult, maxResult);
 	}
 
@@ -137,7 +146,8 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	 * @author kyle
 	 */
 	@Override
-	public List<Notebook> getPaginationData(long firstResult, long maxResult) {
+	public List<Notebook> getPaginationData(long firstResult,
+			long maxResult) {
 		return getPaginationData(null, null, firstResult, maxResult);
 	}
 

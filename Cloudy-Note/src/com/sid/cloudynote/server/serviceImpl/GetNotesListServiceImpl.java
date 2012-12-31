@@ -7,7 +7,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.model.INote;
+import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.service.GetNotesListService;
 import com.sid.cloudynote.server.PMF;
 
@@ -15,14 +15,14 @@ public class GetNotesListServiceImpl extends RemoteServiceServlet implements Get
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public List<INote> getNoteList() {
-		List<INote> execute = null;
+	public List<InfoNote> getNoteList() {
+		List<InfoNote> execute = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			Query query = pm.newQuery(INote.class);
-			execute = (List<INote>) query.execute("root");
-			execute = new ArrayList< INote >(pm.detachCopyAll(execute));
+			Query query = pm.newQuery(InfoNote.class);
+			execute = (List<InfoNote>) query.execute("root");
+			execute = new ArrayList<InfoNote>(pm.detachCopyAll(execute));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -33,5 +33,4 @@ public class GetNotesListServiceImpl extends RemoteServiceServlet implements Get
 		pm.close();
 		return execute;
 	}
-
 }

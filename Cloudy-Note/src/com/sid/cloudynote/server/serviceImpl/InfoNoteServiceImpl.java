@@ -1,5 +1,6 @@
 package com.sid.cloudynote.server.serviceImpl;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,21 +8,23 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.model.INote;
-import com.sid.cloudynote.client.service.NoteService;
+import com.sid.cloudynote.client.model.InfoNote;
+import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 
-public class NoteServiceImpl extends RemoteServiceServlet implements
-		NoteService {
+public class InfoNoteServiceImpl extends RemoteServiceServlet implements
+		InfoNoteService {
 	/**
 	 * 添加实体
 	 */
 	@Override
-	public void add(INote entity) {
+	public void add(InfoNote entity) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
+			pm.currentTransaction().begin();
 			pm.makePersistent(entity);
+			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {
 			pm.close();
@@ -32,7 +35,7 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * 删除实体
 	 */
 	@Override
-	public void delete(INote entity) {
+	public void delete(InfoNote entity) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.deletePersistent(entity);
@@ -46,7 +49,7 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * 更新实体
 	 */
 	@Override
-	public void modify(INote entity) {
+	public void modify(InfoNote entity) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			// 更新数据，直接调用makePersistent()方法的，要求实体类注解了如下
@@ -68,32 +71,37 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * @param maxResult
 	 *            检索结果的最大数量
 	 * @return 查询处理好的数据
-	 * @author kyle
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<INote> getPaginationData(String filter, String ordering,
+	public List<InfoNote> getPaginationData(String filter, String ordering,
 			long firstResult, long maxResult) {
+		List<InfoNote> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		List<INote> list = new ArrayList<INote>();
 		try {
-			Query query = GSQLUtil.getSelectSqlStr(pm, INote.class, filter,
+			pm.currentTransaction().begin();
+			Query query = GSQLUtil.getSelectSqlStr(pm, InfoNote.class, filter,
 					ordering, firstResult, maxResult);
-			Object obj = query.execute();
+			Object obj = query.execute("root");
 			if (obj != null) {
-				list = (List<INote>) obj;
-				// 不调用list.size()方法，那么调用pm.close()后，再次使用list会出现Object Manager
-				// has been closed Exception
-				list.size();
+				result = (List<InfoNote>) obj;
+				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
+				result.size();
 			} else {
-				list = new ArrayList<INote>();
+				result = new ArrayList<InfoNote>();
 			}
-
+//			pm.currentTransaction().begin();
+//			Query query = pm.newQuery(InfoNote.class);
+//			result = (List<InfoNote>) query.execute("root");
+//			result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
 		} catch (Exception e) {
 		} finally {
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
 			pm.close();
 		}
-		return list;
+		return result;
 	}
 
 	/**
@@ -102,10 +110,9 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * @param odering
 	 *            查询后排序条件
 	 * @return 查询处理好的数据
-	 * @author kyle
 	 */
 	@Override
-	public List<INote> getPaginationData(String filter, String ordering) {
+	public List<InfoNote> getPaginationData(String filter, String ordering) {
 		long min = -1;
 		return getPaginationData(filter, ordering, min, min);
 	}
@@ -119,10 +126,9 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * @param maxResult
 	 *            检索结果的最大数量
 	 * @return 查询处理好的数据
-	 * @author kyle
 	 */
 	@Override
-	public List<INote> getPaginationData(String filter, long firstResult,
+	public List<InfoNote> getPaginationData(String filter, long firstResult,
 			long maxResult) {
 		return getPaginationData(filter, null, firstResult, maxResult);
 	}
@@ -134,10 +140,9 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * @param maxResult
 	 *            检索结果的最大数量
 	 * @return 查询处理好的数据
-	 * @author kyle
 	 */
 	@Override
-	public List<INote> getPaginationData(long firstResult, long maxResult) {
+	public List<InfoNote> getPaginationData(long firstResult, long maxResult) {
 		return getPaginationData(null, null, firstResult, maxResult);
 	}
 
@@ -145,19 +150,17 @@ public class NoteServiceImpl extends RemoteServiceServlet implements
 	 * @param filter
 	 *            查询过滤条件
 	 * @return 查询处理好的数据
-	 * @author kyle
 	 */
 	@Override
-	public List<INote> getPaginationData(String filter) {
+	public List<InfoNote> getPaginationData(String filter) {
 		return getPaginationData(filter, null);
 	}
 
 	/**
 	 * @return 查询处理好的数据
-	 * @author kyle
 	 */
 	@Override
-	public List<INote> getPaginationData() {
+	public List<InfoNote> getPaginationData() {
 		return getPaginationData(null);
 	}
 

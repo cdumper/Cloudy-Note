@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.sid.cloudynote.client.model.INote;
+import com.sid.cloudynote.client.model.InfoNote;
 
 @RemoteServiceRelativePath("getNotesList")
 public interface GetNotesListService extends RemoteService{
-	List<INote> getNoteList();
+	List<InfoNote> getNoteList();
 }

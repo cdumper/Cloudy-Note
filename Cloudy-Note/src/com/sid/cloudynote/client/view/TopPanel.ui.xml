@@ -40,5 +40,6 @@
 				<g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
 			</div>
 		</div>
+		<cn:SearchPanel ui:field='searchPanel'/>
 	</g:HTMLPanel>
 </ui:UiBinder>

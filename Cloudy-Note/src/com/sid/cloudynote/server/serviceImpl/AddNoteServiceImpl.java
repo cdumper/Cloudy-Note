@@ -42,4 +42,17 @@ public class AddNoteServiceImpl extends RemoteServiceServlet implements AddNoteS
 		}
 		pm.close();
 	}
+
+	@Override
+	public void addInfoNote(InfoNote note) {
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			pm.currentTransaction().begin();
+			pm.makePersistent(note);
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+	}
 }

@@ -38,12 +38,12 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>NoteService</servlet-name>
-		<servlet-class>com.sid.cloudynote.server.serviceImpl.NoteServiceImpl</servlet-class>
+		<servlet-name>InfoNoteService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.InfoNoteServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>NoteService</servlet-name>
+		<servlet-name>InfoNoteService</servlet-name>
 		<url-pattern>/cloudy_note/noteService</url-pattern>
 	</servlet-mapping>
 	
