@@ -21,6 +21,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.model.DataManager;
 import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
@@ -119,6 +120,11 @@ public class NoteListPanel extends ResizeComposite {
 		pagerPanel.setDisplay(cellList);
 		// rangeLabelPager.setDisplay(cellList);
 	}
+	
+//	private void loadNotes(){
+//		List<InfoNote> notes = dataProvider.getList();
+//		notes.addAll(DataManager.getNotes());
+//	}
 
 	private void loadNotes() {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
@@ -135,12 +141,11 @@ public class NoteListPanel extends ResizeComposite {
 			public void onSuccess(List<InfoNote> result) {
 				List<InfoNote> notes = dataProvider.getList();
 				if (result.size() != 0) {
+					DataManager.setNotes(result);
+					DataManager.setCurrentNote(0);
 					notes.addAll(result);
 				} else {
-					for (int i = 0; i < 50; i++) {
-						notes.add(new InfoNote("Note" + i, "content " + i,
-								null, null));
-					}
+					DataManager.setNotes(null);
 					System.out.println("No notes exist!");
 				}
 			}

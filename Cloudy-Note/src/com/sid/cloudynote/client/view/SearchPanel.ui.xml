@@ -7,7 +7,9 @@
 		}
 	</ui:style>
 	<g:HorizontalPanel>
+		<g:Button ui:field='newNotebook'>New Notebook</g:Button>
+		<g:Button ui:field='newNote' />
 		<g:TextBox ui:field='searchField'/>
-		<g:Button ui:field="newNote" />
+		<g:Button ui:field='edit'>Edit</g:Button>
 	</g:HorizontalPanel>
 </ui:UiBinder> 
