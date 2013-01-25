@@ -20,8 +20,6 @@ public class BottomPanel extends Composite{
 
 	public BottomPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-		personalTabButton.setText("Personal");
-		exploreTabButton.setText("Explore");
 	}
 
 	@UiField

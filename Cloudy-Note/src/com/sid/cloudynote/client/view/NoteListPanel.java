@@ -1,7 +1,10 @@
 package com.sid.cloudynote.client.view;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -12,7 +15,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ResizeComposite;
@@ -23,6 +25,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.model.DataManager;
 import com.sid.cloudynote.client.model.InfoNote;
+import com.sid.cloudynote.client.model.Note;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 
@@ -32,11 +35,17 @@ public class NoteListPanel extends ResizeComposite {
 
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListPanel> {
 	}
+	
+	private EditPanel editPanel;
+
+	public void setEditPanel(EditPanel editPanel) {
+		this.editPanel = editPanel;
+	}
 
 	public static final ProvidesKey<InfoNote> KEY_PROVIDER = new ProvidesKey<InfoNote>() {
 		@Override
 		public Object getKey(InfoNote Note) {
-			return Note == null ? null : Note.getTitle();
+			return Note == null ? null : Note.getKey();
 		}
 	};
 
@@ -109,9 +118,13 @@ public class NoteListPanel extends ResizeComposite {
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						// contactForm.setContact(selectionModel.getSelectedObject());
-						Window.alert(selectionModel.getSelectedObject()
-								.getTitle());
+						// TODO to present selected note in the edit panel
+						Note note = selectionModel.getSelectedObject();
+						DataManager.setCurrentNote(note.getKey());
+						editPanel.presentNote(note);
+//						Window.alert(selectionModel.getSelectedObject()
+//								.getTitle());
+						
 					}
 				});
 
@@ -120,37 +133,42 @@ public class NoteListPanel extends ResizeComposite {
 		pagerPanel.setDisplay(cellList);
 		// rangeLabelPager.setDisplay(cellList);
 	}
-	
-//	private void loadNotes(){
-//		List<InfoNote> notes = dataProvider.getList();
-//		notes.addAll(DataManager.getNotes());
-//	}
 
-	private void loadNotes() {
+	// private void loadNotes(){
+	// List<InfoNote> notes = dataProvider.getList();
+	// notes.addAll(DataManager.getNotes());
+	// }
+
+	public void loadNotes() {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
 		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				System.out.println("falied! getNotesList");
+				GWT.log("falied! getNotesList");
 				caught.printStackTrace();
 			}
 
 			@Override
 			public void onSuccess(List<InfoNote> result) {
 				List<InfoNote> notes = dataProvider.getList();
-				if (result.size() != 0) {
-					DataManager.setNotes(result);
-					DataManager.setCurrentNote(0);
+				if (result != null && result.size() != 0) {
+					Map<Key, InfoNote> noteMap = new HashMap<Key, InfoNote>();
+					for (InfoNote note : result) {
+						noteMap.put(note.getKey(), note);
+					}
+					DataManager.setNotes(noteMap);
+					DataManager.setCurrentNote(result.get(0).getKey());
+					notes.clear();
 					notes.addAll(result);
 				} else {
 					DataManager.setNotes(null);
-					System.out.println("No notes exist!");
+					GWT.log("No notes exist!");
 				}
 			}
 
 		};
-		service.getPaginationData(callback);
+		service.getNotes(DataManager.getCurrentNotebook(),callback);
 	}
 }

@@ -2,8 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-	<g:HorizontalPanel>
-		<g:ToggleButton ui:field="personalTabButton" />
-		<g:ToggleButton ui:field="exploreTabButton" />
+	<g:HorizontalPanel verticalAlignment="middle">
+		<g:cell horizontalAlignment="ALIGN_RIGHT">
+			<g:ToggleButton ui:field="personalTabButton" text='Personal' />
+		</g:cell>
+		<g:cell horizontalAlignment="ALIGN_RIGHT">
+			<g:ToggleButton ui:field="exploreTabButton" text='Explore' />
+		</g:cell>
 	</g:HorizontalPanel>
 </ui:UiBinder> 

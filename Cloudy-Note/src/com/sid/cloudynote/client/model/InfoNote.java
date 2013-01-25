@@ -16,6 +16,8 @@ public class InfoNote extends Note{
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
 	@Persistent
+	private Notebook notebook;
+	@Persistent
 	private String title;
 	@Persistent
 	private String content;
@@ -26,30 +28,43 @@ public class InfoNote extends Note{
 
 	public InfoNote() {
 		super();
-		this.title = "new note";
-		this.content = "content";
+		this.title = "Untitled";
+		this.content = "content...";
+	}
+	
+	public InfoNote(Notebook notebook) {
+		this.title = "Untitled";
+		this.content = "content...";
+		this.notebook = notebook;
+	}
+	
+	public InfoNote(Notebook notebook, String title, String content) {
+		this.notebook = notebook;
+		this.title = title;
+		this.content = content;
 	}
 
-	public InfoNote(String title, String content, NoteProperty property,
+	public InfoNote(Notebook notebook, String title, String content, NoteProperty property,
 			List<Attachment> attachments) {
+		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
 		this.property = property;
 		this.attachments = attachments;
 	}
-
+	
+	@Override
 	public String getTitle() {
 		return title;
 	}
-
+	@Override
 	public String getContent() {
 		return content;
 	}
-
+	@Override
 	public Key getKey() {
 		return key;
 	}
-
 	@Override
 	public NoteProperty getProperty() {
 		return this.property;
@@ -57,5 +72,13 @@ public class InfoNote extends Note{
 
 	public List<Attachment> getAttachments() {
 		return this.attachments;
+	}
+	@Override
+	public Notebook getNotebook() {
+		return notebook;
+	}
+	@Override
+	public void setNotebook(Notebook notebook) {
+		this.notebook = notebook;
 	}
 }

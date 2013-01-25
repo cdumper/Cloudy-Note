@@ -74,7 +74,8 @@ public class Provider {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			InfoNote newNote = new InfoNote(title, content,null,null);
+//			InfoNote newNote = new InfoNote(title, content,null,null);
+			InfoNote newNote = new InfoNote();
 			pm.makePersistent(newNote);
 			pm.currentTransaction().commit();
 			out.print("OK");

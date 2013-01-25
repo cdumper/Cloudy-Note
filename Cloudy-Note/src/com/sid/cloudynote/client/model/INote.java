@@ -9,4 +9,5 @@ public interface INote extends Serializable {
 	String getTitle();
 	String getContent();
 	Key getKey();
+	Notebook getNotebook();
 }

@@ -1,7 +1,10 @@
 package com.sid.cloudynote.client.view;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -13,7 +16,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.sid.cloudynote.client.model.DataManager;
 import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.model.Notebook;
@@ -65,6 +67,11 @@ public class Cloudy_Note implements EntryPoint {
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 				.ensureInjected();
 		DockLayoutPanel dockPanel = binder.createAndBindUi(this);
+		topPanel.setNotebookPanel(notebookListPanel);
+		topPanel.setNotePanel(noteListPanel);
+		topPanel.setEditPanel(editPanel);
+		notebookListPanel.setNotePanel(noteListPanel);
+		noteListPanel.setEditPanel(editPanel);
 		RootLayoutPanel rootPanel = RootLayoutPanel.get();
 		rootPanel.add(dockPanel);
 
@@ -142,10 +149,13 @@ private void loadNotes() {
 
 		@Override
 		public void onSuccess(List<InfoNote> result) {
-			System.out.println("preget notebook list data");
 			if (result.size() != 0) {
-				DataManager.setNotes(result);
-				DataManager.setCurrentNote(0);
+				Map<Key,InfoNote> noteMap = new HashMap<Key,InfoNote>();
+				for(InfoNote note : result){
+					noteMap.put(note.getKey(), note);
+				}
+				DataManager.setNotes(noteMap);
+				DataManager.setCurrentNote(result.get(0).getKey());
 			} else {
 				DataManager.setNotes(null);
 				System.out.println("No notes exist!");
@@ -169,9 +179,14 @@ private void loadNotebooks() {
 		@Override
 		public void onSuccess(List<Notebook> result) {
 			System.out.println("preget notebook list data");
+			
 			if (result.size() != 0) {
-				DataManager.setNotebooks(result);
-				DataManager.setCurrentNotebook(0);
+				Map<Key,Notebook> notebookMap = new HashMap<Key,Notebook>();
+				for(Notebook notebook : result){
+					notebookMap.put(notebook.getKey(), notebook);
+				}
+				DataManager.setNotebooks(notebookMap);
+				DataManager.setCurrentNotebook(result.get(0).getKey());
 			} else {
 				DataManager.setNotebooks(null);
 				System.out.println("No notebooks exist!");

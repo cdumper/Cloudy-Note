@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sid.cloudynote.client.model.InfoNote;
+import com.sid.cloudynote.client.model.Notebook;
 
 public interface InfoNoteServiceAsync {
 
@@ -30,5 +31,8 @@ public interface InfoNoteServiceAsync {
 	void getPaginationData(AsyncCallback<List<InfoNote>> callback);
 
 	void modify(InfoNote entity, AsyncCallback<Void> callback);
+
+	void getNotes(Notebook currentNotebook,
+			AsyncCallback<List<InfoNote>> callback);
 
 }

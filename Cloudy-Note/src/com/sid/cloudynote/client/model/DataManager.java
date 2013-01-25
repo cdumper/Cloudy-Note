@@ -1,42 +1,88 @@
 package com.sid.cloudynote.client.model;
 
-import java.util.List;
+import java.util.Map;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.sid.cloudynote.client.service.NotebookService;
+import com.sid.cloudynote.client.service.NotebookServiceAsync;
 
 public class DataManager {
-	static List<Notebook> notebooks;
-	static List<InfoNote> notes;
-	static int currentNote;
-	static int currentNotebook;
-	
-	public static List<Notebook> getNotebooks(){
+	static Map<Key, Notebook> notebooks;
+	static Map<Key, InfoNote> notes;
+	static Key currentNoteKey;
+	static Key currentNotebookKey;
+	static Notebook currentNotebook;
+	static InfoNote currentNote;
+
+	public static Map<Key, Notebook> getNotebooks() {
 		return notebooks;
 	}
-	
-	public static void setNotebooks(List<Notebook> notebooks){
+
+	public static void setNotebooks(Map<Key, Notebook> notebooks) {
 		DataManager.notebooks = notebooks;
 	}
-	
-	public static List<InfoNote> getNotes(){
+
+	public static Map<Key, InfoNote> getNotes() {
 		return notes;
 	}
-	
-	public static void setNotes(List<InfoNote> notes){
+
+	public static void setNotes(Map<Key, InfoNote> notes) {
 		DataManager.notes = notes;
 	}
+
+	public static Key getCurrentNoteKey() {
+		return DataManager.currentNoteKey;
+	}
+
+	public static void setCurrentNote(Key key) {
+		DataManager.currentNoteKey = key;
+		DataManager.currentNote = DataManager.notes.get(key);
+	}
 	
-	public static int getCurrentNote(){
+	public static void setCurrentNote(InfoNote note) {
+		DataManager.currentNote = note;
+		DataManager.currentNoteKey = note.getKey();
+	}
+
+	public static Key getCurrentNotebookKey() {
+		return DataManager.currentNotebookKey;
+	}
+
+	public static void setCurrentNotebook(Key key) {
+		DataManager.currentNotebookKey = key;
+		DataManager.currentNotebook = DataManager.notebooks.get(key);
+	}
+	
+	public static void setCurrentNotebook(Notebook notebook) {
+		DataManager.currentNotebook = notebook;
+		DataManager.currentNotebookKey = notebook.getKey();
+	}
+
+	public static InfoNote getCurrentNote() {
+		DataManager.currentNote = DataManager.notes
+				.get(DataManager.currentNoteKey);
 		return DataManager.currentNote;
 	}
-	
-	public static void setCurrentNote(int index){
-		DataManager.currentNote = index;
-	}
-	
-	public static int getCurrentNotebook(){
+
+	/**
+	 * The function to get the current selected notebook
+	 * if no notebook selected then set the default notebook as current one
+	 * @return Notebook currentNotebook
+	 */
+	public static Notebook getCurrentNotebook() {
+		if (DataManager.currentNotebook == null) {
+			if (DataManager.notebooks == null || DataManager.notebooks.size() == 0) {
+				GWT.log("No notebook exists!");
+			} else {
+				for(Notebook notebook : DataManager.notebooks.values()){
+					if("Default".equals(notebook.getName())){
+						setCurrentNotebook(notebook);
+					}
+				}
+			}
+		}
 		return DataManager.currentNotebook;
-	}
-	
-	public static void setCurrentNotebook(int index){
-		DataManager.currentNotebook = index;
 	}
 }

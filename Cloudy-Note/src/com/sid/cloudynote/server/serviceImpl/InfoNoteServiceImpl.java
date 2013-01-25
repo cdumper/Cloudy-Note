@@ -1,14 +1,15 @@
 package com.sid.cloudynote.server.serviceImpl;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.model.InfoNote;
+import com.sid.cloudynote.client.model.Notebook;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
@@ -27,8 +28,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {
-			pm.close();
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
 		}
+		pm.close();
+		System.out.println("persistent infonote...");
 	}
 
 	/**
@@ -90,10 +95,10 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			} else {
 				result = new ArrayList<InfoNote>();
 			}
-//			pm.currentTransaction().begin();
-//			Query query = pm.newQuery(InfoNote.class);
-//			result = (List<InfoNote>) query.execute("root");
-//			result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
+			// pm.currentTransaction().begin();
+			// Query query = pm.newQuery(InfoNote.class);
+			// result = (List<InfoNote>) query.execute("root");
+			// result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
 		} catch (Exception e) {
 		} finally {
 			if (pm.currentTransaction().isActive()) {
@@ -163,5 +168,34 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	public List<InfoNote> getPaginationData() {
 		return getPaginationData(null);
 	}
+	
+	public List<InfoNote> getNotes(Notebook notebook) {
+		List<InfoNote> result = null;
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			pm.currentTransaction().begin();
+			
+			Query q = pm.newQuery(InfoNote.class);
+			q.setFilter("notebook == notebookParam");
+			q.declareParameters(Key.class.getName() + " notebookParam");
 
+//			result = (List<InfoNote>) q.execute(notebook.getKey());
+			
+			Object obj = q.execute(notebook.getKey());
+			if (obj != null) {
+				result = (List<InfoNote>) obj;
+				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
+				result.size();
+			} else {
+				result = new ArrayList<InfoNote>();
+			}
+		} catch (Exception e) {
+		} finally {
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+		return result;
+	}
 }
