@@ -27,13 +27,13 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.makePersistent(entity);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (pm.currentTransaction().isActive()) {
 				pm.currentTransaction().rollback();
 			}
+			pm.close();
 		}
-		pm.close();
-		System.out.println("persistent infonote...");
 	}
 
 	/**
@@ -173,27 +173,21 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		List<InfoNote> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
-			pm.currentTransaction().begin();
-			
+//			pm.currentTransaction().begin();
 			Query q = pm.newQuery(InfoNote.class);
 			q.setFilter("notebook == notebookParam");
 			q.declareParameters(Key.class.getName() + " notebookParam");
 
-//			result = (List<InfoNote>) q.execute(notebook.getKey());
-			
 			Object obj = q.execute(notebook.getKey());
 			if (obj != null) {
 				result = (List<InfoNote>) obj;
 				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
-				result.size();
+//				result.size();
 			} else {
 				result = new ArrayList<InfoNote>();
 			}
 		} catch (Exception e) {
 		} finally {
-			if (pm.currentTransaction().isActive()) {
-				pm.currentTransaction().rollback();
-			}
 			pm.close();
 		}
 		return result;

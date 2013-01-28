@@ -8,26 +8,6 @@
 	</welcome-file-list>
 
 	<servlet>
-		<servlet-name>AddNoteService</servlet-name>
-		<servlet-class>com.sid.cloudynote.server.serviceImpl.AddNoteServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>AddNoteService</servlet-name>
-		<url-pattern>/cloudy_note/addNote</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>GetNoteService</servlet-name>
-		<servlet-class>com.sid.cloudynote.server.serviceImpl.GetNoteServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>GetNoteService</servlet-name>
-		<url-pattern>/cloudy_note/getNote</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>GetNotesListService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.GetNotesListServiceImpl</servlet-class>
 	</servlet>

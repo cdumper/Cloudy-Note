@@ -1,7 +1,6 @@
 package com.sid.cloudynote.client.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
@@ -20,8 +18,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.model.DataManager;
 import com.sid.cloudynote.client.model.Notebook;
-import com.sid.cloudynote.client.service.NotebookService;
-import com.sid.cloudynote.client.service.NotebookServiceAsync;
 
 public class TitleBar extends Composite {
 
@@ -30,9 +26,9 @@ public class TitleBar extends Composite {
 
 	interface TitleBarUiBinder extends UiBinder<Widget, TitleBar> {
 	}
-
+	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
-	
+
 	@UiField
 	TextBox title;
 	@UiField
@@ -50,10 +46,10 @@ public class TitleBar extends Composite {
 		// }
 		title.setText("new note");
 	}
-	
-	public void setSelectedNotebook(Key key){
-		for(int i=0;i<notebookList.size();i++){
-			if(notebookList.get(i).equals(key)){
+
+	public void setSelectedNotebook(Key key) {
+		for (int i = 0; i < notebookList.size(); i++) {
+			if (notebookList.get(i).equals(key)) {
 				notebook.setSelectedIndex(i);
 				break;
 			}
@@ -61,46 +57,21 @@ public class TitleBar extends Composite {
 	}
 
 	private void loadNotebooks() {
-		NotebookServiceAsync service = (NotebookServiceAsync) GWT
-				.create(NotebookService.class);
-		AsyncCallback<List<Notebook>> callback = new AsyncCallback<List<Notebook>>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println("falied! getNotebooksList");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(List<Notebook> result) {
-				if (result.size() != 0) {
-					Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
-					for (Notebook notebook : result) {
-						notebookMap.put(notebook.getKey(), notebook);
-					}
-					DataManager.setNotebooks(notebookMap);
-					DataManager.setCurrentNotebook(result.get(0).getKey());
-					for(int i=0;i<result.size();i++){
-						notebookList.add(i, result.get(i).getKey());
-						notebook.addItem(result.get(i).getName());
-					}
-					setSelectedNotebook(DataManager.getCurrentNotebookKey());
-					
-//					for (Notebook nb : result) {
-//						//allNotes.addItem(new TreeItem(notebook.getName()));
-//						notebook.addItem(nb.getName());
-//					}
-				} else {
-					DataManager.setNotebooks(null);
-					System.out.println("No notebooks exist!");
-				}
-			}
-		};
-		service.getPaginationData(callback);
+		notebookMap = DataManager.getNotebooks();
+		for (Notebook nb : notebookMap.values()) {
+			notebookList.add(nb.getKey());
+			notebook.addItem(nb.getName());
+		}
+		setSelectedNotebook(DataManager.getCurrentNotebookKey());
 	}
 
 	@UiHandler("attach")
 	void onClick(ClickEvent e) {
+		// TODO attachments
 		Window.alert("TODO...Attach files!");
+	}
+
+	public Notebook getSelectedNotebook() {
+		return notebookMap.get(notebookList.get(notebook.getSelectedIndex()));
 	}
 }

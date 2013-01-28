@@ -52,12 +52,7 @@ public class Cloudy_Note implements EntryPoint {
 	@UiField
 	NoteListPanel noteListPanel;
 	@UiField
-	EditPanel editPanel;
-
-//	 private TextBox titleTextBox = new TextBox();
-//	 private CKEditor ckeditor = new CKEditor();
-//	 private Button sendButton = new Button("Send");
-//	 private final SplitLayoutPanel notePanel = new SplitLayoutPanel();
+	NoteViewPanel noteViewPanel;
 
 	/**
 	 * This is the entry point method.
@@ -67,11 +62,14 @@ public class Cloudy_Note implements EntryPoint {
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 				.ensureInjected();
 		DockLayoutPanel dockPanel = binder.createAndBindUi(this);
+		
+		// inject dependencies...
 		topPanel.setNotebookPanel(notebookListPanel);
 		topPanel.setNotePanel(noteListPanel);
-		topPanel.setEditPanel(editPanel);
+		topPanel.setNoteViewPanel(noteViewPanel);
 		notebookListPanel.setNotePanel(noteListPanel);
-		noteListPanel.setEditPanel(editPanel);
+		noteListPanel.setNoteViewPanel(noteViewPanel);
+		
 		RootLayoutPanel rootPanel = RootLayoutPanel.get();
 		rootPanel.add(dockPanel);
 

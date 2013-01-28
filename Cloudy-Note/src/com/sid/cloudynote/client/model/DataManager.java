@@ -4,9 +4,6 @@ import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sid.cloudynote.client.service.NotebookService;
-import com.sid.cloudynote.client.service.NotebookServiceAsync;
 
 public class DataManager {
 	static Map<Key, Notebook> notebooks;

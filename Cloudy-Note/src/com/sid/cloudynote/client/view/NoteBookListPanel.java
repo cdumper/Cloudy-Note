@@ -38,11 +38,11 @@ public class NoteBookListPanel extends Composite {
 	interface NotebookListPanelUiBinder extends
 			UiBinder<Widget, NoteBookListPanel> {
 	}
-	
-	private NoteListPanel notePanel;
-	
-	public void setNotePanel(NoteListPanel notePanel) {
-		this.notePanel = notePanel;
+
+	private NoteListPanel noteListPanel;
+
+	public void setNotePanel(NoteListPanel noteListPanel) {
+		this.noteListPanel = noteListPanel;
 	}
 
 	public interface Images extends ClientBundle, Tree.Resources {
@@ -83,25 +83,26 @@ public class NoteBookListPanel extends Composite {
 		// addImageItem(allNotes, "Trash", images.trash());
 		tags = new NotebookTreeItem("Tags");
 		tagsTree.addItem(tags);
-		
+
 		noteBooksTree.addTreeListener(new TreeListener() {
 
 			@Override
 			public void onTreeItemSelected(TreeItem item) {
 				if (item.getChildCount() == 0) {
-					Notebook selectedNotebook = ((NotebookTreeItem) item).getNotebook();
-//					System.out.println(DataManager.getNotebooks().size()+" "+selectedNotebook.getName());
-					DataManager.setCurrentNotebook(selectedNotebook.getKey());
-					notePanel.loadNotes();
-//					System.out.println("notebook selected "+DataManager.getCurrentNotebookKey());
+					Notebook selectedNotebook = ((NotebookTreeItem) item)
+							.getNotebook();
+					if (!selectedNotebook.getKey().equals(
+							DataManager.getCurrentNotebookKey())) {
+						DataManager.setCurrentNotebook(selectedNotebook
+								.getKey());
+						noteListPanel.loadNotes();
+					}
 				}
 			}
 
 			@Override
 			public void onTreeItemStateChanged(TreeItem item) {
-				// Window.alert("state changed" + item.getTitle());
 			}
-
 		});
 
 		noteBooksTree.addMouseDownHandler(new MouseDownHandler() {
@@ -117,14 +118,16 @@ public class NoteBookListPanel extends Composite {
 					NotebookTreeItem item = (NotebookTreeItem) getTreeItemAt(
 							tree, event.getNativeEvent().getClientY());
 					if (item != null) {
-						DecoratedPopupPanel popup = new DecoratedPopupPanel(true);
+						DecoratedPopupPanel popup = new DecoratedPopupPanel(
+								true);
 						popup.add(new Button(item.getText()));
-						popup.setPopupPosition(event.getClientX(),event.getClientY());
+						popup.setPopupPosition(event.getClientX(),
+								event.getClientY());
 						event.preventDefault();
 						event.stopPropagation();
 						popup.show();
-//						Window.alert("right click on notebook "
-//								+ item.getNotebook().getName());
+						// Window.alert("right click on notebook "
+						// + item.getNotebook().getName());
 					}
 				}
 			}
@@ -197,28 +200,26 @@ public class NoteBookListPanel extends Composite {
 			@Override
 			public void onSuccess(List<Notebook> result) {
 				if (result.size() != 0) {
-					Map<Key,Notebook> notebookMap = new HashMap<Key,Notebook>();
-					for(Notebook notebook : result){
+					Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
+					allNotes.removeItems();
+					for (Notebook notebook : result) {
+//						System.out.println(result.get(0).getNotes().size());
 						notebookMap.put(notebook.getKey(), notebook);
+						addImageItem(allNotes, notebook, images.templates());
 					}
 					DataManager.setNotebooks(notebookMap);
 					DataManager.setCurrentNotebook(result.get(0).getKey());
-					
-					allNotes.removeItems();
-					for (Notebook notebook : result) {
-						addImageItem(allNotes, notebook, images.templates());
-					}
-//					System.out.println("notebook list loaded");
+					allNotes.setState(true);
+					noteListPanel.loadNotes();
 				} else {
-					System.out.println("No notebooks exist!");
+					GWT.log("No notebooks exist!");
 					createDefaultNotebook();
-					loadNotebooks();
 				}
 			}
 		};
 		service.getPaginationData(callback);
 	}
-	
+
 	private void createDefaultNotebook() {
 		NotebookServiceAsync service = (NotebookServiceAsync) GWT
 				.create(NotebookService.class);
@@ -233,6 +234,7 @@ public class NoteBookListPanel extends Composite {
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Default notebook created...");
+				loadNotebooks();
 			}
 		};
 		service.add(new Notebook("Default"), callback);

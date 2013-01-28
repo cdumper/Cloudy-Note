@@ -31,10 +31,11 @@ public class SearchPanel extends Composite {
 	public SearchPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
+	
+	private boolean isNewNote = false;
 	private NoteBookListPanel notebookPanel;
 	private NoteListPanel notePanel;
-	private EditPanel editPanel;
+	private NoteViewPanel noteViewPanel;
 	@UiField
 	Button newNotebook;
 	@UiField
@@ -46,31 +47,15 @@ public class SearchPanel extends Composite {
 
 	@UiHandler("newNote")
 	void onClickNewNote(ClickEvent e) {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("falied! getNotesList");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				GWT.log("New note added successfully!");
-				editPanel.newNote();
-				notePanel.loadNotes();
-			}
-		};
-		Notebook currentNotebook = DataManager.getNotebooks().get(DataManager.getCurrentNotebookKey());
-		GWT.log(currentNotebook.getName()+" "+currentNotebook.getKey());
-		service.add(new InfoNote(currentNotebook), callback);
+		noteViewPanel.newNote();
+//		saveNote();
+		edit.setText("Done");
+		isNewNote = true;
 	}
 
 	@UiHandler("newNotebook")
 	void onClickNewNotebook(ClickEvent e) {
-		newNotebookDialog().show();
+		newNotebookDialog().center();
 	}
 
 	private DialogBox newNotebookDialog() {
@@ -123,10 +108,28 @@ public class SearchPanel extends Composite {
 		};
 		service.add(new Notebook(name), callback);
 	}
-
+	
+	private void saveNote(){
+		if(isNewNote){
+			this.noteViewPanel.createNewNote();
+			isNewNote = false;
+		} else {
+			this.noteViewPanel.updateNote();
+		}
+		notePanel.loadNotes();
+	}
+	
 	@UiHandler("edit")
 	void onClickEdit(ClickEvent e) {
 		// TODO change the isEditing state, re-render the edit panel
+		if(noteViewPanel.isEditing()){
+			this.saveNote();
+			noteViewPanel.stopEdit();
+			edit.setText("Edit");
+		} else {
+			noteViewPanel.startEdit();
+			edit.setText("Done");
+		}
 	}
 
 	public void setNotebookPanel(NoteBookListPanel notebookListPanel) {
@@ -137,7 +140,7 @@ public class SearchPanel extends Composite {
 		this.notePanel = noteListPanel;
 	}
 	
-	public void setEditPanel(EditPanel editPanel) {
-		this.editPanel = editPanel;
+	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
+		this.noteViewPanel = noteViewPanel;
 	}
 }

@@ -27,7 +27,7 @@
         </g:north>
  -->
         <g:center>
-          <cn:EditPanel ui:field='editPanel' />
+          <cn:NoteViewPanel ui:field='noteViewPanel' />
         </g:center>
       </g:SplitLayoutPanel>
     </g:center>

@@ -22,7 +22,7 @@ public class TopPanel extends Composite {
 
 	private NoteBookListPanel notebookPanel;
 	private NoteListPanel notePanel;
-	private EditPanel editPanel;
+	private NoteViewPanel noteViewPanel;
 	@UiField
 	Anchor signOutLink;
 	@UiField
@@ -57,8 +57,8 @@ public class TopPanel extends Composite {
 		searchPanel.setNotePanel(noteListPanel);
 	}
 	
-	public void setEditPanel(EditPanel editPanel) {
-		this.editPanel = editPanel;
-		searchPanel.setEditPanel(editPanel);
+	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
+		this.noteViewPanel = noteViewPanel;
+		searchPanel.setNoteViewPanel(noteViewPanel);
 	}
 }

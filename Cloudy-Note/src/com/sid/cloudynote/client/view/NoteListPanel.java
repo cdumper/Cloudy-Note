@@ -25,7 +25,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.model.DataManager;
 import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.Note;
+import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 
@@ -35,17 +35,17 @@ public class NoteListPanel extends ResizeComposite {
 
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListPanel> {
 	}
-	
-	private EditPanel editPanel;
 
-	public void setEditPanel(EditPanel editPanel) {
-		this.editPanel = editPanel;
+	private NoteViewPanel noteViewPanel;
+
+	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
+		this.noteViewPanel = noteViewPanel;
 	}
 
 	public static final ProvidesKey<InfoNote> KEY_PROVIDER = new ProvidesKey<InfoNote>() {
 		@Override
-		public Object getKey(InfoNote Note) {
-			return Note == null ? null : Note.getKey();
+		public Object getKey(InfoNote InfoNote) {
+			return InfoNote == null ? null : InfoNote.getKey();
 		}
 	};
 
@@ -55,6 +55,8 @@ public class NoteListPanel extends ResizeComposite {
 
 	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
 
+	private SingleSelectionModel<InfoNote> selectionModel;
+
 	static class NoteCell extends AbstractCell<InfoNote> {
 		private final String imageHtml;
 
@@ -63,9 +65,9 @@ public class NoteListPanel extends ResizeComposite {
 		}
 
 		@Override
-		public void render(Context context, InfoNote Note, SafeHtmlBuilder sb) {
+		public void render(Context context, InfoNote InfoNote, SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
-			if (Note == null) {
+			if (InfoNote == null) {
 				return;
 			}
 
@@ -78,9 +80,9 @@ public class NoteListPanel extends ResizeComposite {
 
 			// Add the name and address.
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
-			sb.appendEscaped(Note.getTitle());
+			sb.appendEscaped(InfoNote.getTitle());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(Note.getContent());
+			sb.appendEscaped(InfoNote.getContent());
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}
@@ -111,20 +113,19 @@ public class NoteListPanel extends ResizeComposite {
 		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
 		// Add a selection model so we can select cells.
-		final SingleSelectionModel<InfoNote> selectionModel = new SingleSelectionModel<InfoNote>(
-				KEY_PROVIDER);
+		selectionModel = new SingleSelectionModel<InfoNote>(KEY_PROVIDER);
 		cellList.setSelectionModel(selectionModel);
 
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						// TODO to present selected note in the edit panel
-						Note note = selectionModel.getSelectedObject();
+						// TODO to present selected InfoNote in the edit panel
+						InfoNote note = selectionModel.getSelectedObject();
 						DataManager.setCurrentNote(note.getKey());
-						editPanel.presentNote(note);
-//						Window.alert(selectionModel.getSelectedObject()
-//								.getTitle());
-						
+						noteViewPanel.presentNote(note);
+						// Window.alert(selectionModel.getSelectedObject()
+						// .getTitle());
+
 					}
 				});
 
@@ -143,7 +144,6 @@ public class NoteListPanel extends ResizeComposite {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
 		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log("falied! getNotesList");
@@ -156,19 +156,23 @@ public class NoteListPanel extends ResizeComposite {
 				if (result != null && result.size() != 0) {
 					Map<Key, InfoNote> noteMap = new HashMap<Key, InfoNote>();
 					for (InfoNote note : result) {
+//						System.out.println(note.getNotebook());
 						noteMap.put(note.getKey(), note);
 					}
 					DataManager.setNotes(noteMap);
 					DataManager.setCurrentNote(result.get(0).getKey());
 					notes.clear();
 					notes.addAll(result);
+					selectionModel.setSelected(result.get(0), true);
 				} else {
 					DataManager.setNotes(null);
+					notes.clear();
 					GWT.log("No notes exist!");
 				}
 			}
-
 		};
-		service.getNotes(DataManager.getCurrentNotebook(),callback);
+		if (DataManager.getCurrentNotebook() != null) {
+			service.getNotes(DataManager.getCurrentNotebook(), callback);
+		}
 	}
 }
