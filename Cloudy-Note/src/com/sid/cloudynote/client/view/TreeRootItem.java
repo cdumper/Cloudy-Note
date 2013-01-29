@@ -13,9 +13,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.Notebook;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.shared.Notebook;
 
 public class TreeRootItem extends Composite{
 

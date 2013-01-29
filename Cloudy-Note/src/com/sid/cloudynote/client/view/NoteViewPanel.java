@@ -4,11 +4,11 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.Notebook;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.Notebook;
 
 public class NoteViewPanel extends SimplePanel {
 	private Widget panel;

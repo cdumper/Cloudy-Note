@@ -16,8 +16,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.Notebook;
+import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.shared.Notebook;
 
 public class TitleBar extends Composite {
 

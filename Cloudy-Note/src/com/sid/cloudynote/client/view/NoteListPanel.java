@@ -23,11 +23,10 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.InfoNote;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.shared.InfoNote;
 
 public class NoteListPanel extends ResizeComposite {
 	private static NoteListPanelUiBinder uiBinder = GWT
@@ -156,7 +155,10 @@ public class NoteListPanel extends ResizeComposite {
 				if (result != null && result.size() != 0) {
 					Map<Key, InfoNote> noteMap = new HashMap<Key, InfoNote>();
 					for (InfoNote note : result) {
-//						System.out.println(note.getNotebook());
+//						if(note.getNotebook()!=null)
+//							System.out.println(note.getNotebook().getName());
+//						else
+//							System.out.println("notebook null");
 						noteMap.put(note.getKey(), note);
 					}
 					DataManager.setNotes(noteMap);

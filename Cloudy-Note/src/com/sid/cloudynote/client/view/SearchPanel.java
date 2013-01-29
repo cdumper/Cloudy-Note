@@ -3,6 +3,7 @@ package com.sid.cloudynote.client.view;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -13,13 +14,11 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.Notebook;
-import com.sid.cloudynote.client.service.InfoNoteService;
-import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.client.event.INotebookChangedHandler;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.shared.Notebook;
 
 public class SearchPanel extends Composite {
 	private static SearchPanelUiBinder uiBinder = GWT
@@ -31,7 +30,7 @@ public class SearchPanel extends Composite {
 	public SearchPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-	
+
 	private boolean isNewNote = false;
 	private NoteBookListPanel notebookPanel;
 	private NoteListPanel notePanel;
@@ -48,7 +47,7 @@ public class SearchPanel extends Composite {
 	@UiHandler("newNote")
 	void onClickNewNote(ClickEvent e) {
 		noteViewPanel.newNote();
-//		saveNote();
+		// saveNote();
 		edit.setText("Done");
 		isNewNote = true;
 	}
@@ -102,15 +101,17 @@ public class SearchPanel extends Composite {
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Notebook added successfully!");
-				notebookPanel.loadNotebooks();
+				// notebookPanel.loadNotebooks();
+				HandlerManager eventBus = new HandlerManager(null);
+				eventBus.fireEvent(new NotebookChangedEvent());
 			}
 
 		};
 		service.add(new Notebook(name), callback);
 	}
-	
-	private void saveNote(){
-		if(isNewNote){
+
+	private void saveNote() {
+		if (isNewNote) {
 			this.noteViewPanel.createNewNote();
 			isNewNote = false;
 		} else {
@@ -118,11 +119,11 @@ public class SearchPanel extends Composite {
 		}
 		notePanel.loadNotes();
 	}
-	
+
 	@UiHandler("edit")
 	void onClickEdit(ClickEvent e) {
 		// TODO change the isEditing state, re-render the edit panel
-		if(noteViewPanel.isEditing()){
+		if (noteViewPanel.isEditing()) {
 			this.saveNote();
 			noteViewPanel.stopEdit();
 			edit.setText("Edit");
@@ -139,7 +140,7 @@ public class SearchPanel extends Composite {
 	public void setNotePanel(NoteListPanel noteListPanel) {
 		this.notePanel = noteListPanel;
 	}
-	
+
 	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
 		this.noteViewPanel = noteViewPanel;
 	}

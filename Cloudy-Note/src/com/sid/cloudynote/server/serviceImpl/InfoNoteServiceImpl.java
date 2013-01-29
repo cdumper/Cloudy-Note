@@ -8,11 +8,11 @@ import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.Notebook;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.Notebook;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		InfoNoteService {
@@ -24,6 +24,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
+//			Notebook notebook = entity.getNotebook();
+//			notebook.getNotes().add(entity);
+//			pm.makePersistent(notebook);
 			pm.makePersistent(entity);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
@@ -183,6 +186,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				result = (List<InfoNote>) obj;
 				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
 //				result.size();
+				for(int i=0;i<result.size();i++){
+					System.out.println("rpc service"+result.get(i).getNotebook().getName());
+				}
 			} else {
 				result = new ArrayList<InfoNote>();
 			}

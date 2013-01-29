@@ -15,7 +15,7 @@
 	<inherits name='com.axeiya.gwtckeditor.Gwtckeditor' />
 	<inherits name="com.resmarksystems.AppEngineDataTypes"/>
 	<!-- Specify the app entry point class. -->
-	<entry-point class='com.sid.cloudynote.client.view.Cloudy_Note' />
+	<entry-point class='com.sid.cloudynote.client.Cloudy_Note' />
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />

@@ -7,9 +7,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.Note;
+import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.Note;
 
 public class NonEditPanel extends Composite {
 	private Note note;

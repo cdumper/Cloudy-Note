@@ -7,9 +7,9 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.model.InfoNote;
 import com.sid.cloudynote.client.service.GetNotesListService;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.InfoNote;
 
 public class GetNotesListServiceImpl extends RemoteServiceServlet implements GetNotesListService{
 	private static final long serialVersionUID = 1L;

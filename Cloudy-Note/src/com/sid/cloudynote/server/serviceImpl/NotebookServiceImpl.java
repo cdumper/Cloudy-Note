@@ -7,10 +7,10 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sid.cloudynote.client.model.Notebook;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.Notebook;
 
 public class NotebookServiceImpl extends RemoteServiceServlet implements
 		NotebookService {

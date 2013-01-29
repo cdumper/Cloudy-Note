@@ -1,4 +1,4 @@
-package com.sid.cloudynote.client.view;
+package com.sid.cloudynote.client;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,13 +16,17 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.InfoNote;
-import com.sid.cloudynote.client.model.Notebook;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.client.view.BottomPanel;
+import com.sid.cloudynote.client.view.NoteBookListPanel;
+import com.sid.cloudynote.client.view.NoteListPanel;
+import com.sid.cloudynote.client.view.NoteViewPanel;
+import com.sid.cloudynote.client.view.TopPanel;
+import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.Notebook;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

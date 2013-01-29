@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -25,12 +26,15 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.model.DataManager;
-import com.sid.cloudynote.client.model.Notebook;
+import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.INotebookChangedHandler;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.shared.Notebook;
 
-public class NoteBookListPanel extends Composite {
+public class NoteBookListPanel extends Composite implements
+		INotebookChangedHandler {
 
 	private static NotebookListPanelUiBinder uiBinder = GWT
 			.create(NotebookListPanelUiBinder.class);
@@ -66,6 +70,8 @@ public class NoteBookListPanel extends Composite {
 	private NotebookTreeItem tags;
 
 	public NoteBookListPanel() {
+		HandlerManager eventBus = new HandlerManager(null);
+		eventBus.addHandler(NotebookChangedEvent.TYPE,this);
 		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONDBLCLICK
 				| Event.ONCONTEXTMENU);
 		initWidget(uiBinder.createAndBindUi(this));
@@ -203,7 +209,6 @@ public class NoteBookListPanel extends Composite {
 					Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
 					allNotes.removeItems();
 					for (Notebook notebook : result) {
-//						System.out.println(result.get(0).getNotes().size());
 						notebookMap.put(notebook.getKey(), notebook);
 						addImageItem(allNotes, notebook, images.templates());
 					}
@@ -279,5 +284,11 @@ public class NoteBookListPanel extends Composite {
 			// event.getNativeEvent().stopPropagation();
 			// contextMenu.show();
 		}
+	}
+
+	@Override
+	public void onNotebookChanged(NotebookChangedEvent event) {
+		// TODO Auto-generated method stub
+		this.loadNotebooks();
 	}
 }
