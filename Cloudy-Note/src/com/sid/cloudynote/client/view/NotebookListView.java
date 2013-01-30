@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.shared.Notebook;
@@ -64,9 +63,7 @@ public class NotebookListView extends ResizeComposite implements
 	}
 	@UiField
 	StackLayoutPanel stackContent;
-	public StackLayoutPanel getStackContent() {
-		return stackContent;
-	}
+
 	@UiField
 	Tree noteBooksTree;
 	@UiField

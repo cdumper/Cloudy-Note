@@ -1,9 +1,46 @@
+<!DOCTYPE ui:UiBinder 
+  SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent"
+>
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
 
+	<ui:style>
+		.statusDiv {
+			text-align: right;
+			margin: 1em;
+		}
+		
+		.linksDiv {
+			text-align: right;
+		}
+		
+		.logo {
+			gwt-image: 'logo';
+			position: absolute;
+		}
+		}
+	</ui:style>
+
 	<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
 		<g:north size='15'>
-			<cn:TopPanel ui:field='topView' />
+			<g:VerticalPanel height="100%" width="100%">
+				<g:HTMLPanel>
+					<div class='{style.logo}' />
+					<div class="{style.statusDiv}">
+						<div>
+							<b>Welcome back, foo@example.com</b>
+						</div>
+
+						<div class='{style.linksDiv}'>
+							<g:Anchor href='javascript:;' ui:field='signOutLink'>Sign Out
+							</g:Anchor>
+        &nbsp;
+							<g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
+						</div>
+					</div>
+				</g:HTMLPanel>
+				<cn:SearchView ui:field='searchView' />
+			</g:VerticalPanel>
 		</g:north>
 
 		<g:south size='5'>
