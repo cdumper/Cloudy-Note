@@ -59,7 +59,7 @@
 
 				<!-- <g:north size='200'> <mail:MailList ui:field='mailList' /> </g:north> -->
 				<g:center>
-					<cn:NoteViewPanel ui:field='noteView' />
+					<cn:NoteView ui:field='noteView' height="100%" width="100%"/>
 				</g:center>
 			</g:SplitLayoutPanel>
 		</g:center>

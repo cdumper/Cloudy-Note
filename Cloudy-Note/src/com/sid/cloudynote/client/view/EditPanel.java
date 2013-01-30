@@ -19,40 +19,42 @@ import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.EditNoteDoneEvent;
+import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 
-public class EditPanel extends ResizeComposite{
+public class EditPanel extends ResizeComposite implements IEditNoteDoneHandler {
 
 	private static EditPanelUiBinder uiBinder = GWT
 			.create(EditPanelUiBinder.class);
-	
+
 	@UiField
 	CKEditor ckeditor;
-	@UiField 
+	@UiField
 	TextBox title;
-	@UiField 
+	@UiField
 	ListBox notebook;
-	@UiField 
+	@UiField
 	Anchor attach;
-//	@UiField
-//	TitleBar titleBar;
-	
+	// @UiField
+	// TitleBar titleBar;
+
 	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
-	
+
 	interface EditPanelUiBinder extends UiBinder<Widget, EditPanel> {
 	}
 
 	public EditPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.loadNotebooks();
-//		this.presentNote(DataManager.getCurrentNote());
+		// this.presentNote(DataManager.getCurrentNote());
 	}
-	
-	public void newNote(){
+
+	public void newNote() {
 		title.setText("Untitled");
 		setSelectedNotebook(DataManager.getCurrentNotebookKey());
 		ckeditor.setData("Content...");
@@ -80,7 +82,8 @@ public class EditPanel extends ResizeComposite{
 				GWT.log("New InfoNote added successfully!");
 			}
 		};
-		InfoNote note = new InfoNote(getSelectedNotebook(),title.getText(),ckeditor.getData());
+		InfoNote note = new InfoNote(getSelectedNotebook(), title.getText(),
+				ckeditor.getData());
 		service.add(note, callback);
 	}
 
@@ -105,7 +108,7 @@ public class EditPanel extends ResizeComposite{
 		note.setContent(ckeditor.getData());
 		service.modify(note, callback);
 	}
-	
+
 	public void setSelectedNotebook(Key key) {
 		for (int i = 0; i < notebookList.size(); i++) {
 			if (notebookList.get(i).equals(key)) {
@@ -123,14 +126,20 @@ public class EditPanel extends ResizeComposite{
 		}
 		setSelectedNotebook(DataManager.getCurrentNotebookKey());
 	}
-	
+
 	public Notebook getSelectedNotebook() {
 		return notebookMap.get(notebookList.get(notebook.getSelectedIndex()));
 	}
-	
+
 	@UiHandler("attach")
 	void onClick(ClickEvent e) {
 		// TODO attachments
 		Window.alert("TODO...Attach files!");
+	}
+
+	@Override
+	public void onEditNoteDone(EditNoteDoneEvent event) {
+		// TODO Auto-generated method stub
+		System.out.println("edit done. save note");
 	}
 }

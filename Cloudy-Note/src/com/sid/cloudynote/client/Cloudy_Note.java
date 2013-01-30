@@ -16,8 +16,10 @@ import com.sid.cloudynote.client.presenter.NotebookListPresenter;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.presenter.SearchPresenter;
 import com.sid.cloudynote.client.view.BottomPanel;
+import com.sid.cloudynote.client.view.NonEditPanel;
 import com.sid.cloudynote.client.view.NoteListView;
-import com.sid.cloudynote.client.view.NoteViewPanel;
+import com.sid.cloudynote.client.view.NotePresenter;
+import com.sid.cloudynote.client.view.NoteView;
 import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.SearchView;
 
@@ -49,7 +51,7 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 	@UiField
 	NoteListView noteListView;
 	@UiField
-	NoteViewPanel noteView;
+	NoteView noteView;
 
 	private HandlerManager eventBus;
 	private AppController appViewer;
@@ -66,8 +68,8 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 //		topView.setNotebookPanel(notebookListView);
 //		topView.setNotePanel(noteListView);
 //		topView.setNoteViewPanel(noteView);
-		notebookListView.setNotePanel(noteListView);
-		noteListView.setNoteViewPanel(noteView);
+//		notebookListView.setNotePanel(noteListView);
+//		noteListView.setNoteViewPanel(noteView);
 
 		eventBus = new HandlerManager(null);
 		appViewer = new AppController(this, eventBus);
@@ -85,13 +87,17 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 		NoteListPresenter noteListPresenter = new NoteListPresenter(
 				this.noteListView, eventBus);
 		SearchPresenter searchPresenter = new SearchPresenter(this.searchView,eventBus);
+//		NotePresenter notePresenter = new NotePresenter(new NonEditPanel(),eventBus);
+		NotePresenter notePresenter = new NotePresenter(this.noteView.asWidget(),eventBus);
 		
 		this.noteListView.setPresenter(noteListPresenter);
 		this.notebookListView.setPresenter(notebookListPresenter);
 		this.searchView.setPresenter(searchPresenter);
+		this.noteView.setPresenter(notePresenter);
 
 		notebookListPresenter.go(notebookListView.getContainer());
 		noteListPresenter.go(noteListView.getContainer());
 		searchPresenter.go(searchView.getContainer());
+		notePresenter.go(noteView.getContainer());
 	}
 }

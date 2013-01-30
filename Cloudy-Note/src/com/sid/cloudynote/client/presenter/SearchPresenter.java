@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
+import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
@@ -41,25 +43,9 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 	@Override
 	public void onNewNoteButtonClicked() {
 		// TODO NewNoteEvent : when new note button clicked
-		System.out.println("newNoteEvent");
-		// eventBus.fireEvent(new NewNoteEvent());
-		// noteViewPanel.newNote();
-		// edit.setText("Done");
+		eventBus.fireEvent(new NewNoteEvent());
+		view.getEdit().setText("Done");
 		// isNewNote = true;
-	}
-
-	@Override
-	public void onEditButtonClicked() {
-		// TODO EditNoteEvent : when edit button clicked
-		System.out.println("EditNoteEvent");
-		// eventBus.fireEvent(new EditNoteEvent());
-	}
-
-	@Override
-	public void onDoneButtonClicked() {
-		// TODO EditNoteDoneEvent : when done button clicked
-		System.out.println("EditNoteDoneEvent");
-		// eventBus.fireEvent(new EditNoteDoneEvent());
 	}
 
 	@Override
@@ -68,7 +54,7 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 		System.out.println("SearchNoteEvent");
 		// eventBus.fireEvent(new SearchNoteEvent());
 	}
-	
+
 	private DialogBox newNotebookDialog() {
 		final DialogBox dialog = new DialogBox();
 		final TextBox name = new TextBox();
@@ -85,7 +71,7 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 		confirm.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				//call rpc to create new notebook
+				// call rpc to create new notebook
 				createNewNotebook(name.getText());
 				dialog.hide();
 			}
@@ -99,7 +85,7 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 		});
 		return dialog;
 	}
-	
+
 	private void createNewNotebook(String name) {
 		NotebookServiceAsync service = (NotebookServiceAsync) GWT
 				.create(NotebookService.class);
@@ -114,11 +100,20 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Notebook added successfully!");
-				//new notebook created fires the notebookChangedEvent
+				// new notebook created fires the notebookChangedEvent
 				eventBus.fireEvent(new NotebookChangedEvent());
 			}
 
 		};
 		service.add(new Notebook(name), callback);
+	}
+
+	@Override
+	public void onEditDoneButtonClicked() {
+		eventBus.fireEvent(new EditDoneButtonClickedEvent());
+		if(view.getEdit().getText().equals("Edit"))
+			view.getEdit().setText("Done");
+		else if(view.getEdit().getText().equals("Done"))
+			view.getEdit().setText("Edit");
 	}
 }

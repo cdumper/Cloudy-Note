@@ -19,8 +19,6 @@ public class SearchView extends ResizeComposite implements ISearchView{
 	private static SearchViewUiBinder uiBinder = GWT
 			.create(SearchViewUiBinder.class);
 
-	private boolean isNewNote = false;
-	private NoteViewPanel noteViewPanel;
 	private Presenter presenter;
 
 	@UiField
@@ -40,6 +38,10 @@ public class SearchView extends ResizeComposite implements ISearchView{
 	@UiField
 	Button edit;
 
+	public Button getEdit() {
+		return edit;
+	}
+
 	public SearchView() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -47,43 +49,16 @@ public class SearchView extends ResizeComposite implements ISearchView{
 	@UiHandler("newNote")
 	void onClickNewNote(ClickEvent e) {
 		presenter.onNewNoteButtonClicked();
-		
-//		noteViewPanel.newNote();
-//		edit.setText("Done");
-//		isNewNote = true;
 	}
 
 	@UiHandler("newNotebook")
 	void onClickNewNotebook(ClickEvent e) {
 		presenter.onNewNotebookButtonClicked();
-//		newNotebookDialog().center();
-	}
-
-	private void saveNote() {
-		if (isNewNote) {
-			this.noteViewPanel.createNewNote();
-			isNewNote = false;
-		} else {
-			this.noteViewPanel.updateNote();
-		}
-//		notePanel.loadNotes();
 	}
 
 	@UiHandler("edit")
 	void onClickEdit(ClickEvent e) {
-		//change the isEditing state, re-render the edit panel
-		if (noteViewPanel.isEditing()) {
-			this.saveNote();
-			noteViewPanel.stopEdit();
-			edit.setText("Edit");
-		} else {
-			noteViewPanel.startEdit();
-			edit.setText("Done");
-		}
-	}
-
-	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
-		this.noteViewPanel = noteViewPanel;
+		presenter.onEditDoneButtonClicked();
 	}
 
 	@Override

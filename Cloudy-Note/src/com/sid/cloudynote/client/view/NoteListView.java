@@ -34,7 +34,7 @@ public class NoteListView extends ResizeComposite implements
 	private static NoteListPanelUiBinder uiBinder = GWT
 			.create(NoteListPanelUiBinder.class);
 
-	private NoteViewPanel noteViewPanel;
+	private NotePresenter noteViewPanel;
 
 	/**
 	 * The pager used to change the range of data.
@@ -56,7 +56,7 @@ public class NoteListView extends ResizeComposite implements
 
 	private CellList<InfoNote> cellList;
 
-	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
+	public void setNoteViewPanel(NotePresenter noteViewPanel) {
 		this.noteViewPanel = noteViewPanel;
 	}
 
