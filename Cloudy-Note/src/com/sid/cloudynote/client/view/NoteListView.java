@@ -1,10 +1,7 @@
 package com.sid.cloudynote.client.view;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -12,10 +9,10 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,23 +21,46 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.DataManager;
-import com.sid.cloudynote.client.service.InfoNoteService;
-import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.client.event.INoteChangedHandler;
+import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.shared.InfoNote;
 
-public class NoteListPanel extends ResizeComposite {
+public class NoteListView extends ResizeComposite implements
+		INoteChangedHandler, INoteListView {
+	@UiTemplate("NoteListView.ui.xml")
+	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListView> {
+	}
+
 	private static NoteListPanelUiBinder uiBinder = GWT
 			.create(NoteListPanelUiBinder.class);
 
-	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListPanel> {
+	private NoteViewPanel noteViewPanel;
+
+	/**
+	 * The pager used to change the range of data.
+	 */
+	@UiField
+	ShowMorePagerPanel pagerPanel;
+	@UiField
+	Container container;
+
+	public Container getContainer() {
+		return container;
 	}
 
-	private NoteViewPanel noteViewPanel;
+	/**
+	 * The pager used to display the current range.
+	 */
+	// @UiField
+	// RangeLabelPager rangeLabelPager;
+
+	private CellList<InfoNote> cellList;
 
 	public void setNoteViewPanel(NoteViewPanel noteViewPanel) {
 		this.noteViewPanel = noteViewPanel;
 	}
 
+	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
 	public static final ProvidesKey<InfoNote> KEY_PROVIDER = new ProvidesKey<InfoNote>() {
 		@Override
 		public Object getKey(InfoNote InfoNote) {
@@ -52,9 +72,8 @@ public class NoteListPanel extends ResizeComposite {
 		ImageResource home();
 	}
 
-	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
-
 	private SingleSelectionModel<InfoNote> selectionModel;
+	private Presenter presenter;
 
 	static class NoteCell extends AbstractCell<InfoNote> {
 		private final String imageHtml;
@@ -64,7 +83,8 @@ public class NoteListPanel extends ResizeComposite {
 		}
 
 		@Override
-		public void render(Context context, InfoNote InfoNote, SafeHtmlBuilder sb) {
+		public void render(Context context, InfoNote InfoNote,
+				SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
 			if (InfoNote == null) {
 				return;
@@ -86,21 +106,7 @@ public class NoteListPanel extends ResizeComposite {
 		}
 	}
 
-	/**
-	 * The pager used to change the range of data.
-	 */
-	@UiField
-	ShowMorePagerPanel pagerPanel;
-
-	/**
-	 * The pager used to display the current range.
-	 */
-	// @UiField
-	// RangeLabelPager rangeLabelPager;
-
-	private CellList<InfoNote> cellList;
-
-	public NoteListPanel() {
+	public NoteListView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		Images images = GWT.create(Images.class);
 
@@ -118,63 +124,36 @@ public class NoteListPanel extends ResizeComposite {
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						// TODO to present selected InfoNote in the edit panel
 						InfoNote note = selectionModel.getSelectedObject();
 						DataManager.setCurrentNote(note.getKey());
-						noteViewPanel.presentNote(note);
-						// Window.alert(selectionModel.getSelectedObject()
-						// .getTitle());
-
+						presenter.onNoteItemSelected(note);
 					}
 				});
-
-		loadNotes();
 		dataProvider.addDataDisplay(cellList);
 		pagerPanel.setDisplay(cellList);
 		// rangeLabelPager.setDisplay(cellList);
 	}
 
-	// private void loadNotes(){
-	// List<InfoNote> notes = dataProvider.getList();
-	// notes.addAll(DataManager.getNotes());
-	// }
+	@Override
+	public void onNoteChanged(NoteChangedEvent event) {
+		presenter.loadNoteList(event.getNotebook());
+	}
 
-	public void loadNotes() {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("falied! getNotesList");
-				caught.printStackTrace();
-			}
+	@Override
+	public void setPresenter(Presenter presenter) {
+		this.presenter = presenter;
+	}
 
-			@Override
-			public void onSuccess(List<InfoNote> result) {
-				List<InfoNote> notes = dataProvider.getList();
-				if (result != null && result.size() != 0) {
-					Map<Key, InfoNote> noteMap = new HashMap<Key, InfoNote>();
-					for (InfoNote note : result) {
-//						if(note.getNotebook()!=null)
-//							System.out.println(note.getNotebook().getName());
-//						else
-//							System.out.println("notebook null");
-						noteMap.put(note.getKey(), note);
-					}
-					DataManager.setNotes(noteMap);
-					DataManager.setCurrentNote(result.get(0).getKey());
-					notes.clear();
-					notes.addAll(result);
-					selectionModel.setSelected(result.get(0), true);
-				} else {
-					DataManager.setNotes(null);
-					notes.clear();
-					GWT.log("No notes exist!");
-				}
-			}
-		};
-		if (DataManager.getCurrentNotebook() != null) {
-			service.getNotes(DataManager.getCurrentNotebook(), callback);
-		}
+	@Override
+	public void setNoteList(List<InfoNote> result) {
+		List<InfoNote> notes = dataProvider.getList();
+		notes.clear();
+		notes.addAll(result);
+		selectionModel.setSelected(DataManager.getCurrentNote(), true);
+	}
+
+	@Override
+	public Widget asWidget() {
+		return this.pagerPanel;
 	}
 }

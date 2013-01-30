@@ -20,8 +20,8 @@ public class TopPanel extends Composite {
 
 	private static final Binder binder = GWT.create(Binder.class);
 
-	private NoteBookListPanel notebookPanel;
-	private NoteListPanel notePanel;
+	private NotebookListView notebookPanel;
+	private NoteListView notePanel;
 	private NoteViewPanel noteViewPanel;
 	@UiField
 	Anchor signOutLink;
@@ -47,12 +47,12 @@ public class TopPanel extends Composite {
 		Window.alert("If this were implemented, you would be signed out now.");
 	}
 
-	public void setNotebookPanel(NoteBookListPanel notebookListPanel) {
+	public void setNotebookPanel(NotebookListView notebookListPanel) {
 		this.notebookPanel = notebookListPanel;
 		searchPanel.setNotebookPanel(notebookListPanel);
 	}
 
-	public void setNotePanel(NoteListPanel noteListPanel) {
+	public void setNotePanel(NoteListView noteListPanel) {
 		this.notePanel = noteListPanel;
 		searchPanel.setNotePanel(noteListPanel);
 	}

@@ -32,8 +32,8 @@ public class SearchPanel extends Composite {
 	}
 
 	private boolean isNewNote = false;
-	private NoteBookListPanel notebookPanel;
-	private NoteListPanel notePanel;
+	private NotebookListView notebookPanel;
+	private NoteListView notePanel;
 	private NoteViewPanel noteViewPanel;
 	@UiField
 	Button newNotebook;
@@ -117,7 +117,7 @@ public class SearchPanel extends Composite {
 		} else {
 			this.noteViewPanel.updateNote();
 		}
-		notePanel.loadNotes();
+//		notePanel.loadNotes();
 	}
 
 	@UiHandler("edit")
@@ -133,11 +133,11 @@ public class SearchPanel extends Composite {
 		}
 	}
 
-	public void setNotebookPanel(NoteBookListPanel notebookListPanel) {
+	public void setNotebookPanel(NotebookListView notebookListPanel) {
 		this.notebookPanel = notebookListPanel;
 	}
 
-	public void setNotePanel(NoteListPanel noteListPanel) {
+	public void setNotePanel(NoteListView noteListPanel) {
 		this.notePanel = noteListPanel;
 	}
 

@@ -11,17 +11,16 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
+import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
@@ -29,25 +28,18 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
-import com.sid.cloudynote.client.service.NotebookService;
-import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.shared.Notebook;
 
-public class NoteBookListPanel extends Composite implements
-		INotebookChangedHandler {
+public class NotebookListView extends ResizeComposite implements
+		INotebookChangedHandler, INotebookListView {
+
+	@UiTemplate("NoteBookListView.ui.xml")
+	interface NotebookListPanelUiBinder extends
+			UiBinder<Widget, NotebookListView> {
+	}
 
 	private static NotebookListPanelUiBinder uiBinder = GWT
 			.create(NotebookListPanelUiBinder.class);
-
-	interface NotebookListPanelUiBinder extends
-			UiBinder<Widget, NoteBookListPanel> {
-	}
-
-	private NoteListPanel noteListPanel;
-
-	public void setNotePanel(NoteListPanel noteListPanel) {
-		this.noteListPanel = noteListPanel;
-	}
 
 	public interface Images extends ClientBundle, Tree.Resources {
 		ImageResource drafts();
@@ -64,29 +56,45 @@ public class NoteBookListPanel extends Composite implements
 		// @Source("noimage.png")
 		// ImageResource treeLeaf();
 	}
+	
+	@UiField
+	Container container;
+	public Container getContainer() {
+		return container;
+	}
+	@UiField
+	StackLayoutPanel stackContent;
+	public StackLayoutPanel getStackContent() {
+		return stackContent;
+	}
+	@UiField
+	Tree noteBooksTree;
+	@UiField
+	Tree tagsTree;
+
+	private Presenter presenter;
+
+	private NoteListView noteListPanel;
+
+	public void setNotePanel(NoteListView noteListPanel) {
+		this.noteListPanel = noteListPanel;
+	}
 
 	private Images images;
 	private NotebookTreeItem allNotes;
 	private NotebookTreeItem tags;
 
-	public NoteBookListPanel() {
-		HandlerManager eventBus = new HandlerManager(null);
-		eventBus.addHandler(NotebookChangedEvent.TYPE,this);
-		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONDBLCLICK
-				| Event.ONCONTEXTMENU);
+	public NotebookListView() {
+		// sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONDBLCLICK
+		// | Event.ONCONTEXTMENU);
 		initWidget(uiBinder.createAndBindUi(this));
 		images = GWT.create(Images.class);
 
 		allNotes = new NotebookTreeItem(new TreeRootItem(images.home(),
 				"All Notes"));
-		loadNotebooks();
 		allNotes.setState(true);
 		noteBooksTree.addItem(allNotes);
-		// addImageItem(allNotes, "Inbox", images.inbox());
-		// addImageItem(allNotes, "Drafts", images.drafts());
-		// addImageItem(allNotes, "Templates", images.templates());
-		// addImageItem(allNotes, "Sent", images.sent());
-		// addImageItem(allNotes, "Trash", images.trash());
+
 		tags = new NotebookTreeItem("Tags");
 		tagsTree.addItem(tags);
 
@@ -97,12 +105,13 @@ public class NoteBookListPanel extends Composite implements
 				if (item.getChildCount() == 0) {
 					Notebook selectedNotebook = ((NotebookTreeItem) item)
 							.getNotebook();
-					if (!selectedNotebook.getKey().equals(
-							DataManager.getCurrentNotebookKey())) {
-						DataManager.setCurrentNotebook(selectedNotebook
-								.getKey());
-						noteListPanel.loadNotes();
-					}
+//					if (!selectedNotebook.getKey().equals(
+//							DataManager.getCurrentNotebookKey())) 
+						// noteListPanel.loadNotes();
+						if (presenter != null) {
+							presenter.onNotebookItemSelected(selectedNotebook);
+						}
+					
 				}
 			}
 
@@ -159,16 +168,6 @@ public class NoteBookListPanel extends Composite implements
 		});
 	}
 
-	@UiField
-	Tree noteBooksTree;
-	@UiField
-	Tree tagsTree;
-
-	// @UiHandler("noteBooksTree")
-	// void onClick(SelectionEvent<TreeItem> e) {
-	// Window.alert(e.getSelectedItem().getClass().getName());
-	// }
-
 	// private NotebookTreeItem addImageItem(NotebookTreeItem root, String
 	// title,
 	// ImageResource imageProto) {
@@ -190,59 +189,6 @@ public class NoteBookListPanel extends Composite implements
 	private String imageItemHTML(ImageResource imageProto, String title) {
 		return AbstractImagePrototype.create(imageProto).getHTML() + " "
 				+ title;
-	}
-
-	public void loadNotebooks() {
-		NotebookServiceAsync service = (NotebookServiceAsync) GWT
-				.create(NotebookService.class);
-		AsyncCallback<List<Notebook>> callback = new AsyncCallback<List<Notebook>>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println("falied! getNotebooksList");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(List<Notebook> result) {
-				if (result.size() != 0) {
-					Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
-					allNotes.removeItems();
-					for (Notebook notebook : result) {
-						notebookMap.put(notebook.getKey(), notebook);
-						addImageItem(allNotes, notebook, images.templates());
-					}
-					DataManager.setNotebooks(notebookMap);
-					DataManager.setCurrentNotebook(result.get(0).getKey());
-					allNotes.setState(true);
-					noteListPanel.loadNotes();
-				} else {
-					GWT.log("No notebooks exist!");
-					createDefaultNotebook();
-				}
-			}
-		};
-		service.getPaginationData(callback);
-	}
-
-	private void createDefaultNotebook() {
-		NotebookServiceAsync service = (NotebookServiceAsync) GWT
-				.create(NotebookService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("Add Notebook falied!");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				GWT.log("Default notebook created...");
-				loadNotebooks();
-			}
-		};
-		service.add(new Notebook("Default"), callback);
 	}
 
 	private class NotebookTreeItem extends TreeItem implements
@@ -285,10 +231,28 @@ public class NoteBookListPanel extends Composite implements
 			// contextMenu.show();
 		}
 	}
-
 	@Override
 	public void onNotebookChanged(NotebookChangedEvent event) {
-		// TODO Auto-generated method stub
-		this.loadNotebooks();
+		presenter.loadNotebookList();
+	}
+	@Override
+	public void setPresenter(Presenter presenter) {
+		this.presenter = presenter;
+	}
+	@Override
+	public void setNotebookList(List<Notebook> notebooks) {
+		Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
+		allNotes.removeItems();
+		for (Notebook notebook : notebooks) {
+			notebookMap.put(notebook.getKey(), notebook);
+			addImageItem(allNotes, notebook, images.templates());
+		}
+		allNotes.setState(true);
+		// noteListPanel.loadNotes();
+	}
+	@Override
+	public Widget asWidget() {
+		return this.stackContent;
+//		return this.container;
 	}
 }

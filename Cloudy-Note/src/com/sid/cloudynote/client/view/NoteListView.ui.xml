@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
+	<ui:style>
+		.notesPanel {
+			border-top: 1px solid #999;
+			border-left: 1px solid #999;
+			border-right: 1px solid #999;
+			border-bottom: 1px solid #999;
+		}
+		
+		.scrollable {
+			border: 1px solid #999; /*ccc*/
+			text-align: left;
+		}
+	</ui:style>
+
+	<!-- <g:HTMLPanel styleName='{style.notesPanel}'> <table> <tr> <td valign='top' 
+		align='center'> <cn:ShowMorePagerPanel addStyleNames='{style.scrollable}' 
+		ui:field='pagerPanel' /> <cn:RangeLabelPager ui:field='rangeLabelPager' /> 
+		</td> </tr> <tr> <td align='center'> <cn:ShowMorePagerPanel ui:field='pager' 
+		/> </td> </tr> </table> </g:HTMLPanel> -->
+
+	<!-- <g:HTMLPanel styleName='{style.notesPanel}'> <table> <tr> <td valign='top' 
+		align='center'> <cn:ShowMorePagerPanel addStyleNames='{style.scrollable}' 
+		ui:field='pagerPanel' /> <cn:RangeLabelPager ui:field='rangeLabelPager' /> 
+		</td> </tr> </table> </g:HTMLPanel> -->
+	<cn:Container ui:field="container">
+		<cn:ShowMorePagerPanel addStyleNames='{style.scrollable}'
+			ui:field='pagerPanel' height="100%"/>
+	</cn:Container>
+</ui:UiBinder> 

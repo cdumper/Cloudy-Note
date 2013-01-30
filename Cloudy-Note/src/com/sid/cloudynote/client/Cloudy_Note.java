@@ -1,37 +1,29 @@
 package com.sid.cloudynote.client;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.sid.cloudynote.client.service.InfoNoteService;
-import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
-import com.sid.cloudynote.client.service.NotebookService;
-import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.client.presenter.NoteListPresenter;
+import com.sid.cloudynote.client.presenter.NotebookListPresenter;
+import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.view.BottomPanel;
-import com.sid.cloudynote.client.view.NoteBookListPanel;
-import com.sid.cloudynote.client.view.NoteListPanel;
+import com.sid.cloudynote.client.view.NoteListView;
 import com.sid.cloudynote.client.view.NoteViewPanel;
+import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.TopPanel;
-import com.sid.cloudynote.shared.InfoNote;
-import com.sid.cloudynote.shared.Notebook;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Cloudy_Note implements EntryPoint {
+public class Cloudy_Note implements EntryPoint, Presenter {
 	interface Binder extends UiBinder<DockLayoutPanel, Cloudy_Note> {
 	}
 
@@ -41,206 +33,59 @@ public class Cloudy_Note implements EntryPoint {
 		CssResource css();
 	}
 
-	static interface Images extends ClientBundle {
-		ImageResource inbox();
-	}
-
 	private static final Binder binder = GWT.create(Binder.class);
 
 	@UiField
-	TopPanel topPanel;
+	DockLayoutPanel dockLayoutPanel;
 	@UiField
-	BottomPanel bottomPanel;
+	TopPanel topView;
 	@UiField
-	NoteBookListPanel notebookListPanel;
+	BottomPanel bottomView;
 	@UiField
-	NoteListPanel noteListPanel;
+	NotebookListView notebookListView;
 	@UiField
-	NoteViewPanel noteViewPanel;
+	NoteListView noteListView;
+	@UiField
+	NoteViewPanel noteView;
+
+	private HandlerManager eventBus;
+	private AppController appViewer;
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-//		preloadData();
+		//initate ui components
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 				.ensureInjected();
-		DockLayoutPanel dockPanel = binder.createAndBindUi(this);
-		
+		dockLayoutPanel = binder.createAndBindUi(this);
 		// inject dependencies...
-		topPanel.setNotebookPanel(notebookListPanel);
-		topPanel.setNotePanel(noteListPanel);
-		topPanel.setNoteViewPanel(noteViewPanel);
-		notebookListPanel.setNotePanel(noteListPanel);
-		noteListPanel.setNoteViewPanel(noteViewPanel);
-		
-		RootLayoutPanel rootPanel = RootLayoutPanel.get();
-		rootPanel.add(dockPanel);
+		topView.setNotebookPanel(notebookListView);
+		topView.setNotePanel(noteListView);
+		topView.setNoteViewPanel(noteView);
+		notebookListView.setNotePanel(noteListView);
+		noteListView.setNoteViewPanel(noteView);
 
-		Images images = GWT.create(Images.class);
+		eventBus = new HandlerManager(null);
+		appViewer = new AppController(this, eventBus);
 
-
-		// HTMLTable editPanel = new FlexTable();
-		// notePanel.addWest(new Tree(), 300);
-		// notePanel.add(editPanel);
-		// dockPanel.addNorth(topPanel, 10);
-		// titleTextBox.setWidth("600px");
-		//
-		// editPanel.setText(0, 0, "Notes:");
-		// editPanel.getRowFormatter().addStyleName(0, "LogTitle");
-		// editPanel.setText(1, 0, "Title");
-		// editPanel.setWidget(2, 0, titleTextBox);
-		// editPanel.setText(3, 0, "Content");
-		// editPanel.setWidget(4, 0, ckeditor);
-		// editPanel.setWidget(5, 0, sendButton);
-
-		// tree.addTreeListener(new TreeListener() {
-		// @Override
-		// public void onTreeItemSelected(TreeItem item) {
-		// GetNoteServiceAsync getNoteService = GWT
-		// .create(GetNoteService.class);
-		// AsyncCallback<Note> callback = new AsyncCallback<Note>() {
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// System.out.println("Failure! getNote");
-		// caught.printStackTrace();
-		// }
-		//
-		// @Override
-		// public void onSuccess(Note note) {
-		// titleTextBox.setText(note.getTitle());
-		// ckeditor.setData(note.getContent());
-		// }
-		//
-		// };
-		// System.out.println("select " + item.getText());
-		// getNoteService.getNote(item.getText(), callback);
-		// }
-		//
-		// @Override
-		// public void onTreeItemStateChanged(TreeItem item) {
-		//
-		// }
-		// });
-
-		// refreshNotesList();
-		//
-		// sendButton.addClickHandler(new ClickHandler() {
-		// public void onClick(ClickEvent event) {
-		// saveNote(titleTextBox.getText(), ckeditor.getHTML());
-		// }
-		// });
+		appViewer.go(RootLayoutPanel.get());
 	}
 
-private void preloadData() {
-	loadNotebooks();
-	loadNotes();
-}
+	@Override
+	public void go(HasWidgets container) {
+		container.clear();
+		container.add(this.dockLayoutPanel);
 
-private void loadNotes() {
-	InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-			.create(InfoNoteService.class);
-	AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
+		NotebookListPresenter notebookListPresenter = new NotebookListPresenter(
+				this.notebookListView, eventBus);
+		NoteListPresenter noteListPresenter = new NoteListPresenter(
+				this.noteListView, eventBus);
+		
+		this.noteListView.setPresenter(noteListPresenter);
+		this.notebookListView.setPresenter(notebookListPresenter);
 
-		@Override
-		public void onFailure(Throwable caught) {
-			System.out.println("falied! getNotesList");
-			caught.printStackTrace();
-		}
-
-		@Override
-		public void onSuccess(List<InfoNote> result) {
-			if (result.size() != 0) {
-				Map<Key,InfoNote> noteMap = new HashMap<Key,InfoNote>();
-				for(InfoNote note : result){
-					noteMap.put(note.getKey(), note);
-				}
-				DataManager.setNotes(noteMap);
-				DataManager.setCurrentNote(result.get(0).getKey());
-			} else {
-				DataManager.setNotes(null);
-				System.out.println("No notes exist!");
-			}
-		}
-	};
-	service.getPaginationData(callback);
-}
-
-private void loadNotebooks() {
-	NotebookServiceAsync service = (NotebookServiceAsync) GWT
-			.create(NotebookService.class);
-	AsyncCallback<List<Notebook>> callback = new AsyncCallback<List<Notebook>>() {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			System.out.println("falied! getNotebooksList");
-			caught.printStackTrace();
-		}
-
-		@Override
-		public void onSuccess(List<Notebook> result) {
-			System.out.println("preget notebook list data");
-			
-			if (result.size() != 0) {
-				Map<Key,Notebook> notebookMap = new HashMap<Key,Notebook>();
-				for(Notebook notebook : result){
-					notebookMap.put(notebook.getKey(), notebook);
-				}
-				DataManager.setNotebooks(notebookMap);
-				DataManager.setCurrentNotebook(result.get(0).getKey());
-			} else {
-				DataManager.setNotebooks(null);
-				System.out.println("No notebooks exist!");
-			}
-			System.out.println("notebooks number: "+DataManager.getNotebooks().size());
-		}
-	};
-	service.getPaginationData(callback);
-}
-
-	// private void saveNote(String title, String content) {
-	// AddNoteServiceAsync addNoteService = (AddNoteServiceAsync) GWT
-	// .create(AddNoteService.class);
-	// AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-	//
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// System.out.println("falied! addNote");
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// Window.alert("success!!!!");
-	// refreshNotesList();
-	// }
-	//
-	// };
-	// addNoteService.addNote(title, content, callback);
-	// }
-
-	// protected void refreshNotesList() {
-	// GetNotesListServiceAsync getNotesService = (GetNotesListServiceAsync) GWT
-	// .create(GetNotesListService.class);
-	// AsyncCallback<List<Note>> callback = new AsyncCallback<List<Note>>() {
-	//
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// System.out.println("falied! getNotesList");
-	// caught.printStackTrace();
-	// }
-	//
-	// @Override
-	// public void onSuccess(List<Note> result) {
-	// trtmAllNotebooks.removeItems();
-	// for (Note note : result) {
-	// TreeItem node = new TreeItem(note.getTitle());
-	// trtmAllNotebooks.addItem(node);
-	// trtmAllNotebooks.setState(true);
-	// }
-	// }
-	//
-	// };
-	// getNotesService.getNoteList(callback);
-	// }
+		notebookListPresenter.go(notebookListView.getContainer());
+		noteListPresenter.go(noteListView.getContainer());
+	}
 }
