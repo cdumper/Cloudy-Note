@@ -13,8 +13,8 @@ import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
-import com.sid.cloudynote.client.view.INotebookListView;
 import com.sid.cloudynote.client.view.NotebookListView;
+import com.sid.cloudynote.client.view.interfaces.INotebookListView;
 import com.sid.cloudynote.shared.Notebook;
 
 public class NotebookListPresenter implements Presenter,

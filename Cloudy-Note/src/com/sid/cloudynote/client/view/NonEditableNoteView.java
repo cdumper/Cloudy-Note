@@ -11,7 +11,7 @@ import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Note;
 
-public class NonEditPanel extends Composite {
+public class NonEditableNoteView extends Composite {
 	private Note note;
 
 	public Note getNote() {
@@ -25,14 +25,14 @@ public class NonEditPanel extends Composite {
 	private static NonEditPanelUiBinder uiBinder = GWT
 			.create(NonEditPanelUiBinder.class);
 
-	interface NonEditPanelUiBinder extends UiBinder<Widget, NonEditPanel> {
+	interface NonEditPanelUiBinder extends UiBinder<Widget, NonEditableNoteView> {
 	}
 
-	public NonEditPanel() {
+	public NonEditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public NonEditPanel(Note note) {
+	public NonEditableNoteView(Note note) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.note = note;
 		this.title.setText(note.getTitle());
@@ -47,12 +47,11 @@ public class NonEditPanel extends Composite {
 	@UiField
 	TextArea content;
 
-	public NonEditPanel(String firstName) {
+	public NonEditableNoteView(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	
 	public void presentNote(InfoNote note) {
-		// TODO Auto-generated method stub
 		title.setText(note.getTitle());
 		notebook.setText(DataManager.getCurrentNotebook().getName());
 		content.setText(note.getContent());

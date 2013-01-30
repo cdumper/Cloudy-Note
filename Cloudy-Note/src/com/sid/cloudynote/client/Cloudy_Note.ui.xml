@@ -44,7 +44,7 @@
 		</g:north>
 
 		<g:south size='5'>
-			<cn:BottomPanel ui:field='bottomView' />
+			<cn:BottomView ui:field='bottomView' />
 		</g:south>
 
 		<g:west size='15'>

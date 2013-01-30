@@ -15,6 +15,7 @@ import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
 import com.sid.cloudynote.client.event.IEditNoteHandler;
 import com.sid.cloudynote.client.event.INewNoteHandler;
 import com.sid.cloudynote.client.event.NewNoteEvent;
+import com.sid.cloudynote.client.view.interfaces.INoteView;
 
 public class NoteView extends ResizeComposite implements INoteView,
 		INewNoteHandler, IEditNoteHandler, IEditNoteDoneHandler, IEditDoneButtonClickedHandler {
@@ -31,7 +32,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	public NoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
-		widget = new NonEditPanel();
+		widget = new NonEditableNoteView();
 	}
 
 	public Container getContainer() {
@@ -52,7 +53,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	@Override
 	public void onEditNote(EditNoteEvent event) {
-		EditPanel editView = new EditPanel();
+		EditableNoteView editView = new EditableNoteView();
 		editView.setHeight("100%");
 		editView.setWidth("100%");
 		editView.presentNote(DataManager.getCurrentNote());
@@ -64,7 +65,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 	
 	@Override
 	public void onEditNoteDone(EditNoteDoneEvent event) {
-		NonEditPanel nonEditView = new NonEditPanel();
+		NonEditableNoteView nonEditView = new NonEditableNoteView();
 		nonEditView.setHeight("100%");
 		nonEditView.setWidth("100%");
 		nonEditView.presentNote(DataManager.getCurrentNote());
@@ -76,7 +77,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	@Override
 	public void onNewNote(NewNoteEvent event) {
-		EditPanel editView = new EditPanel();
+		EditableNoteView editView = new EditableNoteView();
 		editView.setHeight("100%");
 		editView.setWidth("100%");
 		this.container.clear();

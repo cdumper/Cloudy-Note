@@ -21,12 +21,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
+import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 
-public class EditPanel extends ResizeComposite implements IEditNoteDoneHandler {
+public class EditableNoteView extends ResizeComposite {
 
 	private static EditPanelUiBinder uiBinder = GWT
 			.create(EditPanelUiBinder.class);
@@ -39,19 +40,17 @@ public class EditPanel extends ResizeComposite implements IEditNoteDoneHandler {
 	ListBox notebook;
 	@UiField
 	Anchor attach;
-	// @UiField
-	// TitleBar titleBar;
 
 	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
 
-	interface EditPanelUiBinder extends UiBinder<Widget, EditPanel> {
+	interface EditPanelUiBinder extends UiBinder<Widget, EditableNoteView> {
 	}
 
-	public EditPanel() {
+	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.loadNotebooks();
-		// this.presentNote(DataManager.getCurrentNote());
+		this.presentNote(DataManager.getCurrentNote());
 	}
 
 	public void newNote() {
@@ -61,30 +60,18 @@ public class EditPanel extends ResizeComposite implements IEditNoteDoneHandler {
 	}
 
 	public void presentNote(InfoNote note) {
-		// TODO Auto-generated method stub
 		title.setText(note.getTitle());
 		setSelectedNotebook(DataManager.getCurrentNotebookKey());
 		ckeditor.setData(note.getContent());
 	}
 
 	public void createNewNote() {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("falied! getNotesList");
-				caught.printStackTrace();
-			}
+		
+	}
 
-			@Override
-			public void onSuccess(Void result) {
-				GWT.log("New InfoNote added successfully!");
-			}
-		};
-		InfoNote note = new InfoNote(getSelectedNotebook(), title.getText(),
+	public InfoNote getInfoNote() {
+		return new InfoNote(getSelectedNotebook(), title.getText(),
 				ckeditor.getData());
-		service.add(note, callback);
 	}
 
 	public void updateNote() {
@@ -135,11 +122,5 @@ public class EditPanel extends ResizeComposite implements IEditNoteDoneHandler {
 	void onClick(ClickEvent e) {
 		// TODO attachments
 		Window.alert("TODO...Attach files!");
-	}
-
-	@Override
-	public void onEditNoteDone(EditNoteDoneEvent event) {
-		// TODO Auto-generated method stub
-		System.out.println("edit done. save note");
 	}
 }

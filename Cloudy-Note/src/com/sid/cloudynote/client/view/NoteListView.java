@@ -23,6 +23,8 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INoteChangedHandler;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.presenter.NotePresenter;
+import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.InfoNote;
 
 public class NoteListView extends ResizeComposite implements
@@ -33,8 +35,6 @@ public class NoteListView extends ResizeComposite implements
 
 	private static NoteListPanelUiBinder uiBinder = GWT
 			.create(NoteListPanelUiBinder.class);
-
-	private NotePresenter noteViewPanel;
 
 	/**
 	 * The pager used to change the range of data.
@@ -55,10 +55,6 @@ public class NoteListView extends ResizeComposite implements
 	// RangeLabelPager rangeLabelPager;
 
 	private CellList<InfoNote> cellList;
-
-	public void setNoteViewPanel(NotePresenter noteViewPanel) {
-		this.noteViewPanel = noteViewPanel;
-	}
 
 	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
 	public static final ProvidesKey<InfoNote> KEY_PROVIDER = new ProvidesKey<InfoNote>() {

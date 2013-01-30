@@ -10,15 +10,15 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
-public class BottomPanel extends Composite{
+public class BottomView extends Composite{
 
 	private static BottomPanelUiBinder uiBinder = GWT
 			.create(BottomPanelUiBinder.class);
 
-	interface BottomPanelUiBinder extends UiBinder<Widget, BottomPanel> {
+	interface BottomPanelUiBinder extends UiBinder<Widget, BottomView> {
 	}
 
-	public BottomPanel() {
+	public BottomView() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.event.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.view.interfaces.INotebookListView;
 import com.sid.cloudynote.shared.Notebook;
 
 public class NotebookListView extends ResizeComposite implements
@@ -55,12 +56,14 @@ public class NotebookListView extends ResizeComposite implements
 		// @Source("noimage.png")
 		// ImageResource treeLeaf();
 	}
-	
+
 	@UiField
 	Container container;
+
 	public Container getContainer() {
 		return container;
 	}
+
 	@UiField
 	StackLayoutPanel stackContent;
 
@@ -69,17 +72,10 @@ public class NotebookListView extends ResizeComposite implements
 	@UiField
 	Tree tagsTree;
 
-	private Presenter presenter;
-
-	private NoteListView noteListPanel;
-
-	public void setNotePanel(NoteListView noteListPanel) {
-		this.noteListPanel = noteListPanel;
-	}
-
 	private Images images;
 	private NotebookTreeItem allNotes;
 	private NotebookTreeItem tags;
+	private Presenter presenter;
 
 	public NotebookListView() {
 		// sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONDBLCLICK
@@ -102,13 +98,13 @@ public class NotebookListView extends ResizeComposite implements
 				if (item.getChildCount() == 0) {
 					Notebook selectedNotebook = ((NotebookTreeItem) item)
 							.getNotebook();
-//					if (!selectedNotebook.getKey().equals(
-//							DataManager.getCurrentNotebookKey())) 
-						// noteListPanel.loadNotes();
-						if (presenter != null) {
-							presenter.onNotebookItemSelected(selectedNotebook);
-						}
-					
+					// if (!selectedNotebook.getKey().equals(
+					// DataManager.getCurrentNotebookKey()))
+					// noteListPanel.loadNotes();
+					if (presenter != null) {
+						presenter.onNotebookItemSelected(selectedNotebook);
+					}
+
 				}
 			}
 
@@ -228,14 +224,17 @@ public class NotebookListView extends ResizeComposite implements
 			// contextMenu.show();
 		}
 	}
+
 	@Override
 	public void onNotebookChanged(NotebookChangedEvent event) {
 		presenter.loadNotebookList();
 	}
+
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
 	}
+
 	@Override
 	public void setNotebookList(List<Notebook> notebooks) {
 		Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
@@ -245,11 +244,10 @@ public class NotebookListView extends ResizeComposite implements
 			addImageItem(allNotes, notebook, images.templates());
 		}
 		allNotes.setState(true);
-		// noteListPanel.loadNotes();
 	}
+
 	@Override
 	public Widget asWidget() {
 		return this.stackContent;
-//		return this.container;
 	}
 }

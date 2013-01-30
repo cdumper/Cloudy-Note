@@ -25,7 +25,6 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	private void bind() {
 		eventBus.addHandler(NotebookChangedEvent.TYPE,cn.notebookListView);
 		eventBus.addHandler(NoteChangedEvent.TYPE,cn.noteListView);
-//		eventBus.addHandler(EditNoteDoneEvent.TYPE,cn.noteListView);
 		eventBus.addHandler(EditNoteEvent.TYPE,cn.noteView);
 		eventBus.addHandler(NewNoteEvent.TYPE,cn.noteView);
 		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,cn.noteView);
@@ -34,7 +33,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
-		// TODO Auto-generated method stub
+		// TODO appController history controll part
 		System.out.println("onValueChange fired");
 	}
 

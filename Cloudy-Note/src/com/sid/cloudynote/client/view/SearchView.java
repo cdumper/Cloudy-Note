@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.view.interfaces.ISearchView;
 
 public class SearchView extends ResizeComposite implements ISearchView{
 	@UiTemplate("SearchView.ui.xml")

@@ -15,8 +15,8 @@ import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
-import com.sid.cloudynote.client.view.ISearchView;
 import com.sid.cloudynote.client.view.SearchView;
+import com.sid.cloudynote.client.view.interfaces.ISearchView;
 import com.sid.cloudynote.shared.Notebook;
 
 public class SearchPresenter implements Presenter, ISearchView.Presenter {

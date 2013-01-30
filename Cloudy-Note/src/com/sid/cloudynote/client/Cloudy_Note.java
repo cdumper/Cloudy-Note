@@ -12,13 +12,12 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.sid.cloudynote.client.presenter.NoteListPresenter;
+import com.sid.cloudynote.client.presenter.NotePresenter;
 import com.sid.cloudynote.client.presenter.NotebookListPresenter;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.presenter.SearchPresenter;
-import com.sid.cloudynote.client.view.BottomPanel;
-import com.sid.cloudynote.client.view.NonEditPanel;
+import com.sid.cloudynote.client.view.BottomView;
 import com.sid.cloudynote.client.view.NoteListView;
-import com.sid.cloudynote.client.view.NotePresenter;
 import com.sid.cloudynote.client.view.NoteView;
 import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.SearchView;
@@ -40,12 +39,10 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
-//	@UiField
-//	TopPanel topView;
 	@UiField
 	SearchView searchView;
 	@UiField
-	BottomPanel bottomView;
+	BottomView bottomView;
 	@UiField
 	NotebookListView notebookListView;
 	@UiField
@@ -64,12 +61,6 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 				.ensureInjected();
 		dockLayoutPanel = binder.createAndBindUi(this);
-		// inject dependencies...
-//		topView.setNotebookPanel(notebookListView);
-//		topView.setNotePanel(noteListView);
-//		topView.setNoteViewPanel(noteView);
-//		notebookListView.setNotePanel(noteListView);
-//		noteListView.setNoteViewPanel(noteView);
 
 		eventBus = new HandlerManager(null);
 		appViewer = new AppController(this, eventBus);
@@ -81,13 +72,16 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(this.dockLayoutPanel);
+		
+		bindPresentersAndViews();
+	}
 
+	private void bindPresentersAndViews() {
 		NotebookListPresenter notebookListPresenter = new NotebookListPresenter(
 				this.notebookListView, eventBus);
 		NoteListPresenter noteListPresenter = new NoteListPresenter(
 				this.noteListView, eventBus);
 		SearchPresenter searchPresenter = new SearchPresenter(this.searchView,eventBus);
-//		NotePresenter notePresenter = new NotePresenter(new NonEditPanel(),eventBus);
 		NotePresenter notePresenter = new NotePresenter(this.noteView.asWidget(),eventBus);
 		
 		this.noteListView.setPresenter(noteListPresenter);

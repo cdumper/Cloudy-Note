@@ -10,10 +10,11 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
-import com.sid.cloudynote.client.view.INoteListView;
 import com.sid.cloudynote.client.view.NoteListView;
+import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 
@@ -29,8 +30,8 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void onNoteItemSelected(InfoNote clickedItem) {
-		// TODO Auto-generated method stub
-		// eventBus.fireEvent(new EditNoteEvent());
+		//TODO on note item selected
+		 eventBus.fireEvent(new EditNoteDoneEvent());
 	}
 
 	@Override
