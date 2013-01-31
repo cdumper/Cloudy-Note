@@ -39,7 +39,7 @@ public class DataManager {
 		DataManager.currentNoteKey = key;
 		DataManager.currentNote = DataManager.notes.get(key);
 	}
-	
+
 	public static void setCurrentNote(InfoNote note) {
 		DataManager.currentNote = note;
 		DataManager.currentNoteKey = note.getKey();
@@ -53,30 +53,39 @@ public class DataManager {
 		DataManager.currentNotebookKey = key;
 		DataManager.currentNotebook = DataManager.notebooks.get(key);
 	}
-	
+
 	public static void setCurrentNotebook(Notebook notebook) {
 		DataManager.currentNotebook = notebook;
 		DataManager.currentNotebookKey = notebook.getKey();
 	}
 
 	public static InfoNote getCurrentNote() {
-		DataManager.currentNote = DataManager.notes
-				.get(DataManager.currentNoteKey);
+		if (DataManager.currentNote == null) {
+			if (DataManager.notes == null || DataManager.notes.size() == 0) {
+				GWT.log("No note exists!");
+			} else {
+				DataManager.currentNote = DataManager.notes
+						.get(DataManager.currentNoteKey);
+			}
+		}
 		return DataManager.currentNote;
+
 	}
 
 	/**
-	 * The function to get the current selected notebook
-	 * if no notebook selected then set the default notebook as current one
+	 * The function to get the current selected notebook if no notebook selected
+	 * then set the default notebook as current one
+	 * 
 	 * @return Notebook currentNotebook
 	 */
 	public static Notebook getCurrentNotebook() {
 		if (DataManager.currentNotebook == null) {
-			if (DataManager.notebooks == null || DataManager.notebooks.size() == 0) {
+			if (DataManager.notebooks == null
+					|| DataManager.notebooks.size() == 0) {
 				GWT.log("No notebook exists!");
 			} else {
-				for(Notebook notebook : DataManager.notebooks.values()){
-					if("Default".equals(notebook.getName())){
+				for (Notebook notebook : DataManager.notebooks.values()) {
+					if ("Default".equals(notebook.getName())) {
 						setCurrentNotebook(notebook);
 					}
 				}

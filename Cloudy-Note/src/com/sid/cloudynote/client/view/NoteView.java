@@ -73,6 +73,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 		this.container.add(nonEditView);
 		presenter.setView(nonEditView);
 		presenter.setEditing(false);
+		presenter.setNewNote(false);
 	}
 
 	@Override
@@ -80,10 +81,12 @@ public class NoteView extends ResizeComposite implements INoteView,
 		EditableNoteView editView = new EditableNoteView();
 		editView.setHeight("100%");
 		editView.setWidth("100%");
+		editView.newNote();
 		this.container.clear();
 		this.container.add(editView);
 		presenter.setView(editView);
 		presenter.setEditing(true);
+		presenter.setNewNote(true);
 	}
 
 	@Override

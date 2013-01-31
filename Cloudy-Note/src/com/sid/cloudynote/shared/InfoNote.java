@@ -21,7 +21,7 @@ public class InfoNote implements Serializable {
 	private String title;
 	@Persistent
 	private String content;
-	@Persistent
+	@Persistent(defaultFetchGroup="true")
 	private Notebook notebook;
 	@Persistent
 	private NoteProperty property;

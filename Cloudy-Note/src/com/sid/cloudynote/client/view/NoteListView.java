@@ -23,7 +23,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INoteChangedHandler;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
-import com.sid.cloudynote.client.presenter.NotePresenter;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.InfoNote;
 
@@ -145,7 +144,8 @@ public class NoteListView extends ResizeComposite implements
 		List<InfoNote> notes = dataProvider.getList();
 		notes.clear();
 		notes.addAll(result);
-		selectionModel.setSelected(DataManager.getCurrentNote(), true);
+		if(DataManager.getCurrentNote()!=null)
+			selectionModel.setSelected(DataManager.getCurrentNote(), true);
 	}
 
 	@Override

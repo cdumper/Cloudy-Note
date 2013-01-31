@@ -21,6 +21,15 @@ public class NotePresenter extends SimplePanel implements Presenter,
 	private final HandlerManager eventBus;
 	private Widget view;
 	private boolean isEditing = false;
+	private boolean isNewNote = false;
+
+	public boolean isNewNote() {
+		return isNewNote;
+	}
+	@Override
+	public void setNewNote(boolean isNewNote) {
+		this.isNewNote = isNewNote;
+	}
 
 	public NotePresenter(Widget view, HandlerManager eventBus) {
 		super();
@@ -50,9 +59,16 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 	@Override
 	public void saveNote() {
-		// TODO Auto-generated method stub
 		EditableNoteView panel = (EditableNoteView) view;
-		createNewNote(panel.getInfoNote());
+		if (isNewNote)
+			createNewNote(panel.getInfoNote());
+		else {
+			InfoNote note = DataManager.getCurrentNote();
+			note.setTitle(panel.getInfoNote().getTitle());
+			note.setContent(panel.getInfoNote().getContent());
+			note.setNotebook(panel.getInfoNote().getNotebook());
+			updateNote(note);
+		}
 		eventBus.fireEvent(new EditNoteDoneEvent());
 	}
 
@@ -84,7 +100,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 			@Override
 			public void onSuccess(Void result) {
-				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
+				eventBus.fireEvent(new NoteChangedEvent(DataManager
+						.getCurrentNotebook()));
 				GWT.log("New InfoNote added successfully!");
 			}
 		};
@@ -93,7 +110,22 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 	@Override
 	public void updateNote(InfoNote note) {
-		// TODO Auto-generated method stub
-		eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
+		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
+				.create(InfoNoteService.class);
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("update note failed");
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				eventBus.fireEvent(new NoteChangedEvent(DataManager
+						.getCurrentNotebook()));
+				GWT.log("Note updated successfully!");
+			}
+		};
+		service.modify(note, callback);
 	}
 }

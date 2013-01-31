@@ -30,8 +30,8 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void onNoteItemSelected(InfoNote clickedItem) {
-		//TODO on note item selected
-		 eventBus.fireEvent(new EditNoteDoneEvent());
+		// TODO on note item selected
+		eventBus.fireEvent(new EditNoteDoneEvent());
 	}
 
 	@Override
@@ -60,11 +60,13 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 					}
 					DataManager.setNotes(noteMap);
 					// everytime set the selected note to the first one
-					//					if (notebook.getKey() != DataManager.getCurrentNotebookKey() || DataManager.getCurrentNoteKey() == null) 
-						DataManager.setCurrentNote(result.get(0).getKey());
-						// eventBus.fireEvent(new EditNoteEvent());
+					// if (notebook.getKey() !=
+					// DataManager.getCurrentNotebookKey() ||
+					// DataManager.getCurrentNoteKey() == null)
+					DataManager.setCurrentNote(result.get(0).getKey());
+					// eventBus.fireEvent(new EditNoteEvent());
 				} else {
-					GWT.log("No notes exist!");
+//					GWT.log("No notes exist!");
 				}
 				view.setNoteList(result);
 			}

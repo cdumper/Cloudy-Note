@@ -12,18 +12,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
-import com.sid.cloudynote.client.event.EditNoteDoneEvent;
-import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
-import com.sid.cloudynote.client.event.NoteChangedEvent;
-import com.sid.cloudynote.client.service.InfoNoteService;
-import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 
@@ -50,7 +44,7 @@ public class EditableNoteView extends ResizeComposite {
 	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.loadNotebooks();
-		this.presentNote(DataManager.getCurrentNote());
+//		this.presentNote(DataManager.getCurrentNote());
 	}
 
 	public void newNote() {
@@ -60,40 +54,16 @@ public class EditableNoteView extends ResizeComposite {
 	}
 
 	public void presentNote(InfoNote note) {
-		title.setText(note.getTitle());
-		setSelectedNotebook(DataManager.getCurrentNotebookKey());
-		ckeditor.setData(note.getContent());
-	}
-
-	public void createNewNote() {
-		
+		if (note != null) {
+			title.setText(note.getTitle());
+			setSelectedNotebook(DataManager.getCurrentNotebookKey());
+			ckeditor.setData(note.getContent());
+		}
 	}
 
 	public InfoNote getInfoNote() {
 		return new InfoNote(getSelectedNotebook(), title.getText(),
 				ckeditor.getData());
-	}
-
-	public void updateNote() {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("update note failed");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				GWT.log("Note updated successfully!");
-			}
-		};
-		InfoNote note = DataManager.getCurrentNote();
-		note.setNotebook(getSelectedNotebook());
-		note.setTitle(title.getText());
-		note.setContent(ckeditor.getData());
-		service.modify(note, callback);
 	}
 
 	public void setSelectedNotebook(Key key) {

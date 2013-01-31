@@ -15,6 +15,11 @@ import com.sid.cloudynote.shared.Notebook;
 public class NotebookServiceImpl extends RemoteServiceServlet implements
 		NotebookService {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3191322844970681081L;
+
+	/**
 	 * 添加实体
 	 */
 	@Override

@@ -13,6 +13,7 @@ public interface INoteView {
 		void setView(Widget view);
 		void createNewNote(InfoNote note);
 		void updateNote(InfoNote note);
+		void setNewNote(boolean b);
 	}
 	
 	void setPresenter(Presenter presenter);

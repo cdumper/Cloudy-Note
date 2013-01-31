@@ -17,17 +17,26 @@ import com.sid.cloudynote.shared.Notebook;
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		InfoNoteService {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1560433333437871362L;
+
+	/**
 	 * 添加实体
 	 */
 	@Override
-	public void add(InfoNote entity) {
+	public void add(InfoNote note) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-//			Notebook notebook = entity.getNotebook();
-//			notebook.getNotes().add(entity);
-//			pm.makePersistent(notebook);
-			pm.makePersistent(entity);
+			// Notebook notebook = pm.getObjectById(Notebook.class,
+			// note.getNotebook().getKey());
+			// Notebook notebook = note.getNotebook();
+			// System.out.println("trying to add note into notebook:"+notebook.getKey());
+			// notebook.getNotes().add(note);
+			// InfoNote entity = pm.getObjectById(InfoNote.class,
+			// note.getKey());
+			pm.makePersistent(note);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,14 +66,25 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * 更新实体
 	 */
 	@Override
-	public void modify(InfoNote entity) {
+	public void modify(InfoNote note) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		String title = note.getTitle();
+		Notebook notebook = note.getNotebook();
+		String content = note.getContent();
 		try {
 			// 更新数据，直接调用makePersistent()方法的，要求实体类注解了如下
 			// @PersistenceCapable(detachable="true")
-			pm.makePersistent(entity);
+			pm.currentTransaction().begin();
+			InfoNote entity = pm.getObjectById(InfoNote.class, note.getKey());
+			entity.setTitle(title);
+			entity.setContent(content);
+			entity.setNotebook(notebook);
+			pm.makePersistent(note);
+			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {
+			if (pm.currentTransaction().isActive())
+				pm.currentTransaction().rollback();
 			pm.close();
 		}
 	}
@@ -171,12 +191,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	public List<InfoNote> getPaginationData() {
 		return getPaginationData(null);
 	}
-	
+
 	public List<InfoNote> getNotes(Notebook notebook) {
 		List<InfoNote> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
-//			pm.currentTransaction().begin();
+			// pm.currentTransaction().begin();
 			Query q = pm.newQuery(InfoNote.class);
 			q.setFilter("notebook == notebookParam");
 			q.declareParameters(Key.class.getName() + " notebookParam");
@@ -185,10 +205,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			if (obj != null) {
 				result = (List<InfoNote>) obj;
 				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
-//				result.size();
-				for(int i=0;i<result.size();i++){
-					System.out.println("rpc service"+result.get(i).getNotebook().getName());
-				}
+				result.size();
 			} else {
 				result = new ArrayList<InfoNote>();
 			}

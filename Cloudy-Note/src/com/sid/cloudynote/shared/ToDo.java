@@ -8,7 +8,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 
-
+//TODO todo note model to be implemented
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
 public class ToDo extends Note{
 	@PrimaryKey
@@ -21,26 +21,21 @@ public class ToDo extends Note{
 
 	@Override
 	public NoteProperty getProperty() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getContent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Key getKey() {
-		// TODO Auto-generated method stub
 		return key;
 	}
-
 }
