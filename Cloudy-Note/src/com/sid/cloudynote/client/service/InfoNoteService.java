@@ -11,4 +11,5 @@ import com.sid.cloudynote.shared.Notebook;
 @RemoteServiceRelativePath("noteService")
 public interface InfoNoteService extends RemoteService, IDAO<InfoNote>{
 	List<InfoNote> getNotes(Notebook currentNotebook);
+	void moveNoteTo(InfoNote note, Notebook notebook);
 }

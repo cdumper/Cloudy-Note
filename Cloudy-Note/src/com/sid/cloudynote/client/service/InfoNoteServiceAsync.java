@@ -35,4 +35,6 @@ public interface InfoNoteServiceAsync {
 	void getNotes(Notebook currentNotebook,
 			AsyncCallback<List<InfoNote>> callback);
 
+	void moveNoteTo(InfoNote note, Notebook notebook,
+			AsyncCallback<Void> callback);
 }

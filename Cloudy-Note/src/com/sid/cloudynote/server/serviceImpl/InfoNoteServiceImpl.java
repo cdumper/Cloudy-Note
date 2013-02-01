@@ -68,18 +68,38 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void modify(InfoNote note) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		String title = note.getTitle();
-		Notebook notebook = note.getNotebook();
-		String content = note.getContent();
+//		String title = note.getTitle();
+//		Notebook notebook = note.getNotebook();
+//		String content = note.getContent();
+		System.out.println(note.getNotebook().getKey());
 		try {
 			// 更新数据，直接调用makePersistent()方法的，要求实体类注解了如下
 			// @PersistenceCapable(detachable="true")
 			pm.currentTransaction().begin();
-			InfoNote entity = pm.getObjectById(InfoNote.class, note.getKey());
-			entity.setTitle(title);
-			entity.setContent(content);
-			entity.setNotebook(notebook);
+//			InfoNote entity = pm.getObjectById(InfoNote.class, note.getKey());
+//			entity.setTitle(title);
+//			entity.setContent(content);
+//			entity.setNotebook(notebook);
 			pm.makePersistent(note);
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+		} finally {
+			if (pm.currentTransaction().isActive())
+				pm.currentTransaction().rollback();
+			pm.close();
+		}
+	}
+	
+	@Override
+	public void moveNoteTo(InfoNote note, Notebook notebook){
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		String title = note.getTitle();
+		String content = note.getContent();
+		try {
+			pm.currentTransaction().begin();
+			InfoNote entity = new InfoNote(notebook,title,content);
+			pm.deletePersistent(note);
+			pm.makePersistent(entity);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {

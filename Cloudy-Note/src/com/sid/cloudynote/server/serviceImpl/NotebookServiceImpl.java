@@ -85,7 +85,7 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	@SuppressWarnings("unchecked")
 	public List<Notebook> getPaginationData(String filter,
 			String ordering, long firstResult, long maxResult) {
-		List<Notebook> result = null;
+		List<Notebook> result = new ArrayList<Notebook>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();

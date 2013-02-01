@@ -15,6 +15,7 @@ import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.view.EditableNoteView;
 import com.sid.cloudynote.client.view.interfaces.INoteView;
 import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.Notebook;
 
 public class NotePresenter extends SimplePanel implements Presenter,
 		INoteView.Presenter {
@@ -26,6 +27,7 @@ public class NotePresenter extends SimplePanel implements Presenter,
 	public boolean isNewNote() {
 		return isNewNote;
 	}
+
 	@Override
 	public void setNewNote(boolean isNewNote) {
 		this.isNewNote = isNewNote;
@@ -66,8 +68,13 @@ public class NotePresenter extends SimplePanel implements Presenter,
 			InfoNote note = DataManager.getCurrentNote();
 			note.setTitle(panel.getInfoNote().getTitle());
 			note.setContent(panel.getInfoNote().getContent());
-			note.setNotebook(panel.getInfoNote().getNotebook());
-			updateNote(note);
+			// note.setNotebook(panel.getInfoNote().getNotebook());
+			if (!note.getNotebook().getKey()
+					.equals(panel.getInfoNote().getNotebook().getKey())) {
+				moveNote(note, panel.getInfoNote().getNotebook());
+			} else {
+				updateNote(note);
+			}
 		}
 		eventBus.fireEvent(new EditNoteDoneEvent());
 	}
@@ -106,6 +113,26 @@ public class NotePresenter extends SimplePanel implements Presenter,
 			}
 		};
 		service.add(note, callback);
+	}
+
+	public void moveNote(InfoNote note, Notebook notebook) {
+		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
+				.create(InfoNoteService.class);
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("update note failed");
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				eventBus.fireEvent(new NoteChangedEvent(DataManager
+						.getCurrentNotebook()));
+				GWT.log("Note updated successfully!");
+			}
+		};
+		service.moveNoteTo(note, notebook, callback);
 	}
 
 	@Override
