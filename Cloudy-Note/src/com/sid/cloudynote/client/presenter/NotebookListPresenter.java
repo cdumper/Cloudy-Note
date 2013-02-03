@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.client.view.NotebookListView;
@@ -94,7 +95,7 @@ public class NotebookListPresenter implements Presenter,
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Default notebook created...");
-				loadNotebookList();
+				eventBus.fireEvent(new NotebookChangedEvent());
 			}
 		};
 		service.add(new Notebook("Default"), callback);

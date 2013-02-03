@@ -25,7 +25,8 @@ public class NonEditableNoteView extends Composite {
 	private static NonEditPanelUiBinder uiBinder = GWT
 			.create(NonEditPanelUiBinder.class);
 
-	interface NonEditPanelUiBinder extends UiBinder<Widget, NonEditableNoteView> {
+	interface NonEditPanelUiBinder extends
+			UiBinder<Widget, NonEditableNoteView> {
 	}
 
 	public NonEditableNoteView() {
@@ -50,10 +51,12 @@ public class NonEditableNoteView extends Composite {
 	public NonEditableNoteView(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-	
+
 	public void presentNote(InfoNote note) {
-		title.setText(note.getTitle());
-		notebook.setText(DataManager.getCurrentNotebook().getName());
-		content.setText(note.getContent());
+		if (note != null) {
+			title.setText(note.getTitle());
+			notebook.setText(DataManager.getCurrentNotebook().getName());
+			content.setText(note.getContent());
+		}
 	}
 }

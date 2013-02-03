@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
+import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.view.NoteListView;
@@ -67,6 +68,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 					// eventBus.fireEvent(new EditNoteEvent());
 				} else {
 //					GWT.log("No notes exist!");
+					eventBus.fireEvent(new NoNotesExistEvent());
 				}
 				view.setNoteList(result);
 			}
@@ -76,7 +78,6 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void go(HasWidgets container) {
-		// this.loadNoteList(DataManager.getCurrentNotebook());
 		container.clear();
 		container.add(view.asWidget());
 	}

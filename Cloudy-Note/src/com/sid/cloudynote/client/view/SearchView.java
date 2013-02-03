@@ -11,9 +11,13 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.event.INewNoteHandler;
+import com.sid.cloudynote.client.event.INoNotesExistHandler;
+import com.sid.cloudynote.client.event.NewNoteEvent;
+import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.view.interfaces.ISearchView;
 
-public class SearchView extends ResizeComposite implements ISearchView{
+public class SearchView extends ResizeComposite implements ISearchView, INoNotesExistHandler, INewNoteHandler{
 	@UiTemplate("SearchView.ui.xml")
 	interface SearchViewUiBinder extends UiBinder<Widget, SearchView> {
 	}
@@ -70,5 +74,16 @@ public class SearchView extends ResizeComposite implements ISearchView{
 	@Override
 	public Widget asWidget(){
 		return this.content;
+	}
+
+	@Override
+	public void onNotesExistEvent(NoNotesExistEvent event) {
+		this.edit.setVisible(false);
+	}
+
+	@Override
+	public void onNewNote(NewNoteEvent event) {
+		this.edit.setVisible(true);
+		this.edit.setText("Done");
 	}
 }
