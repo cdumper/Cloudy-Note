@@ -1,6 +1,7 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -17,6 +18,7 @@ import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
+import com.sid.cloudynote.shared.NoteProperty;
 import com.sid.cloudynote.shared.Notebook;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
@@ -44,6 +46,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			// notebook.getNotes().add(note);
 			// InfoNote entity = pm.getObjectById(InfoNote.class,
 			// note.getKey());
+			NoteProperty property = new NoteProperty(new Date(),new Date());
+			note.setProperty(property);
 			note.setUser(getUser());
 			pm.makePersistent(note);
 			pm.currentTransaction().commit();
@@ -261,10 +265,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	public List<InfoNote> getNotes(Notebook notebook)
 			throws NotLoggedInException {
 		checkLoggedIn();
-		List<InfoNote> result = null;
+		List<InfoNote> result = new ArrayList<InfoNote>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
-			// pm.currentTransaction().begin();
 			Query q = pm.newQuery(InfoNote.class);
 			q.setFilter("user == userParam && notebook == notebookParam");
 			q.declareParameters(User.class.getName() + " userParam,"+Key.class.getName() + " notebookParam");
@@ -274,8 +277,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				result = (List<InfoNote>) obj;
 				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
 				result.size();
-			} else {
-				result = new ArrayList<InfoNote>();
 			}
 		} catch (Exception e) {
 		} finally {

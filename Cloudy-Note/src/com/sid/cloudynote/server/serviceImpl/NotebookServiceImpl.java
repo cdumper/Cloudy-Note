@@ -202,7 +202,7 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<Notebook> getNotebooks() throws NotLoggedInException {
 		checkLoggedIn();
-		List<Notebook> result = null;
+		List<Notebook> result = new ArrayList<Notebook>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(Notebook.class);
@@ -214,8 +214,6 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 				result = (List<Notebook>) obj;
 				result = new ArrayList<Notebook>(pm.detachCopyAll(result));
 				result.size();
-			} else {
-				result = new ArrayList<Notebook>();
 			}
 		} catch (Exception e) {
 		} finally {

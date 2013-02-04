@@ -111,6 +111,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 	@Override
 	public void onNoteSelectionChanged(NoteSelectionChangedEvent event) {
 		presenter.stopEdit();
-//		presenter.presentNote();
+		DataManager.setCurrentNote(event.getClickedItem());
+		presenter.presentNote();
 	}
 }

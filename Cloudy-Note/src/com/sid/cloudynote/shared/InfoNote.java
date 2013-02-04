@@ -3,6 +3,7 @@ package com.sid.cloudynote.shared;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -26,7 +27,7 @@ public class InfoNote implements Serializable {
 	private String content;
 	@Persistent(defaultFetchGroup="true")
 	private Notebook notebook;
-	@Persistent
+	@Persistent(defaultFetchGroup="true")
 	private NoteProperty property;
 	@Persistent
 	private List<Attachment> attachments;

@@ -65,6 +65,10 @@ public class EditableNoteView extends ResizeComposite {
 		return new InfoNote(getSelectedNotebook(), title.getText(),
 				ckeditor.getData());
 	}
+	
+	private String removeHTMLTags(String data){
+		return data.replaceAll("\\<.*?>","");
+	}
 
 	public void setSelectedNotebook(Key key) {
 		for (int i = 0; i < notebookList.size(); i++) {

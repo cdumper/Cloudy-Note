@@ -121,7 +121,7 @@ public class NoteListView extends ResizeComposite implements
 					public void onSelectionChange(SelectionChangeEvent event) {
 						InfoNote note = selectionModel.getSelectedObject();
 						presenter.onNoteItemSelected(note);
-						DataManager.setCurrentNote(note.getKey());
+//						DataManager.setCurrentNote(note.getKey());
 					}
 				});
 		dataProvider.addDataDisplay(cellList);

@@ -16,6 +16,7 @@
 	<g:VerticalPanel styleName="{style.editPanel}">
 		<g:Label ui:field="title" text='title'/>
 		<g:Label ui:field="notebook" text='notebook'/>
+		<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:'/>
 		<g:TextArea ui:field="content" text='content'/>
 	</g:VerticalPanel>
 </ui:UiBinder> 

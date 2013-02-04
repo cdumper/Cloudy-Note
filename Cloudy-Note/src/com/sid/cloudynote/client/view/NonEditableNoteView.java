@@ -37,6 +37,7 @@ public class NonEditableNoteView extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.note = note;
 		this.title.setText(note.getTitle());
+		this.datetime.setText("Created Time: "+note.getProperty().getCreatedTime()+"	Last Modified Time: "+note.getProperty().getLastModifiOedTime());
 		this.notebook.setText(note.getNotebook().getName());
 		this.content.setText(note.getContent());
 	}
@@ -45,6 +46,8 @@ public class NonEditableNoteView extends Composite {
 	Label title;
 	@UiField
 	Label notebook;
+	@UiField
+	Label datetime;
 	@UiField
 	TextArea content;
 
@@ -55,6 +58,7 @@ public class NonEditableNoteView extends Composite {
 	public void presentNote(InfoNote note) {
 		if (note != null) {
 			title.setText(note.getTitle());
+			datetime.setText("Created Time: "+note.getProperty().getCreatedTime()+"	Last Modified Time: "+note.getProperty().getLastModifiOedTime());
 			notebook.setText(DataManager.getCurrentNotebook().getName());
 			content.setText(note.getContent());
 		}
