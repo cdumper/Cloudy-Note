@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
+import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.view.NoteListView;
@@ -31,8 +32,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void onNoteItemSelected(InfoNote clickedItem) {
-		// TODO on note item selected
-		eventBus.fireEvent(new EditNoteDoneEvent());
+		eventBus.fireEvent(new NoteSelectionChangedEvent());
 	}
 
 	@Override
@@ -64,10 +64,11 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 					// if (notebook.getKey() !=
 					// DataManager.getCurrentNotebookKey() ||
 					// DataManager.getCurrentNoteKey() == null)
+//					eventBus.fireEvent(new EditNoteDoneEvent());
+					eventBus.fireEvent(new NoteSelectionChangedEvent());
 					DataManager.setCurrentNote(result.get(0).getKey());
-					// eventBus.fireEvent(new EditNoteEvent());
 				} else {
-//					GWT.log("No notes exist!");
+					// GWT.log("No notes exist!");
 					eventBus.fireEvent(new NoNotesExistEvent());
 				}
 				view.setNoteList(result);

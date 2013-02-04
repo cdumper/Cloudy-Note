@@ -61,19 +61,21 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 	@Override
 	public void saveNote() {
-		EditableNoteView panel = (EditableNoteView) view;
-		if (isNewNote)
-			createNewNote(panel.getInfoNote());
-		else {
-			InfoNote note = DataManager.getCurrentNote();
-			note.setTitle(panel.getInfoNote().getTitle());
-			note.setContent(panel.getInfoNote().getContent());
-			// note.setNotebook(panel.getInfoNote().getNotebook());
-			if (!note.getNotebook().getKey()
-					.equals(panel.getInfoNote().getNotebook().getKey())) {
-				moveNote(note, panel.getInfoNote().getNotebook());
-			} else {
-				updateNote(note);
+		if (isEditing) {
+			EditableNoteView panel = (EditableNoteView) view;
+			if (isNewNote)
+				createNewNote(panel.getInfoNote());
+			else {
+				InfoNote note = DataManager.getCurrentNote();
+				note.setTitle(panel.getInfoNote().getTitle());
+				note.setContent(panel.getInfoNote().getContent());
+				// note.setNotebook(panel.getInfoNote().getNotebook());
+				if (!note.getNotebook().getKey()
+						.equals(panel.getInfoNote().getNotebook().getKey())) {
+					moveNote(note, panel.getInfoNote().getNotebook());
+				} else {
+					updateNote(note);
+				}
 			}
 		}
 		eventBus.fireEvent(new EditNoteDoneEvent());
@@ -82,6 +84,15 @@ public class NotePresenter extends SimplePanel implements Presenter,
 	@Override
 	public void stopEdit() {
 		saveNote();
+	}
+
+	// this function may be called when note selection changed
+	@Override
+	// TODO presenteNote in notePresenter
+	public void presentNote() {
+		if (isEditing) {
+		}
+		eventBus.fireEvent(new EditNoteDoneEvent());
 	}
 
 	@Override
@@ -94,7 +105,6 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		this.view = view;
 	}
 
-	@Override
 	public void createNewNote(InfoNote note) {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
@@ -135,7 +145,6 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		service.moveNoteTo(note, notebook, callback);
 	}
 
-	@Override
 	public void updateNote(InfoNote note) {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);

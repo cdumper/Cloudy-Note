@@ -15,12 +15,15 @@ import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
 import com.sid.cloudynote.client.event.IEditNoteHandler;
 import com.sid.cloudynote.client.event.INewNoteHandler;
 import com.sid.cloudynote.client.event.INoNotesExistHandler;
+import com.sid.cloudynote.client.event.INoteSelectionChangedHandler;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
+import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.view.interfaces.INoteView;
 
 public class NoteView extends ResizeComposite implements INoteView,
-		INewNoteHandler, IEditNoteHandler, IEditNoteDoneHandler, IEditDoneButtonClickedHandler, INoNotesExistHandler {
+		INewNoteHandler, IEditNoteHandler, IEditNoteDoneHandler,
+		IEditDoneButtonClickedHandler, INoNotesExistHandler, INoteSelectionChangedHandler{
 	@UiTemplate("NoteView.ui.xml")
 	interface NoteViewUiBinder extends UiBinder<Widget, NoteView> {
 	}
@@ -64,7 +67,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 		presenter.setView(editView);
 		presenter.setEditing(true);
 	}
-	
+
 	@Override
 	public void onEditNoteDone(EditNoteDoneEvent event) {
 		NonEditableNoteView nonEditView = new NonEditableNoteView();
@@ -102,7 +105,12 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	@Override
 	public void onNotesExistEvent(NoNotesExistEvent event) {
-		// TODO Auto-generated method stub
 		this.container.clear();
+	}
+
+	@Override
+	public void onNoteSelectionChanged(NoteSelectionChangedEvent event) {
+		presenter.stopEdit();
+//		presenter.presentNote();
 	}
 }

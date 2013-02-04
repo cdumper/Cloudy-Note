@@ -31,8 +31,10 @@ public class NotebookListPresenter implements Presenter,
 
 	@Override
 	public void onNotebookItemSelected(Notebook clickedItem) {
-		eventBus.fireEvent(new NoteChangedEvent(clickedItem));
-		DataManager.setCurrentNotebook(clickedItem.getKey());
+		if (clickedItem.getKey() != DataManager.getCurrentNotebookKey()) {
+			eventBus.fireEvent(new NoteChangedEvent(clickedItem));
+			DataManager.setCurrentNotebook(clickedItem.getKey());
+		} 
 	}
 
 	@Override

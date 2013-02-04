@@ -10,6 +10,7 @@ import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 
@@ -24,15 +25,17 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	}
 
 	private void bind() {
-		eventBus.addHandler(NotebookChangedEvent.TYPE, cn.notebookListView);
-		eventBus.addHandler(NoteChangedEvent.TYPE, cn.noteListView);
-		eventBus.addHandler(EditNoteEvent.TYPE, cn.noteView);
 		eventBus.addHandler(NewNoteEvent.TYPE, cn.noteView);
-		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.noteView);
+		eventBus.addHandler(NewNoteEvent.TYPE, cn.searchView);
+		eventBus.addHandler(EditNoteEvent.TYPE, cn.noteView);
+		eventBus.addHandler(NoteChangedEvent.TYPE, cn.noteListView);
+		eventBus.addHandler(NotebookChangedEvent.TYPE, cn.notebookListView);
 		eventBus.addHandler(EditNoteDoneEvent.TYPE, cn.noteView);
+		eventBus.addHandler(EditNoteDoneEvent.TYPE, cn.searchView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.noteView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.searchView);
-		eventBus.addHandler(NewNoteEvent.TYPE, cn.searchView);
+		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.noteView);
+		eventBus.addHandler(NoteSelectionChangedEvent.TYPE, cn.noteView);
 	}
 
 	@Override

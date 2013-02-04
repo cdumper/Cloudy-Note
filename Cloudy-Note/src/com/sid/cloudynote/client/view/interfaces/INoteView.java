@@ -14,6 +14,7 @@ public interface INoteView {
 		void createNewNote(InfoNote note);
 		void updateNote(InfoNote note);
 		void setNewNote(boolean b);
+		void presentNote();
 	}
 	
 	void setPresenter(Presenter presenter);
