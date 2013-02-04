@@ -81,7 +81,7 @@ public class NotebookListPresenter implements Presenter,
 				}
 			}
 		};
-		service.getPaginationData(callback);
+		service.getNotebooks(callback);
 	}
 
 	private void createDefaultNotebook() {

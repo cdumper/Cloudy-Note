@@ -30,4 +30,6 @@ public interface NotebookServiceAsync {
 
 	void modify(Notebook entity, AsyncCallback<Void> callback);
 
+	void getNotebooks(AsyncCallback<List<Notebook>> callback);
+
 }

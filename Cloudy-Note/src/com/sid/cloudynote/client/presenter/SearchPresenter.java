@@ -42,10 +42,8 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 
 	@Override
 	public void onNewNoteButtonClicked() {
-		// TODO NewNoteEvent : when new note button clicked
 		eventBus.fireEvent(new NewNoteEvent());
 		view.getEdit().setText("Done");
-		// isNewNote = true;
 	}
 
 	@Override

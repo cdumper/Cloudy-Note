@@ -12,6 +12,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
 public class Notebook implements Serializable{
@@ -19,14 +20,12 @@ public class Notebook implements Serializable{
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
 	@Persistent
+	private User user;
+	@Persistent
 	private String name;
 	@Persistent(mappedBy="notebook")
     @Element(dependent = "true")
 	private List<InfoNote> notes;
-	
-	public void setKey(Key key) {
-		this.key = key;
-	}
 
 	public Notebook() {
 		super();
@@ -42,6 +41,18 @@ public class Notebook implements Serializable{
 		return key;
 	}
 	
+	public void setKey(Key key) {
+		this.key = key;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public String getName() {
 		return name;
 	}

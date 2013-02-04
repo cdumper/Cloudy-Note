@@ -7,11 +7,16 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
@@ -23,9 +28,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	/**
 	 * 添加实体
+	 * 
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public void add(InfoNote note) {
+	public void add(InfoNote note) throws NotLoggedInException {
+		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
@@ -36,6 +44,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			// notebook.getNotes().add(note);
 			// InfoNote entity = pm.getObjectById(InfoNote.class,
 			// note.getKey());
+			note.setUser(getUser());
 			pm.makePersistent(note);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
@@ -50,12 +59,20 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	/**
 	 * 删除实体
+	 * 
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public void delete(InfoNote entity) {
+	public void delete(InfoNote entity) throws NotLoggedInException {
+		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
-			pm.deletePersistent(entity);
+			// check the owner of the note is the current user
+			if (!entity.getUser().equals(getUser())) {
+				GWT.log("You don't have the access to delete since you're not the ower of the note");
+			} else {
+				pm.deletePersistent(entity);
+			}
 		} catch (Exception e) {
 		} finally {
 			pm.close();
@@ -64,23 +81,30 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	/**
 	 * 更新实体
+	 * 
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public void modify(InfoNote note) {
+	public void modify(InfoNote note) throws NotLoggedInException {
+		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-//		String title = note.getTitle();
-//		Notebook notebook = note.getNotebook();
-//		String content = note.getContent();
-		System.out.println(note.getNotebook().getKey());
+		// String title = note.getTitle();
+		// Notebook notebook = note.getNotebook();
+		// String content = note.getContent();
 		try {
 			// 更新数据，直接调用makePersistent()方法的，要求实体类注解了如下
 			// @PersistenceCapable(detachable="true")
 			pm.currentTransaction().begin();
-//			InfoNote entity = pm.getObjectById(InfoNote.class, note.getKey());
-//			entity.setTitle(title);
-//			entity.setContent(content);
-//			entity.setNotebook(notebook);
-			pm.makePersistent(note);
+			// InfoNote entity = pm.getObjectById(InfoNote.class,
+			// note.getKey());
+			// entity.setTitle(title);
+			// entity.setContent(content);
+			// entity.setNotebook(notebook);
+			if (!note.getUser().equals(getUser())) {
+				GWT.log("You don't have the access to delete since you're not the ower of the note");
+			} else {
+				pm.makePersistent(note);
+			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {
@@ -89,17 +113,23 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.close();
 		}
 	}
-	
+
 	@Override
-	public void moveNoteTo(InfoNote note, Notebook notebook){
+	public void moveNoteTo(InfoNote note, Notebook notebook)
+			throws NotLoggedInException {
+		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		String title = note.getTitle();
 		String content = note.getContent();
 		try {
 			pm.currentTransaction().begin();
-			InfoNote entity = new InfoNote(notebook,title,content);
-			pm.deletePersistent(note);
-			pm.makePersistent(entity);
+			if (!note.getUser().equals(getUser())) {
+				GWT.log("You don't have the access to delete since you're not the ower of the note");
+			} else {
+				InfoNote entity = new InfoNote(notebook, title, content);
+				pm.deletePersistent(note);
+				pm.makePersistent(entity);
+			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {
@@ -119,11 +149,13 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @param maxResult
 	 *            检索结果的最大数量
 	 * @return 查询处理好的数据
+	 * @throws NotLoggedInException
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<InfoNote> getPaginationData(String filter, String ordering,
-			long firstResult, long maxResult) {
+			long firstResult, long maxResult) throws NotLoggedInException {
+		checkLoggedIn();
 		List<InfoNote> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
@@ -158,9 +190,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @param odering
 	 *            查询后排序条件
 	 * @return 查询处理好的数据
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public List<InfoNote> getPaginationData(String filter, String ordering) {
+	public List<InfoNote> getPaginationData(String filter, String ordering)
+			throws NotLoggedInException {
+		checkLoggedIn();
 		long min = -1;
 		return getPaginationData(filter, ordering, min, min);
 	}
@@ -174,10 +209,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @param maxResult
 	 *            检索结果的最大数量
 	 * @return 查询处理好的数据
+	 * @throws NotLoggedInException
 	 */
 	@Override
 	public List<InfoNote> getPaginationData(String filter, long firstResult,
-			long maxResult) {
+			long maxResult) throws NotLoggedInException {
+		checkLoggedIn();
 		return getPaginationData(filter, null, firstResult, maxResult);
 	}
 
@@ -188,9 +225,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @param maxResult
 	 *            检索结果的最大数量
 	 * @return 查询处理好的数据
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public List<InfoNote> getPaginationData(long firstResult, long maxResult) {
+	public List<InfoNote> getPaginationData(long firstResult, long maxResult)
+			throws NotLoggedInException {
+		checkLoggedIn();
 		return getPaginationData(null, null, firstResult, maxResult);
 	}
 
@@ -198,31 +238,38 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @param filter
 	 *            查询过滤条件
 	 * @return 查询处理好的数据
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public List<InfoNote> getPaginationData(String filter) {
+	public List<InfoNote> getPaginationData(String filter)
+			throws NotLoggedInException {
+		checkLoggedIn();
 		return getPaginationData(filter, null);
 	}
 
 	/**
 	 * @return 查询处理好的数据
+	 * @throws NotLoggedInException
 	 */
 	@Override
-	public List<InfoNote> getPaginationData() {
+	public List<InfoNote> getPaginationData() throws NotLoggedInException {
+		checkLoggedIn();
 		return getPaginationData(null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<InfoNote> getNotes(Notebook notebook) {
+	public List<InfoNote> getNotes(Notebook notebook)
+			throws NotLoggedInException {
+		checkLoggedIn();
 		List<InfoNote> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			// pm.currentTransaction().begin();
 			Query q = pm.newQuery(InfoNote.class);
-			q.setFilter("notebook == notebookParam");
-			q.declareParameters(Key.class.getName() + " notebookParam");
+			q.setFilter("user == userParam && notebook == notebookParam");
+			q.declareParameters(User.class.getName() + " userParam,"+Key.class.getName() + " notebookParam");
 
-			Object obj = q.execute(notebook.getKey());
+			Object obj = q.execute(getUser(),notebook.getKey());
 			if (obj != null) {
 				result = (List<InfoNote>) obj;
 				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
@@ -235,5 +282,16 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.close();
 		}
 		return result;
+	}
+
+	private void checkLoggedIn() throws NotLoggedInException {
+		if (getUser() == null) {
+			throw new NotLoggedInException("Not logged in.");
+		}
+	}
+
+	private User getUser() {
+		UserService userService = UserServiceFactory.getUserService();
+		return userService.getCurrentUser();
 	}
 }
