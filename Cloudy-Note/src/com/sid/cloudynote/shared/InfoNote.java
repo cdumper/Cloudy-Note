@@ -10,6 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
 // public class InfoNote extends Note{
@@ -17,6 +18,8 @@ public class InfoNote implements Serializable {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
+	@Persistent
+	User user;
 	@Persistent
 	private String title;
 	@Persistent
@@ -38,6 +41,7 @@ public class InfoNote implements Serializable {
 		this.content = content;
 		this.property = null;
 		this.attachments = null;
+		this.user = null;
 	}
 
 	public InfoNote(Notebook notebook, String title, String content,
@@ -71,6 +75,14 @@ public class InfoNote implements Serializable {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public void setAttachments(List<Attachment> attachments) {

@@ -14,6 +14,7 @@ import com.sid.cloudynote.shared.InfoNote;
 public class GetNotesListServiceImpl extends RemoteServiceServlet implements GetNotesListService{
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<InfoNote> getNoteList() {
 		List<InfoNote> execute = null;

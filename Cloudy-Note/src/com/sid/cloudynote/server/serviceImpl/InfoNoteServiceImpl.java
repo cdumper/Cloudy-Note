@@ -212,6 +212,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		return getPaginationData(null);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<InfoNote> getNotes(Notebook notebook) {
 		List<InfoNote> result = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
