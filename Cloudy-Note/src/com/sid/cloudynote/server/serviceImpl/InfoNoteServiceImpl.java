@@ -125,12 +125,15 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		String title = note.getTitle();
 		String content = note.getContent();
+		NoteProperty property = new NoteProperty(note.getProperty().getCreatedTime(),new Date());
 		try {
 			pm.currentTransaction().begin();
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
 				InfoNote entity = new InfoNote(notebook, title, content);
+				entity.setProperty(property);
+				entity.setUser(getUser());
 				pm.deletePersistent(note);
 				pm.makePersistent(entity);
 			}
