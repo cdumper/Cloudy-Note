@@ -84,7 +84,7 @@ public class NotebookListView extends ResizeComposite implements
 		images = GWT.create(Images.class);
 
 		allNotes = new NotebookTreeItem(new TreeRootItem(images.home(),
-				"All Notes"));
+				"Notebooks"));
 		allNotes.setState(true);
 		noteBooksTree.addItem(allNotes);
 

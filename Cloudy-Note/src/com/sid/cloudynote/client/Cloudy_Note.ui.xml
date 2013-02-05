@@ -28,7 +28,7 @@
 					<div class='{style.logo}' />
 					<div class="{style.statusDiv}">
 						<div>
-							<b>Welcome back, foo@example.com</b>
+							<g:Label ui:field="user" text="Welcome back, foo@example.com"/>
 						</div>
 
 						<div class='{style.linksDiv}'>

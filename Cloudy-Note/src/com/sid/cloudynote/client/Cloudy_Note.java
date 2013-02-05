@@ -57,6 +57,8 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 	@UiField
 	NoteView noteView;
 	@UiField
+	Label user;
+	@UiField
 	Anchor aboutLink;
 	@UiField
 	Anchor signOutLink;
@@ -106,7 +108,8 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 				.ensureInjected();
 		dockLayoutPanel = binder.createAndBindUi(this);
-		signOutLink.setHref(loginInfo.getLogoutUrl());
+		user.setText(loginInfo.getEmailAddress());
+		signOutLink.setHref("Welcome back, "+loginInfo.getLogoutUrl());
 
 		eventBus = new HandlerManager(null);
 		appViewer = new AppController(this, eventBus);

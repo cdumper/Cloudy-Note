@@ -78,10 +78,10 @@ public class NoteListView extends ResizeComposite implements
 		}
 
 		@Override
-		public void render(Context context, InfoNote InfoNote,
+		public void render(Context context, InfoNote note,
 				SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
-			if (InfoNote == null) {
+			if (note == null) {
 				return;
 			}
 
@@ -94,9 +94,9 @@ public class NoteListView extends ResizeComposite implements
 
 			// Add the name and address.
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
-			sb.appendEscaped(InfoNote.getTitle());
+			sb.appendEscaped(note.getTitle());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(InfoNote.getContent());
+			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>",""));
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}

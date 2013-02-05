@@ -60,7 +60,9 @@ public class NonEditableNoteView extends Composite {
 			title.setText(note.getTitle());
 			datetime.setText("Created Time: "+note.getProperty().getCreatedTime()+"	Last Modified Time: "+note.getProperty().getLastModifiOedTime());
 			notebook.setText(DataManager.getCurrentNotebook().getName());
-			content.setText(note.getContent());
+			content.setText(note.getContent().replaceAll("\\<.*?>",""));
+			content.setWidth("90%");
+			content.setHeight("100px");
 		}
 	}
 }
