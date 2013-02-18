@@ -3,6 +3,7 @@ package com.sid.cloudynote.server.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -39,14 +40,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			// Notebook notebook = pm.getObjectById(Notebook.class,
-			// note.getNotebook().getKey());
-			// Notebook notebook = note.getNotebook();
-			// System.out.println("trying to add note into notebook:"+notebook.getKey());
-			// notebook.getNotes().add(note);
-			// InfoNote entity = pm.getObjectById(InfoNote.class,
-			// note.getKey());
-			NoteProperty property = new NoteProperty(new Date(),new Date());
+			NoteProperty property = new NoteProperty(new Date(), new Date());
 			note.setProperty(property);
 			note.setUser(getUser());
 			pm.makePersistent(note);
@@ -92,18 +86,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	public void modify(InfoNote note) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		// String title = note.getTitle();
-		// Notebook notebook = note.getNotebook();
-		// String content = note.getContent();
 		try {
-			// 更新数据，直接调用makePersistent()方法的，要求实体类注解了如下
-			// @PersistenceCapable(detachable="true")
 			pm.currentTransaction().begin();
-			// InfoNote entity = pm.getObjectById(InfoNote.class,
-			// note.getKey());
-			// entity.setTitle(title);
-			// entity.setContent(content);
-			// entity.setNotebook(notebook);
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
@@ -125,7 +109,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		String title = note.getTitle();
 		String content = note.getContent();
-		NoteProperty property = new NoteProperty(note.getProperty().getCreatedTime(),new Date());
+		NoteProperty property = new NoteProperty(note.getProperty()
+				.getCreatedTime(), new Date());
 		try {
 			pm.currentTransaction().begin();
 			if (!note.getUser().equals(getUser())) {
@@ -273,9 +258,10 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		try {
 			Query q = pm.newQuery(InfoNote.class);
 			q.setFilter("user == userParam && notebook == notebookParam");
-			q.declareParameters(User.class.getName() + " userParam,"+Key.class.getName() + " notebookParam");
+			q.declareParameters(User.class.getName() + " userParam,"
+					+ Key.class.getName() + " notebookParam");
 
-			Object obj = q.execute(getUser(),notebook.getKey());
+			Object obj = q.execute(getUser(), notebook.getKey());
 			if (obj != null) {
 				result = (List<InfoNote>) obj;
 				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));

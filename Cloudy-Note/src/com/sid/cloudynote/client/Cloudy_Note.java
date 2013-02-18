@@ -2,6 +2,8 @@ package com.sid.cloudynote.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -62,7 +64,6 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 	Anchor aboutLink;
 	@UiField
 	Anchor signOutLink;
-	
 
 	private HandlerManager eventBus;
 	private AppController appViewer;
@@ -79,37 +80,38 @@ public class Cloudy_Note implements EntryPoint, Presenter {
 	 */
 	public void onModuleLoad() {
 		// Check login status using login service.
-	    LoginServiceAsync loginService = GWT.create(LoginService.class);
-	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-	      public void onFailure(Throwable error) {
-	      }
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(),
+				new AsyncCallback<LoginInfo>() {
+					public void onFailure(Throwable error) {
+					}
 
-	      public void onSuccess(LoginInfo result) {
-	        loginInfo = result;
-	        if(loginInfo.isLoggedIn()) {
-	          loadApp();
-	        } else {
-	          loadLogin();
-	        }
-	      }
-	    });
+					public void onSuccess(LoginInfo result) {
+						loginInfo = result;
+						if (loginInfo.isLoggedIn()) {
+							loadApp();
+						} else {
+							loadLogin();
+						}
+					}
+				});
 	}
-	
+
 	private void loadLogin() {
-	    // Assemble login panel.
-	    signInLink.setHref(loginInfo.getLoginUrl());
-	    loginPanel.add(loginLabel);
-	    loginPanel.add(signInLink);
-	    RootLayoutPanel.get().add(loginPanel);
-	  }
+		// Assemble login panel.
+		signInLink.setHref(loginInfo.getLoginUrl());
+		loginPanel.add(loginLabel);
+		loginPanel.add(signInLink);
+		RootLayoutPanel.get().add(loginPanel);
+	}
 
 	private void loadApp() {
 		// initate ui components
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 				.ensureInjected();
 		dockLayoutPanel = binder.createAndBindUi(this);
-		user.setText(loginInfo.getEmailAddress());
-		signOutLink.setHref("Welcome back, "+loginInfo.getLogoutUrl());
+		user.setText("Welcome back: "+loginInfo.getEmailAddress());
+		signOutLink.setHref(loginInfo.getLogoutUrl());
 
 		eventBus = new HandlerManager(null);
 		appViewer = new AppController(this, eventBus);

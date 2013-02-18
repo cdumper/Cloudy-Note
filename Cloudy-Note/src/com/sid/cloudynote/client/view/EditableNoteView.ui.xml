@@ -19,7 +19,7 @@
 	<g:DockLayoutPanel styleName="{style.editPanel}"
 		unit="PCT">
 		<g:north size="20">
-			<g:VerticalPanel>
+			<g:VerticalPanel ui:field="topPanel">
 				<g:TextBox ui:field="title"></g:TextBox>
 				<g:ListBox ui:field="notebook"></g:ListBox>
 				<g:Anchor ui:field="attach">Attach files</g:Anchor>

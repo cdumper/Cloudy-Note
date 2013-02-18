@@ -70,13 +70,13 @@ public class TreeRootItem extends Composite{
 
 			@Override
 			public void onFailure(Throwable caught) {
-				System.out.println("falied! getNotebooksList");
+				GWT.log("getNotebooksList falied!");
 				caught.printStackTrace();
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				System.out.println("Notebook added successfully!");
+				GWT.log("Notebook added successfully!");
 			}
 
 		};

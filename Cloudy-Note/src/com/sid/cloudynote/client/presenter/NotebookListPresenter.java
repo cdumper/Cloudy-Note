@@ -58,7 +58,7 @@ public class NotebookListPresenter implements Presenter,
 
 			@Override
 			public void onFailure(Throwable caught) {
-				System.out.println("falied! getNotebooksList");
+				GWT.log("getNotebooksList falied!");
 				caught.printStackTrace();
 			}
 

@@ -46,6 +46,36 @@
 		<servlet-name>loginService</servlet-name>
 		<url-pattern>/cloudy_note/login</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>uploadService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.UploadServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>uploadService</servlet-name>
+		<url-pattern>/cloudy_note/uploadService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>uploadServlet</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.UploadServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>uploadServlet</servlet-name>
+		<url-pattern>/cloudy_note/upload</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>serveServlet</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.ServeServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>serveServlet</servlet-name>
+		<url-pattern>/cloudy_note/serve</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>SystemServiceServlet</servlet-name>
@@ -60,5 +90,17 @@
 		<servlet-name>SystemServiceServlet</servlet-name>
 		<url-pattern>/_ah/spi/*</url-pattern>
 	</servlet-mapping>
+
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>*</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
 
 </web-app>

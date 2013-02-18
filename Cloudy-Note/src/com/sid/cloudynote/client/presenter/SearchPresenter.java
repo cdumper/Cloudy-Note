@@ -49,7 +49,6 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 	@Override
 	public void onSearchMade() {
 		// TODO SearchNoteEvent : when perform a search
-		System.out.println("SearchNoteEvent");
 		// eventBus.fireEvent(new SearchNoteEvent());
 	}
 

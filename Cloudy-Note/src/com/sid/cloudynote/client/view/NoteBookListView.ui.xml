@@ -8,6 +8,7 @@
 			border-right: 1px solid #999;
 			border-bottom: 1px solid #999;
 		}
+		
 		.stackHeader {
 			gwt-image: 'gradient';
 			cursor: pointer;
@@ -15,46 +16,26 @@
 			font-weight: bold;
 			color: #000;
 		}
-		
-		.outer {
-			background-color: #b4b6bc;
-			cursor: pointer;
-			text-shadow: rgba(255, 255, 255, 1) 0 1px 1px;
-			font-size: 1.2em;
-			font-weight: bold;
-			color: #000;
-			padding: .7em .5em 0 .6em;
-			border-top: 1px solid #888;
+	
+		.scrollable {
+			border: 1px solid #999; /*ccc*/
+			text-align: left;
 		}
-		
-		<!-- .notebooksPanel {
-			border-top: 1px solid #999;
-			border-left: 1px solid #999;
-			border-right: 1px solid #999;
-			border-bottom: 1px solid #999;
-			padding: 20px 40px 20px 10px;
-		} -->
-		
 	</ui:style>
 	<cn:Container ui:field="container" addStyleNames='{style.notebooksPanel}'>
-		<g:StackLayoutPanel ui:field="stackContent" unit='EM' height="100%">
-			<g:stack>
-				<g:header size='2.5'>
-					<div class='{style.stackHeader}'>
-						Notebooks
-					</div>
+		<g:VerticalPanel ui:field="content">
+			<g:DisclosurePanel>
+				<g:header>
+					Notebooks
 				</g:header>
-				<g:Tree ui:field="noteBooksTree" />
-			</g:stack>
-
-			<g:stack>
-				<g:header size='2.5'>
-					<div class='{style.stackHeader}'>
-						Tags
-					</div>
+				<cn:ShowMorePagerPanel addStyleNames='{style.scrollable}' ui:field="pagerPanel" />
+			</g:DisclosurePanel>
+			<g:DisclosurePanel>
+				<g:header>
+					Tags
 				</g:header>
 				<g:Tree ui:field="tagsTree" />
-			</g:stack>
-		</g:StackLayoutPanel>
+			</g:DisclosurePanel>
+		</g:VerticalPanel>
 	</cn:Container>
 </ui:UiBinder> 

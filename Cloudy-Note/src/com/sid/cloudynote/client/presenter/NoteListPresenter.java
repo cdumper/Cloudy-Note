@@ -37,7 +37,6 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	@Override
 	public void onNoteItemRightClicked(InfoNote clickedItem) {
 		// TODO show context menu to be able to delete note
-
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("falied! getNotesList");
+				GWT.log("getNotesList falied!");
 				caught.printStackTrace();
 			}
 
@@ -55,19 +54,9 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 			public void onSuccess(List<InfoNote> result) {
 				if (result != null && result.size() != 0) {
 					Map<Key, InfoNote> noteMap = new HashMap<Key, InfoNote>();
-					for (InfoNote note : result) {
-						noteMap.put(note.getKey(), note);
-					}
 					DataManager.setNotes(noteMap);
-					// everytime set the selected note to the first one
-					// if (notebook.getKey() !=
-					// DataManager.getCurrentNotebookKey() ||
-					// DataManager.getCurrentNoteKey() == null)
-//					eventBus.fireEvent(new EditNoteDoneEvent());
 					eventBus.fireEvent(new NoteSelectionChangedEvent(result.get(0)));
-//					DataManager.setCurrentNote(result.get(0).getKey());
 				} else {
-					// GWT.log("No notes exist!");
 					eventBus.fireEvent(new NoNotesExistEvent());
 				}
 				view.setNoteList(result);

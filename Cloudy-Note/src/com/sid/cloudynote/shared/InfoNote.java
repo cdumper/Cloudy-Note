@@ -1,9 +1,9 @@
 package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -25,12 +25,21 @@ public class InfoNote implements Serializable {
 	private String title;
 	@Persistent
 	private String content;
-	@Persistent(defaultFetchGroup="true")
+	@Persistent(defaultFetchGroup = "true")
 	private Notebook notebook;
-	@Persistent(defaultFetchGroup="true")
+	@Persistent(defaultFetchGroup = "true")
 	private NoteProperty property;
 	@Persistent
-	private List<Attachment> attachments;
+	private List<String> attachments;
+
+	public List<String> getAttachments() {
+		if(attachments==null) attachments = new ArrayList<String>();
+		return attachments;
+	}
+
+	public void setAttachments(List<String> attachments) {
+		this.attachments = attachments;
+	}
 
 	public InfoNote() {
 		super();
@@ -41,21 +50,17 @@ public class InfoNote implements Serializable {
 		this.title = title;
 		this.content = content;
 		this.property = null;
-		this.attachments = null;
+		this.attachments = new ArrayList<String>();
 		this.user = null;
 	}
 
 	public InfoNote(Notebook notebook, String title, String content,
-			NoteProperty property, List<Attachment> attachments) {
+			NoteProperty property, List<String> attachments) {
 		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
 		this.property = property;
 		this.attachments = attachments;
-	}
-
-	public List<Attachment> getAttachments() {
-		return attachments;
 	}
 
 	public String getContent() {
@@ -84,10 +89,6 @@ public class InfoNote implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public void setAttachments(List<Attachment> attachments) {
-		this.attachments = attachments;
 	}
 
 	public void setContent(String content) {
