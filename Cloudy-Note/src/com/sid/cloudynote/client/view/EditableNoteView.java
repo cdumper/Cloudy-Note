@@ -1,18 +1,10 @@
 package com.sid.cloudynote.client.view;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.axeiya.gwtckeditor.client.CKEditor;
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,6 +26,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.service.BlobService;
+import com.sid.cloudynote.client.service.BlobServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.service.UploadService;
@@ -81,9 +75,7 @@ public class EditableNoteView extends ResizeComposite {
 			setSelectedNotebook(DataManager.getCurrentNotebookKey());
 			ckeditor.setData(note.getContent());
 			if (note.getAttachments() != null) {
-				for (String key : note.getAttachments()) {
-					this.addAttachmentLink(key);
-				}
+				presentAttachmentLinks(note.getAttachments());
 			}
 		}
 	}
@@ -182,13 +174,13 @@ public class EditableNoteView extends ResizeComposite {
 	}
 
 	private void addAttachment(String fileName, String key) {
-		updateNote(fileName, key);
+		addAttachmentToNote(fileName, key);
 	}
 
-	private void updateNote(final String fileName, final String key) {
+	private void addAttachmentToNote(final String fileName, final String key) {
 		InfoNote note = DataManager.getCurrentNote();
 		note.getAttachments().add(key);
-		
+
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
 		service.modify(note, new AsyncCallback<Void>() {
@@ -200,34 +192,34 @@ public class EditableNoteView extends ResizeComposite {
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("attachment added successfully");
-				addAttachmentLink(fileName, key);
+				presentAttachmentLink(fileName, key);
 			}
 		});
 	}
 
-	private void addAttachmentLink(String key) {
-		if (key == null)
-			key = "null";
-		Anchor file = new Anchor();
-//		TODO file.setText(fileName);
-//		getBlob(key);
-		file.setText("link");
-		file.setHref("/cloudy_note/serve?blob-key=" + key);
-		topPanel.add(file);
+	private void presentAttachmentLinks(final List<String> keys) {
+		BlobServiceAsync service = GWT.create(BlobService.class);
+		service.getBlobFileName(keys, new AsyncCallback<List<String>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("get blob file name failed!");
+			}
+
+			@Override
+			public void onSuccess(List<String> result) {
+				for (int i=0;i<result.size();i++) {
+					presentAttachmentLink(result.get(i),keys.get(i));
+				}
+			}
+		});
 	}
-	
-	private void addAttachmentLink(String fileName, String key) {
+
+	private void presentAttachmentLink(String fileName, String key) {
 		if (key == null)
 			key = "null";
 		Anchor file = new Anchor();
 		file.setText(fileName);
 		file.setHref("/cloudy_note/serve?blob-key=" + key);
 		topPanel.add(file);
-	}
-	
-	public void getBlob(String key) {
-		BlobstoreService blobstoreService = BlobstoreServiceFactory
-				.getBlobstoreService();
-		BlobKey blobKey = new BlobKey(key);
 	}
 }

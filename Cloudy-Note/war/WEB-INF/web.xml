@@ -58,6 +58,16 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>blobService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.BlobServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>blobService</servlet-name>
+		<url-pattern>/cloudy_note/blobService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>uploadServlet</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.UploadServlet</servlet-class>
 	</servlet>
