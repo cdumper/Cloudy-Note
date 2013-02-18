@@ -9,26 +9,19 @@
 			border-bottom: 1px solid #999;
 		}
 		
-		.stackHeader {
-			gwt-image: 'gradient';
-			cursor: pointer;
-			font-size: 1.0em;
-			font-weight: bold;
-			color: #000;
-		}
-	
 		.scrollable {
 			border: 1px solid #999; /*ccc*/
 			text-align: left;
 		}
 	</ui:style>
 	<cn:Container ui:field="container" addStyleNames='{style.notebooksPanel}'>
-		<g:VerticalPanel ui:field="content">
-			<g:DisclosurePanel>
+		<g:VerticalPanel ui:field="content" width="100%">
+			<g:DisclosurePanel height="100%" width="100%">
 				<g:header>
 					Notebooks
 				</g:header>
-				<cn:ShowMorePagerPanel addStyleNames='{style.scrollable}' ui:field="pagerPanel" />
+				<cn:ShowMorePagerPanel
+					ui:field="pagerPanel" />
 			</g:DisclosurePanel>
 			<g:DisclosurePanel>
 				<g:header>

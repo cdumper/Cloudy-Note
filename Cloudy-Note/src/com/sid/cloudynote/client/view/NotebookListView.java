@@ -3,7 +3,10 @@ package com.sid.cloudynote.client.view;
 import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.resources.client.ClientBundle;
@@ -15,6 +18,7 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Tree;
@@ -93,54 +97,30 @@ public class NotebookListView extends ResizeComposite implements
 		}
 
 		@Override
+		public void onBrowserEvent(Context context, Element parent,
+				Notebook value, NativeEvent event,
+				ValueUpdater<Notebook> valueUpdater) {
+			Window.alert(" right click NativeEvent " + event);
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		@Override
 		public void render(Context context, Notebook notebook,
 				SafeHtmlBuilder sb) {
 			if (notebook != null) {
 				sb.appendHtmlConstant(imageHtml);
 				sb.appendEscaped(notebook.getName());
-//				sb.appendHtmlConstant("(");
-//				sb.appendEscaped(notebook.getUser().getEmail());
-//				sb.appendHtmlConstant(")");
 			}
 		}
 	}
 
 	public NotebookListView() {
-		// sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONDBLCLICK
-		// | Event.ONCONTEXTMENU);
-
 		initWidget(uiBinder.createAndBindUi(this));
 		images = GWT.create(Images.class);
 
 		tags = new NotebookTreeItem("Tags");
 		tagsTree.addItem(tags);
-
-		// allNotes = new NotebookTreeItem(new TreeRootItem(images.home(),
-		// "Notebooks"));
-		// allNotes.setState(true);
-		// noteBooksTree.addItem(allNotes);
-		//
-		// noteBooksTree.addTreeListener(new TreeListener() {
-		//
-		// @Override
-		// public void onTreeItemSelected(TreeItem item) {
-		// if (item.getChildCount() == 0) {
-		// Notebook selectedNotebook = ((NotebookTreeItem) item)
-		// .getNotebook();
-		// // if (!selectedNotebook.getKey().equals(
-		// // DataManager.getCurrentNotebookKey()))
-		// // noteListPanel.loadNotes();
-		// if (presenter != null) {
-		// presenter.onNotebookItemSelected(selectedNotebook);
-		// }
-		//
-		// }
-		// }
-		//
-		// @Override
-		// public void onTreeItemStateChanged(TreeItem item) {
-		// }
-		// });
 
 		NotebookCell notebookCell = new NotebookCell(images.drafts());
 
@@ -161,51 +141,6 @@ public class NotebookListView extends ResizeComposite implements
 				});
 		dataProvider.addDataDisplay(cellList);
 		pagerPanel.setDisplay(cellList);
-
-		// noteBooksTree.addMouseDownHandler(new MouseDownHandler() {
-		// @Override
-		// public void onMouseDown(MouseDownEvent event) {
-		// // System.out.println("Mouse Down!");
-		// if (event.getNativeButton() == NativeEvent.BUTTON_RIGHT) {
-		// // System.out.println("Mouse Down Button Right!");
-		// event.preventDefault();
-		// event.stopPropagation();
-		//
-		// Tree tree = (Tree) event.getSource();
-		// NotebookTreeItem item = (NotebookTreeItem) getTreeItemAt(
-		// tree, event.getNativeEvent().getClientY());
-		// if (item != null) {
-		// DecoratedPopupPanel popup = new DecoratedPopupPanel(
-		// true);
-		// popup.add(new Button(item.getText()));
-		// popup.setPopupPosition(event.getClientX(),
-		// event.getClientY());
-		// event.preventDefault();
-		// event.stopPropagation();
-		// popup.show();
-		// // Window.alert("right click on notebook "
-		// // + item.getNotebook().getName());
-		// }
-		// }
-		// }
-		//
-		// public TreeItem getTreeItemAt(Tree tree, int p_y) {
-		// TreeItem exact = null;
-		// for (int i = 0; i < tree.getItemCount(); i++) {
-		// for (int j = 0; j < tree.getItem(i).getChildCount(); j++) {
-		// TreeItem item = tree.getItem(i).getChild(j);
-		// int top = item.getAbsoluteTop();
-		// int height = item.getOffsetHeight();
-		// if (top >= 0 && height != 0) {
-		// if (p_y >= top && p_y < top + height) {
-		// exact = item;
-		// }
-		// }
-		// }
-		// }
-		// return exact;
-		// }
-		// });
 	}
 
 	private NotebookTreeItem addImageItem(NotebookTreeItem root,
@@ -254,12 +189,12 @@ public class NotebookListView extends ResizeComposite implements
 			event.preventDefault();
 			event.stopPropagation();
 
-			// PopupPanel contextMenu = new PopupPanel(true);
-			// contextMenu.add(new HTML(notebook.getName()));
-			// contextMenu.setPopupPosition(event.getNativeEvent().getClientX(),
-			// event.getNativeEvent().getClientY());
-			// event.getNativeEvent().stopPropagation();
-			// contextMenu.show();
+//			 PopupPanel contextMenu = new PopupPanel(true);
+//			 contextMenu.add(new HTML(notebook.getName()));
+//			 contextMenu.setPopupPosition(event.getNativeEvent().getClientX(),
+//			 event.getNativeEvent().getClientY());
+//			 event.getNativeEvent().stopPropagation();
+//			 contextMenu.show();
 		}
 	}
 
@@ -278,8 +213,6 @@ public class NotebookListView extends ResizeComposite implements
 		List<Notebook> notebooks = dataProvider.getList();
 		notebooks.clear();
 		notebooks.addAll(result);
-//		if (DataManager.getCurrentNotebook() != null)
-//			selectionModel.setSelected(DataManager.getCurrentNotebook(), true);
 	}
 
 	@Override
