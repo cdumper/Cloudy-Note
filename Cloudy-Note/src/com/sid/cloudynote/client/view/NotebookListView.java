@@ -44,6 +44,8 @@ import com.sid.cloudynote.client.event.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.client.service.TagService;
+import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.INotebookListView;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
@@ -189,7 +191,11 @@ public class NotebookListView extends ResizeComposite implements
 			event.preventDefault();
 			event.stopPropagation();
 			if( "click".equals(event.getType())){
-				notebookContextMenu.setSelectedNotebook(value);
+				if (notebookContextMenu == null) {
+					notebookContextMenu = new NotebookContextMenu(value);
+					initialNotebookContextMenu();
+					notebookContextMenu.setSelectedNotebook(value);
+				}
 			}
 			else if ("contextmenu".equals(event.getType())) {
 				if (notebookContextMenu == null) {
@@ -319,13 +325,37 @@ public class NotebookListView extends ResizeComposite implements
 
 			public void renameTag(String name) {
 				// TODO rename the tag
-				System.out.println("rename tag " + selectedTag.getName()
-						+ " to " + name);
+				selectedTag.setName(name);
+				TagServiceAsync service = GWT.create(TagService.class);
+				service.modify(selectedTag, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Rename tag failed!");
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						presenter.loadTagList();
+					}
+				});
 			}
 
 			public void deleteTag() {
 				// TODO delete tag
-				System.out.println("delete tag " + selectedTag.getName());
+				TagServiceAsync service = GWT.create(TagService.class);
+				service.delete(selectedTag, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Delete tag failed!");
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						presenter.loadTagList();
+					}
+				});
 			}
 		}
 
@@ -354,7 +384,11 @@ public class NotebookListView extends ResizeComposite implements
 			event.preventDefault();
 			event.stopPropagation();
 			if ("click".equals(event.getType())){
-				tagContextMenu.setSelectedTag(tag);
+				if (tagContextMenu == null) {
+					tagContextMenu = new TagContextMenu(tag);
+					initialTagContextMenu();
+					tagContextMenu.setSelectedTag(tag);
+				}
 			}
 			else if ("contextmenu".equals(event.getType())) {
 				if (tagContextMenu == null) {
@@ -526,6 +560,13 @@ public class NotebookListView extends ResizeComposite implements
 		List<Notebook> notebooks = notebookDataProvider.getList();
 		notebooks.clear();
 		notebooks.addAll(result);
+	}
+	
+	@Override
+	public void setTagList(List<Tag> result) {
+		List<Tag> tags = tagDataProvider.getList();
+		tags.clear();
+		tags.addAll(result);
 	}
 
 	@Override

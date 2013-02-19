@@ -14,9 +14,12 @@ import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.client.service.TagService;
+import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.interfaces.INotebookListView;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 
 public class NotebookListPresenter implements Presenter,
 		INotebookListView.Presenter {
@@ -82,6 +85,37 @@ public class NotebookListPresenter implements Presenter,
 			}
 		};
 		service.getNotebooks(callback);
+	}
+	
+	@Override
+	public void loadTagList() {
+		TagServiceAsync service = (TagServiceAsync) GWT
+				.create(TagService.class);
+		AsyncCallback<List<Tag>> callback = new AsyncCallback<List<Tag>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("getNotebooksList falied!");
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(List<Tag> result) {
+				if (result.size() != 0) {
+					view.setTagList(result);
+					Map<Key, Tag> tagMap = new HashMap<Key, Tag>();
+					for (Tag tag : result) {
+						tagMap.put(tag.getKey(), tag);
+					}
+//					DataManager.setNotebooks(tagMap);
+					//TODO tagChangedEvent
+//					eventBus.fireEvent(new TagChangedEvent(result.get(0)));
+				} else {
+					GWT.log("No tags exist!");
+				}
+			}
+		};
+		service.getTags(callback);
 	}
 
 	private void createDefaultNotebook() {

@@ -3,7 +3,6 @@ package com.sid.cloudynote.server.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -187,7 +186,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<InfoNote> getPaginationData(String filter, String ordering)
 			throws NotLoggedInException {
-		checkLoggedIn();
 		long min = -1;
 		return getPaginationData(filter, ordering, min, min);
 	}
@@ -206,7 +204,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<InfoNote> getPaginationData(String filter, long firstResult,
 			long maxResult) throws NotLoggedInException {
-		checkLoggedIn();
 		return getPaginationData(filter, null, firstResult, maxResult);
 	}
 
@@ -222,7 +219,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<InfoNote> getPaginationData(long firstResult, long maxResult)
 			throws NotLoggedInException {
-		checkLoggedIn();
 		return getPaginationData(null, null, firstResult, maxResult);
 	}
 
@@ -235,7 +231,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<InfoNote> getPaginationData(String filter)
 			throws NotLoggedInException {
-		checkLoggedIn();
 		return getPaginationData(filter, null);
 	}
 
@@ -245,7 +240,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 */
 	@Override
 	public List<InfoNote> getPaginationData() throws NotLoggedInException {
-		checkLoggedIn();
 		return getPaginationData(null);
 	}
 

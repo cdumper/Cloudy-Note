@@ -16,6 +16,16 @@
 		<servlet-name>GetNotesListService</servlet-name>
 		<url-pattern>/cloudy_note/getNotesList</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>TagService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.TagServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>TagService</servlet-name>
+		<url-pattern>/cloudy_note/tagService</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>InfoNoteService</servlet-name>

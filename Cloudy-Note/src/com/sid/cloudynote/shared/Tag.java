@@ -9,6 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
 public class Tag implements Serializable{
@@ -17,7 +18,15 @@ public class Tag implements Serializable{
 	private Key key;
 	@Persistent
 	private String name;
+	@Persistent
+	private User user;
 	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public Key getKey() {
 		return key;
 	}
