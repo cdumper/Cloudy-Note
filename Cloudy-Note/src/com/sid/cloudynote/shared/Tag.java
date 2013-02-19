@@ -17,7 +17,23 @@ public class Tag implements Serializable{
 	private Key key;
 	@Persistent
 	private String name;
+	
+	public Key getKey() {
+		return key;
+	}
+	public void setKey(Key key) {
+		this.key = key;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Tag() {
 		super();
+	}
+	public Tag(String name){
+		this.name = name;
 	}
 }
