@@ -1,9 +1,17 @@
 package com.sid.cloudynote.client.view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ClickableTextCell;
+import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -13,8 +21,15 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -23,6 +38,8 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INoteChangedHandler;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.service.InfoNoteService;
+import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.InfoNote;
 
@@ -54,7 +71,7 @@ public class NoteListView extends ResizeComposite implements
 	// RangeLabelPager rangeLabelPager;
 
 	private CellList<InfoNote> cellList;
-
+	private NoteCell noteCell;
 	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
 	public static final ProvidesKey<InfoNote> KEY_PROVIDER = new ProvidesKey<InfoNote>() {
 		@Override
@@ -71,9 +88,19 @@ public class NoteListView extends ResizeComposite implements
 	private Presenter presenter;
 
 	static class NoteCell extends AbstractCell<InfoNote> {
+		Presenter presenter;
+		public Presenter getPresenter() {
+			return presenter;
+		}
+
+		public void setPresenter(Presenter presenter) {
+			this.presenter = presenter;
+		}
+
 		private final String imageHtml;
 
 		public NoteCell(ImageResource image) {
+			super("contextmenu");
 			this.imageHtml = AbstractImagePrototype.create(image).getHTML();
 		}
 
@@ -99,13 +126,119 @@ public class NoteListView extends ResizeComposite implements
 			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>",""));
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
+
+		@Override
+		public void onBrowserEvent(Context context, Element parent,
+				InfoNote value, NativeEvent event,
+				ValueUpdater<InfoNote> valueUpdater) {
+			event.preventDefault();
+			event.stopPropagation();
+			
+			if ("contextmenu".equals(event.getType())){
+				noteContextMenu = new NoteContextMenu(value);
+				initialNoteContextMenu();
+				noteContextMenu.setSelectedNote(value);
+				noteContextMenu.setPopupPosition(event.getClientX(),
+						event.getClientY());
+				noteContextMenu.show();
+			}
+		}
+		
+		private class NoteContextMenu extends PopupPanel {
+			private InfoNote selectedNote;
+
+			public InfoNote getSelectedNote() {
+				return selectedNote;
+			}
+
+			public void setSelectedNote(InfoNote selectedNote) {
+				this.selectedNote = selectedNote;
+			}
+
+			NoteContextMenu(InfoNote note) {
+				super();
+				this.selectedNote = note;
+				this.setAutoHideEnabled(true);
+				this.setAnimationEnabled(true);
+			}
+
+			public void deleteNote() {
+				InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
+				service.delete(selectedNote, new AsyncCallback<Void>(){
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Delete notebook failed!");
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						presenter.loadNoteList(DataManager.getCurrentNotebook());
+					}
+				});
+			}
+		}
+		
+		List<String> OPERATION_LIST = new ArrayList<String>(Arrays.asList(
+				"Edit", "Delete"));
+		private NoteContextMenu noteContextMenu;
+		
+		private void initialNoteContextMenu(){
+			VerticalPanel content = new VerticalPanel();
+			noteContextMenu.setAnimationEnabled(true);
+			noteContextMenu.setWidget(content);
+			ClickableTextCell cell = new ClickableTextCell() {
+				@Override
+				public void onBrowserEvent(Context context, Element parent,
+						String value, NativeEvent event,
+						ValueUpdater<String> valueUpdater) {
+					if ("click".equals(event.getType())) {
+						noteContextMenu.hide();
+						if ("Edit".equals(value)) {
+							presenter.startEditing(noteContextMenu.getSelectedNote());
+						} else if ("Delete".equals(value)) {
+							showDeletePanel();
+						} 
+					}
+				}
+			};
+			CellList<String> operationList = new CellList<String>(cell);
+			operationList.setRowData(OPERATION_LIST);
+			content.add(operationList);
+		}
+		
+		public void showDeletePanel() {
+			final DialogBox dialog = new DialogBox();
+			dialog.setText("Delete Note");
+			VerticalPanel content = new VerticalPanel();
+			dialog.setWidget(content);
+
+			final Label name = new Label();
+			content.add(name);
+
+			HorizontalPanel buttonPanel = new HorizontalPanel();
+			buttonPanel.add(new Button("Cancel", new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					dialog.hide();
+				}
+			}));
+			buttonPanel.add(new Button("OK", new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					noteContextMenu.deleteNote();
+					dialog.hide();
+				}
+			}));
+			content.add(buttonPanel);
+
+			dialog.show();
+			dialog.center();
+		}
 	}
 
 	public NoteListView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		Images images = GWT.create(Images.class);
 
-		NoteCell noteCell = new NoteCell(images.home());
+		noteCell = new NoteCell(images.home());
 
 		cellList = new CellList<InfoNote>(noteCell, KEY_PROVIDER);
 		cellList.setPageSize(30);
@@ -137,6 +270,7 @@ public class NoteListView extends ResizeComposite implements
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
+		noteCell.setPresenter(presenter);
 	}
 
 	@Override

@@ -7,7 +7,8 @@ public interface ISearchView {
 		void onNewNotebookButtonClicked();
 		void onNewNoteButtonClicked();
 		void onSearchMade();
-		void onEditDoneButtonClicked();
+		void onClickEditDoneButton();
+		void changeButtonText();
 	}
 	void setPresenter(Presenter presenter);
 	Widget asWidget();

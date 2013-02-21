@@ -10,6 +10,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
@@ -69,6 +70,16 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(view.asWidget());
+	}
+
+	@Override
+	public void startEditing(InfoNote value) {
+//		eventBus.fireEvent(new EditDoneButtonClickedEvent());
+//		if(view.getEdit().getText().equals("Edit"))
+//			view.getEdit().setText("Done");
+//		else if(view.getEdit().getText().equals("Done"))
+//			view.getEdit().setText("Edit");
+		eventBus.fireEvent(new EditDoneButtonClickedEvent(value));
 	}
 
 }

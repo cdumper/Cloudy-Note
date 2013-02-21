@@ -36,6 +36,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.noteView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.searchView);
 		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.noteView);
+		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.searchView);
 		eventBus.addHandler(NoteSelectionChangedEvent.TYPE, cn.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, cn.notebookListView);
 	}

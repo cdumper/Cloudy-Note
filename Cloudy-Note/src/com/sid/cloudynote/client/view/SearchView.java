@@ -11,7 +11,9 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
+import com.sid.cloudynote.client.event.IEditDoneButtonClickedHandler;
 import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
 import com.sid.cloudynote.client.event.INewNoteHandler;
 import com.sid.cloudynote.client.event.INoNotesExistHandler;
@@ -19,7 +21,7 @@ import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.view.interfaces.ISearchView;
 
-public class SearchView extends ResizeComposite implements ISearchView, INoNotesExistHandler, INewNoteHandler, IEditNoteDoneHandler{
+public class SearchView extends ResizeComposite implements ISearchView, INoNotesExistHandler, INewNoteHandler, IEditNoteDoneHandler, IEditDoneButtonClickedHandler{
 	@UiTemplate("SearchView.ui.xml")
 	interface SearchViewUiBinder extends UiBinder<Widget, SearchView> {
 	}
@@ -65,7 +67,7 @@ public class SearchView extends ResizeComposite implements ISearchView, INoNotes
 
 	@UiHandler("edit")
 	void onClickEdit(ClickEvent e) {
-		presenter.onEditDoneButtonClicked();
+		presenter.onClickEditDoneButton();
 	}
 
 	@Override
@@ -93,5 +95,10 @@ public class SearchView extends ResizeComposite implements ISearchView, INoNotes
 	public void onEditNoteDone(EditNoteDoneEvent event) {
 		this.edit.setVisible(true);
 		this.edit.setText("Edit");
+	}
+
+	@Override
+	public void onEditDoneButtonClicked(EditDoneButtonClickedEvent event) {
+		presenter.changeButtonText();
 	}
 }

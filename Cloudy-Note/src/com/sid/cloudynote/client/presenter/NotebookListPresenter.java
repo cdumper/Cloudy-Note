@@ -152,6 +152,7 @@ public class NotebookListPresenter implements Presenter,
 			public void onSuccess(Void result) {
 				GWT.log("Notebook added successfully!");
 				eventBus.fireEvent(new NotebookChangedEvent());
+				
 			}
 
 		};

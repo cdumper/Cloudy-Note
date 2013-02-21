@@ -1,7 +1,5 @@
 package com.sid.cloudynote.client.presenter;
 
-import java.util.Map.Entry;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -95,8 +93,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 	}
 
 	@Override
-	public void startEdit() {
-		eventBus.fireEvent(new EditNoteEvent());
+	public void startEdit(InfoNote note) {
+		eventBus.fireEvent(new EditNoteEvent(note));
 	}
 
 	@Override

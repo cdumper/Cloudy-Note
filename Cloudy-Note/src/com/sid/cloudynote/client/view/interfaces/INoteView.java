@@ -7,7 +7,6 @@ public interface INoteView {
 	public interface Presenter {
 		void saveNote();
 		void stopEdit();
-		void startEdit();
 		boolean isEditing();
 		void setEditing(boolean isEditing);
 		void setView(Widget view);
@@ -15,6 +14,7 @@ public interface INoteView {
 		void updateNote(InfoNote note);
 		void setNewNote(boolean b);
 		void presentNote();
+		void startEdit(InfoNote note);
 	}
 	
 	void setPresenter(Presenter presenter);

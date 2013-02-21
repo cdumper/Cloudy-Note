@@ -187,8 +187,8 @@ public class NotebookListView extends ResizeComposite implements
 
 		List<String> OPERATION_LIST = new ArrayList<String>(Arrays.asList(
 				"Rename", "Delete", "Properties"));
-		private final String imageHtml;
 		private NotebookContextMenu notebookContextMenu;
+		private final String imageHtml;
 
 		public NotebookCell(ImageResource image, Presenter presenter) {
 			super("click", "contextmenu");

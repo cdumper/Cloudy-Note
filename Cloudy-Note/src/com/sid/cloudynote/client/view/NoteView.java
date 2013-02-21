@@ -99,7 +99,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 		if (presenter.isEditing()) {
 			presenter.stopEdit();
 		} else {
-			presenter.startEdit();
+			presenter.startEdit(event.getNote());
 		}
 	}
 

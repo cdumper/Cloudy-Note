@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
+import com.sid.cloudynote.client.event.IEditDoneButtonClickedHandler;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
@@ -19,7 +21,7 @@ import com.sid.cloudynote.client.view.SearchView;
 import com.sid.cloudynote.client.view.interfaces.ISearchView;
 import com.sid.cloudynote.shared.Notebook;
 
-public class SearchPresenter implements Presenter, ISearchView.Presenter {
+public class SearchPresenter implements Presenter, ISearchView.Presenter{
 	private final HandlerManager eventBus;
 	private final SearchView view;
 
@@ -105,8 +107,13 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 	}
 
 	@Override
-	public void onEditDoneButtonClicked() {
-		eventBus.fireEvent(new EditDoneButtonClickedEvent());
+	public void onClickEditDoneButton() {
+		eventBus.fireEvent(new EditDoneButtonClickedEvent(DataManager.getCurrentNote()));
+	}
+	
+	//Change the button text
+	@Override
+	public void changeButtonText() {
 		if(view.getEdit().getText().equals("Edit"))
 			view.getEdit().setText("Done");
 		else if(view.getEdit().getText().equals("Done"))
