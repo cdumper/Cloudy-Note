@@ -136,4 +136,26 @@ public class NotebookListPresenter implements Presenter,
 		};
 		service.add(new Notebook("Default"), callback);
 	}
+
+	@Override
+	public void createNewNotebook(String name) {
+		NotebookServiceAsync service = (NotebookServiceAsync) GWT
+				.create(NotebookService.class);
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Get Notebooks List falied!");
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Notebook added successfully!");
+				eventBus.fireEvent(new NotebookChangedEvent());
+			}
+
+		};
+		service.add(new Notebook(name), callback);
+	}
 }

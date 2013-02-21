@@ -12,6 +12,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -21,13 +23,19 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DisclosureEvent;
+import com.google.gwt.user.client.ui.DisclosureHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.DisclosurePanelImages;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
@@ -76,7 +84,7 @@ public class NotebookListView extends ResizeComposite implements
 		// @Source("noimage.png")
 		// ImageResource treeLeaf();
 	}
-
+	
 	@UiField
 	Container container;
 
@@ -88,8 +96,12 @@ public class NotebookListView extends ResizeComposite implements
 	VerticalPanel content;
 	@UiField
 	DisclosurePanel notebookPanel;
+//	@UiField
+//	DisclosurePanelHeader notebookHeader;
 	@UiField
 	DisclosurePanel tagPanel;
+//	@UiField
+//	Header tagHeader;
 	@UiField
 	ShowMorePagerPanel pagerPanel;
 
@@ -324,7 +336,6 @@ public class NotebookListView extends ResizeComposite implements
 			}
 
 			public void renameTag(String name) {
-				// TODO rename the tag
 				selectedTag.setName(name);
 				TagServiceAsync service = GWT.create(TagService.class);
 				service.modify(selectedTag, new AsyncCallback<Void>(){
@@ -342,7 +353,6 @@ public class NotebookListView extends ResizeComposite implements
 			}
 
 			public void deleteTag() {
-				// TODO delete tag
 				TagServiceAsync service = GWT.create(TagService.class);
 				service.delete(selectedTag, new AsyncCallback<Void>(){
 
@@ -482,8 +492,127 @@ public class NotebookListView extends ResizeComposite implements
 		initWidget(uiBinder.createAndBindUi(this));
 		images = GWT.create(Images.class);
 
+		initialNotebookHeader();
 		initialNotebooksList();
 		initialTagsList();
+	}
+	
+	@SuppressWarnings("deprecation")
+	private class DisclosurePanelHeader extends HorizontalPanel
+	{
+		private Image image;
+		public void setOpen(boolean isOpen) {
+			this.image = (isOpen ? images.disclosurePanelOpen().createImage()
+		              : images.disclosurePanelClosed().createImage());
+			this.clear();
+			present();
+		}
+
+		private void present() {
+			add(this.image);
+	        add(this.html);
+	        add(this.button);
+		}
+
+		private HTML html;
+		Button button = new Button("$");
+		final DisclosurePanelImages images = (DisclosurePanelImages)
+				GWT.create(DisclosurePanelImages.class);
+	    public DisclosurePanelHeader(boolean isOpen, String html)
+	    {
+	    	// it has to add this piece of code otherwise the onBrowserEvent won't work
+	    	this.addDomHandler(new ContextMenuHandler(){
+				@Override
+				public void onContextMenu(ContextMenuEvent event) {
+					System.out.println("context menu event");
+				}
+	    	}, ContextMenuEvent.getType());
+//	    	this.addDomHandler(new MouseUpHandler(){
+//				@Override
+//				public void onMouseUp(MouseUpEvent event) {
+//					if (event.getNativeButton()==NativeEvent.BUTTON_RIGHT){
+//						System.out.println("right button event");
+//					}
+//				}
+//	    	}, MouseUpEvent.getType());
+	    	
+	    	this.image = (isOpen ? images.disclosurePanelOpen().createImage()
+		              : images.disclosurePanelClosed().createImage());
+	    	this.html = new HTML(html);
+	    	button.setSize("5px", "5px");
+	        present();
+	    }
+	    
+		@Override
+		public void onBrowserEvent(Event event) {
+			event.preventDefault();
+			event.stopPropagation();
+			if ("contextmenu".endsWith(event.getType())){
+				//TODO show add notebook OR tag panel
+				final PopupPanel popup = new PopupPanel(true);
+				VerticalPanel panel = new VerticalPanel();
+				panel.add(new Button("Add Notebook",new ClickHandler(){
+					@Override
+					public void onClick(ClickEvent event) {
+						newNotebookDialog().center();
+						popup.hide();
+					}
+				}));
+				popup.setWidget(panel);
+				popup.setPopupPosition(event.getClientX(), event.getClientY());
+				popup.show();
+			}
+		}
+	    
+	}
+	
+	private DialogBox newNotebookDialog() {
+		final DialogBox dialog = new DialogBox();
+		final TextBox name = new TextBox();
+		Button confirm = new Button("Confirm");
+		Button cancel = new Button("Cancel");
+		dialog.setTitle("Create new notebook");
+		VerticalPanel panel = new VerticalPanel();
+		dialog.add(panel);
+		panel.add(name);
+		panel.add(cancel);
+		panel.add(confirm);
+		panel.setSize("200", "200");
+
+		confirm.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// call rpc to create new notebook
+				presenter.createNewNotebook(name.getText());
+				dialog.hide();
+			}
+		});
+
+		cancel.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				dialog.hide();
+			}
+		});
+		return dialog;
+	}
+
+	@SuppressWarnings("deprecation")
+	private void initialNotebookHeader() {
+		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,"Notebooks");
+		notebookPanel.setHeader(header);
+		notebookPanel.addEventHandler(new DisclosureHandler()
+	    {
+	        public void onClose(DisclosureEvent event)
+	        {
+	        	header.setOpen(false);
+	        }
+
+	        public void onOpen(DisclosureEvent event)
+	        {
+	        	header.setOpen(true);
+	        }
+	    });
 	}
 
 	private void initialNotebooksList() {
