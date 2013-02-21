@@ -1,6 +1,7 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -22,6 +23,8 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 	@Override
 	public void add(Tag entity) throws NotLoggedInException {
 		checkLoggedIn();
+		entity.setUser(getUser());
+		entity.setCreatedTime(new Date());
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();

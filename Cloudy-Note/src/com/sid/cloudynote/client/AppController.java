@@ -12,6 +12,7 @@ import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
@@ -36,6 +37,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.searchView);
 		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.noteView);
 		eventBus.addHandler(NoteSelectionChangedEvent.TYPE, cn.noteView);
+		eventBus.addHandler(TagChangedEvent.TYPE, cn.notebookListView);
 	}
 
 	@Override

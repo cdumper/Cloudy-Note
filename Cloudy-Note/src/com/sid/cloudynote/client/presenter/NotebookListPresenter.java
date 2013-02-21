@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.client.service.TagService;
@@ -49,6 +50,7 @@ public class NotebookListPresenter implements Presenter,
 	@Override
 	public void go(HasWidgets container) {
 		this.loadNotebookList();
+		this.loadTagList();
 		container.clear();
 		container.add(view.asWidget());
 	}
@@ -157,5 +159,25 @@ public class NotebookListPresenter implements Presenter,
 
 		};
 		service.add(new Notebook(name), callback);
+	}
+
+	@Override
+	public void createNewTag(String name) {
+		TagServiceAsync service = (TagServiceAsync) GWT
+				.create(TagService.class);
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Get Tags List falied!");
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Tag added successfully!");
+				eventBus.fireEvent(new TagChangedEvent());
+			}
+		};
+		service.add(new Tag(name), callback);
 	}
 }

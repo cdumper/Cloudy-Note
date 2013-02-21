@@ -1,0 +1,17 @@
+package com.sid.cloudynote.client.event;
+
+import com.google.gwt.event.shared.GwtEvent;
+
+public class TagChangedEvent extends GwtEvent<ITagChangedHandler>{
+	public static final Type<ITagChangedHandler> TYPE = new Type<ITagChangedHandler>();
+
+	@Override
+	public Type<ITagChangedHandler> getAssociatedType() {
+		return TYPE;
+	}
+
+	@Override
+	protected void dispatch(ITagChangedHandler handler) {
+		handler.onTagChanged(this);
+	}
+}

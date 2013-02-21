@@ -1,6 +1,7 @@
 package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -20,6 +21,19 @@ public class Tag implements Serializable{
 	private String name;
 	@Persistent
 	private User user;
+	@Persistent
+	private Date createdTime;
+	@Persistent
+	private int noteCount;
+	
+	public Tag() {
+		super();
+		noteCount = 0;
+	}
+	public Tag(String name){
+		this();
+		this.name = name;
+	}
 	
 	public User getUser() {
 		return user;
@@ -39,10 +53,16 @@ public class Tag implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Tag() {
-		super();
+	public Date getCreatedTime() {
+		return createdTime;
 	}
-	public Tag(String name){
-		this.name = name;
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+	public int getNoteCount() {
+		return noteCount;
+	}
+	public void setNoteCount(int noteCount) {
+		this.noteCount = noteCount;
 	}
 }

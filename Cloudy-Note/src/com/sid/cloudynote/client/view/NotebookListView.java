@@ -49,7 +49,9 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INotebookChangedHandler;
+import com.sid.cloudynote.client.event.ITagChangedHandler;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.client.service.TagService;
@@ -59,7 +61,7 @@ import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
 
 public class NotebookListView extends ResizeComposite implements
-		INotebookChangedHandler, INotebookListView {
+		INotebookChangedHandler, ITagChangedHandler, INotebookListView {
 
 	@UiTemplate("NoteBookListView.ui.xml")
 	interface NotebookListPanelUiBinder extends
@@ -493,6 +495,7 @@ public class NotebookListView extends ResizeComposite implements
 		images = GWT.create(Images.class);
 
 		initialNotebookHeader();
+		initialTagHeader();
 		initialNotebooksList();
 		initialTagsList();
 	}
@@ -548,30 +551,39 @@ public class NotebookListView extends ResizeComposite implements
 			event.preventDefault();
 			event.stopPropagation();
 			if ("contextmenu".endsWith(event.getType())){
-				//TODO show add notebook OR tag panel
 				final PopupPanel popup = new PopupPanel(true);
 				VerticalPanel panel = new VerticalPanel();
-				panel.add(new Button("Add Notebook",new ClickHandler(){
-					@Override
-					public void onClick(ClickEvent event) {
-						newNotebookDialog().center();
-						popup.hide();
-					}
-				}));
-				popup.setWidget(panel);
 				popup.setPopupPosition(event.getClientX(), event.getClientY());
+				if ("Notebooks".equals(this.html.getText())){
+					panel.add(new Button("Add Notebook",new ClickHandler(){
+						@Override
+						public void onClick(ClickEvent event) {
+							createNewDialog(true,false,"Create New Notebook").center();
+							popup.hide();
+						}
+					}));
+				} else if ("Tags".equals(this.html.getText())){
+					panel.add(new Button("Add Tag",new ClickHandler(){
+						@Override
+						public void onClick(ClickEvent event) {
+							createNewDialog(false,true,"Create New Tag").center();
+							popup.hide();
+						}
+					}));
+				}
+				popup.setWidget(panel);
 				popup.show();
 			}
 		}
 	    
 	}
 	
-	private DialogBox newNotebookDialog() {
+	private DialogBox createNewDialog(final boolean isNotebook,final boolean isTag,String title) {
 		final DialogBox dialog = new DialogBox();
 		final TextBox name = new TextBox();
 		Button confirm = new Button("Confirm");
 		Button cancel = new Button("Cancel");
-		dialog.setTitle("Create new notebook");
+		dialog.setTitle(title);
 		VerticalPanel panel = new VerticalPanel();
 		dialog.add(panel);
 		panel.add(name);
@@ -582,9 +594,13 @@ public class NotebookListView extends ResizeComposite implements
 		confirm.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// call rpc to create new notebook
-				presenter.createNewNotebook(name.getText());
-				dialog.hide();
+				if (isNotebook){
+					presenter.createNewNotebook(name.getText());
+					dialog.hide();
+				} else if(isTag){
+					presenter.createNewTag(name.getText());
+					dialog.hide();
+				}
 			}
 		});
 
@@ -602,6 +618,24 @@ public class NotebookListView extends ResizeComposite implements
 		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,"Notebooks");
 		notebookPanel.setHeader(header);
 		notebookPanel.addEventHandler(new DisclosureHandler()
+	    {
+	        public void onClose(DisclosureEvent event)
+	        {
+	        	header.setOpen(false);
+	        }
+
+	        public void onOpen(DisclosureEvent event)
+	        {
+	        	header.setOpen(true);
+	        }
+	    });
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void initialTagHeader() {
+		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,"Tags");
+		tagPanel.setHeader(header);
+		tagPanel.addEventHandler(new DisclosureHandler()
 	    {
 	        public void onClose(DisclosureEvent event)
 	        {
@@ -665,7 +699,7 @@ public class NotebookListView extends ResizeComposite implements
 						}
 					}
 				});
-		tagDataProvider.getList().add(new Tag("GWT"));
+//		tagDataProvider.getList().add(new Tag("GWT"));
 		tagDataProvider.addDataDisplay(tagsCellList);
 		tagPanel.setContent(tagsCellList);
 		tagPanel.setOpen(true);
@@ -701,5 +735,10 @@ public class NotebookListView extends ResizeComposite implements
 	@Override
 	public Widget asWidget() {
 		return this.content;
+	}
+
+	@Override
+	public void onTagChanged(TagChangedEvent event) {
+		presenter.loadTagList();
 	}
 }

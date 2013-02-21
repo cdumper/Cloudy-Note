@@ -13,6 +13,7 @@ public interface INotebookListView {
 		void loadNotebookList();
 		void loadTagList();
 		void createNewNotebook(String text);
+		void createNewTag(String text);
 	}
 	
 	void setPresenter(Presenter presenter);

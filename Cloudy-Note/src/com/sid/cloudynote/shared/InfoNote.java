@@ -30,16 +30,9 @@ public class InfoNote implements Serializable {
 	@Persistent(defaultFetchGroup = "true")
 	private NoteProperty property;
 	@Persistent
+	private List<Tag> tags;
+	@Persistent
 	private List<String> attachments;
-
-	public List<String> getAttachments() {
-		if(attachments==null) attachments = new ArrayList<String>();
-		return attachments;
-	}
-
-	public void setAttachments(List<String> attachments) {
-		this.attachments = attachments;
-	}
 
 	public InfoNote() {
 		super();
@@ -50,7 +43,9 @@ public class InfoNote implements Serializable {
 		this.title = title;
 		this.content = content;
 		this.property = null;
-		this.attachments = new ArrayList<String>();
+		this.tags = null;
+//		this.attachments = new ArrayList<String>();
+		this.attachments = null;
 		this.user = null;
 	}
 
@@ -109,5 +104,24 @@ public class InfoNote implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+
+	public List<String> getAttachments() {
+		if(attachments==null) attachments = new ArrayList<String>();
+		return attachments;
+	}
+
+	public void setAttachments(List<String> attachments) {
+		this.attachments = attachments;
 	}
 }
