@@ -90,7 +90,6 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 	// this function may be called when note selection changed
 	@Override
-	// TODO presenteNote in notePresenter
 	public void presentNote() {
 		eventBus.fireEvent(new EditNoteDoneEvent());
 	}

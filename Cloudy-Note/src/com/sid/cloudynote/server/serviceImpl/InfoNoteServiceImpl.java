@@ -110,6 +110,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		String content = note.getContent();
 		NoteProperty property = new NoteProperty(note.getProperty()
 				.getCreatedTime(), new Date());
+		List<String> attachments = note.getAttachments();
 		try {
 			pm.currentTransaction().begin();
 			if (!note.getUser().equals(getUser())) {
@@ -118,7 +119,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				InfoNote entity = new InfoNote(notebook, title, content);
 				entity.setProperty(property);
 				entity.setUser(getUser());
+				entity.setAttachments(attachments);
 				pm.deletePersistent(note);
+//				pm.deletePersistent(note.getProperty());
 				pm.makePersistent(entity);
 			}
 			pm.currentTransaction().commit();

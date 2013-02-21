@@ -100,7 +100,6 @@ public class SearchPresenter implements Presenter, ISearchView.Presenter {
 				// new notebook created fires the notebookChangedEvent
 				eventBus.fireEvent(new NotebookChangedEvent());
 			}
-
 		};
 		service.add(new Notebook(name), callback);
 	}

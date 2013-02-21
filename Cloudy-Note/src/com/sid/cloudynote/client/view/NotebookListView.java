@@ -24,7 +24,6 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
@@ -244,7 +243,7 @@ public class NotebookListView extends ResizeComposite implements
 						} else if ("Delete".equals(value)) {
 							showDeletePanel();
 						} else if ("Properties".equals(value)) {
-							// TODO
+							// TODO show notebook properties
 							// showpRropertiesPanel();
 						}
 					}
@@ -695,11 +694,10 @@ public class NotebookListView extends ResizeComposite implements
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Tag tag = tagSelectionModel.getSelectedObject();
 						if (tag != null) {
-							Window.alert("You selected: " + tag.getName());
+							//TODO tag clicked!
 						}
 					}
 				});
-//		tagDataProvider.getList().add(new Tag("GWT"));
 		tagDataProvider.addDataDisplay(tagsCellList);
 		tagPanel.setContent(tagsCellList);
 		tagPanel.setOpen(true);

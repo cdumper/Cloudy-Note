@@ -21,7 +21,6 @@ public class BlobServiceImpl extends RemoteServiceServlet implements
 		try {
 			checkLoggedIn();
 		} catch (NotLoggedInException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		BlobInfoFactory blobInfoFactory = new BlobInfoFactory();
