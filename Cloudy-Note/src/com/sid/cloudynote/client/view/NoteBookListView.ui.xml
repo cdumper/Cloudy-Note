@@ -15,19 +15,22 @@
 		}
 	</ui:style>
 	<cn:Container ui:field="container" addStyleNames='{style.notebooksPanel}'>
-		<g:VerticalPanel ui:field="content" width="100%">
-			<g:DisclosurePanel height="100%" width="100%" ui:field="notebookPanel">
-				<g:header>
-					Notebooks
-				</g:header>
-				<cn:ShowMorePagerPanel
-					ui:field="pagerPanel" />
-			</g:DisclosurePanel>
-			<g:DisclosurePanel height="100%" width="100%" ui:field="tagPanel">
-				<g:header>
-					Tags
-				</g:header>
-			</g:DisclosurePanel>
-		</g:VerticalPanel>
+		<g:ScrollPanel ui:field="content" width='100%' height='100%'>
+			<g:VerticalPanel width='100%' height='100%'>
+				<g:DisclosurePanel height="100%" width="100%"
+					ui:field="notebookPanel">
+					<g:header>
+						Notebooks
+					</g:header>
+					<cn:ShowMorePagerPanel ui:field="pagerPanel" />
+				</g:DisclosurePanel>
+				<g:DisclosurePanel height="100%" width="100%"
+					ui:field="tagPanel">
+					<g:header>
+						Tags
+					</g:header>
+				</g:DisclosurePanel>
+			</g:VerticalPanel>
+		</g:ScrollPanel>
 	</cn:Container>
 </ui:UiBinder> 

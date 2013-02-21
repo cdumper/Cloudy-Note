@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -46,7 +47,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.ITagChangedHandler;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
@@ -94,7 +94,7 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	@UiField
-	VerticalPanel content;
+	ScrollPanel content;
 	@UiField
 	DisclosurePanel notebookPanel;
 //	@UiField
@@ -169,10 +169,9 @@ public class NotebookListView extends ResizeComposite implements
 
 			public void deleteNotebook() {
 				//TODO need to take into account the CASSCADE DELETE (deleting all the notes in the notebook)
-				Notebook notebook = DataManager.getCurrentNotebook();
+//				Notebook notebook = DataManager.getCurrentNotebook();
 				NotebookServiceAsync service = GWT.create(NotebookService.class);
-				service.delete(notebook, new AsyncCallback<Void>(){
-
+				service.delete(selectedNotebook, new AsyncCallback<Void>(){
 					@Override
 					public void onFailure(Throwable caught) {
 						GWT.log("Delete notebook failed!");
@@ -203,27 +202,14 @@ public class NotebookListView extends ResizeComposite implements
 				ValueUpdater<Notebook> valueUpdater) {
 			event.preventDefault();
 			event.stopPropagation();
-			if( "click".equals(event.getType())){
-				if (notebookContextMenu == null) {
-					notebookContextMenu = new NotebookContextMenu(value);
-					initialNotebookContextMenu();
-					notebookContextMenu.setSelectedNotebook(value);
-				}
-			}
-			else if ("contextmenu".equals(event.getType())) {
-				if (notebookContextMenu == null) {
-					notebookContextMenu = new NotebookContextMenu(value);
-					initialNotebookContextMenu();
-				}
+
+			if ("contextmenu".equals(event.getType())) {
+				notebookContextMenu = new NotebookContextMenu(value);
+				initialNotebookContextMenu();
+				notebookContextMenu.setSelectedNotebook(value);
 				notebookContextMenu.setPopupPosition(event.getClientX(),
 						event.getClientY());
 				notebookContextMenu.show();
-				// Ignore clicks that occur outside of the outermost element.
-				// EventTarget eventTarget = event.getEventTarget();
-				// if (parent.getFirstChildElement().isOrHasChild(
-				// Element.as(eventTarget))) {
-				// doAction(value, valueUpdater);
-				// }
 			}
 		}
 
@@ -394,18 +380,10 @@ public class NotebookListView extends ResizeComposite implements
 				NativeEvent event, ValueUpdater<Tag> valueUpdater) {
 			event.preventDefault();
 			event.stopPropagation();
-			if ("click".equals(event.getType())){
-				if (tagContextMenu == null) {
-					tagContextMenu = new TagContextMenu(tag);
-					initialTagContextMenu();
-					tagContextMenu.setSelectedTag(tag);
-				}
-			}
-			else if ("contextmenu".equals(event.getType())) {
-				if (tagContextMenu == null) {
-					tagContextMenu = new TagContextMenu(tag);
-					initialTagContextMenu();
-				}
+			if ("contextmenu".equals(event.getType())) {
+				tagContextMenu = new TagContextMenu(tag);
+				initialTagContextMenu();
+				tagContextMenu.setSelectedTag(tag);
 				tagContextMenu.setPopupPosition(event.getClientX(),
 						event.getClientY());
 				tagContextMenu.show();
