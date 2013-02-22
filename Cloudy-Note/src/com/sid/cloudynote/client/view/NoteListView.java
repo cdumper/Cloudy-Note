@@ -88,6 +88,16 @@ public class NoteListView extends ResizeComposite implements
 	private Presenter presenter;
 
 	static class NoteCell extends AbstractCell<InfoNote> {
+		private SingleSelectionModel<InfoNote> selectionModel;
+
+		public SingleSelectionModel<InfoNote> getSelectionModel() {
+			return selectionModel;
+		}
+
+		public void setSelectionModel(SingleSelectionModel<InfoNote> selectionModel) {
+			this.selectionModel = selectionModel;
+		}
+
 		Presenter presenter;
 		public Presenter getPresenter() {
 			return presenter;
@@ -137,7 +147,7 @@ public class NoteListView extends ResizeComposite implements
 			if ("contextmenu".equals(event.getType())){
 				noteContextMenu = new NoteContextMenu(value);
 				initialNoteContextMenu();
-				noteContextMenu.setSelectedNote(value);
+//				noteContextMenu.setSelectedNote(value);
 				noteContextMenu.setPopupPosition(event.getClientX(),
 						event.getClientY());
 				noteContextMenu.show();
@@ -194,6 +204,7 @@ public class NoteListView extends ResizeComposite implements
 					if ("click".equals(event.getType())) {
 						noteContextMenu.hide();
 						if ("Edit".equals(value)) {
+//							selectionModel.setSelected(noteContextMenu.getSelectedNote(), true);
 							presenter.startEditing(noteContextMenu.getSelectedNote());
 						} else if ("Delete".equals(value)) {
 							showDeletePanel();
@@ -248,6 +259,7 @@ public class NoteListView extends ResizeComposite implements
 		// Add a selection model so we can select cells.
 		selectionModel = new SingleSelectionModel<InfoNote>(KEY_PROVIDER);
 		cellList.setSelectionModel(selectionModel);
+		noteCell.setSelectionModel(selectionModel);
 
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {

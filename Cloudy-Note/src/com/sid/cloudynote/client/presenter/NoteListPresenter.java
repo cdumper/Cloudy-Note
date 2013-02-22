@@ -81,5 +81,4 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 //			view.getEdit().setText("Edit");
 		eventBus.fireEvent(new EditDoneButtonClickedEvent(value));
 	}
-
 }

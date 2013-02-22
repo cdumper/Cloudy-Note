@@ -61,7 +61,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 		EditableNoteView editView = new EditableNoteView();
 		editView.setHeight("100%");
 		editView.setWidth("100%");
-		editView.presentNote(DataManager.getCurrentNote());
+		editView.presentNote(event.getNote());
 		this.container.clear();
 		this.container.add(editView);
 		presenter.setView(editView);
