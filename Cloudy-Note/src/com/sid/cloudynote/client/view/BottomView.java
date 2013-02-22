@@ -20,6 +20,8 @@ public class BottomView extends Composite{
 
 	public BottomView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		personalTabButton.setDown(true);
+		exploreTabButton.setDown(false);
 	}
 
 	@UiField
