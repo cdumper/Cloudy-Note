@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
+	<ui:style>
+		
+	</ui:style>
+	<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
+		<g:north size='6'>
+			<cn:SearchView ui:field='searchView' />
+		</g:north>
+		<g:west size='15'>
+			<cn:GroupView ui:field='groupView' />
+		</g:west>
+		<g:center>
+			<cn:NoteListView ui:field='noteListView' />
+			<cn:NoteView ui:field='noteView' />
+			<cn:FriendView ui:field='friendView' />
+		</g:center>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 

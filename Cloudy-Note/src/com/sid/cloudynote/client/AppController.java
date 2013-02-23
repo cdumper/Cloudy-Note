@@ -4,41 +4,32 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
-import com.sid.cloudynote.client.event.EditNoteDoneEvent;
-import com.sid.cloudynote.client.event.EditNoteEvent;
-import com.sid.cloudynote.client.event.NewNoteEvent;
-import com.sid.cloudynote.client.event.NoNotesExistEvent;
-import com.sid.cloudynote.client.event.NoteChangedEvent;
-import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
-import com.sid.cloudynote.client.event.NotebookChangedEvent;
-import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.view.AppView;
+import com.sid.cloudynote.shared.LoginInfo;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
+	private static AppController singleton;
 	private final HandlerManager eventBus;
-	private Cloudy_Note cn;
-
-	public AppController(Cloudy_Note cn, HandlerManager eventBus) {
-		this.cn = cn;
-		this.eventBus = eventBus;
-		bind();
+	private LoginInfo loginInfo;
+	boolean isPersonal = true;
+	public boolean isPersonal() {
+		return isPersonal;
 	}
 
-	private void bind() {
-		eventBus.addHandler(NewNoteEvent.TYPE, cn.noteView);
-		eventBus.addHandler(NewNoteEvent.TYPE, cn.searchView);
-		eventBus.addHandler(EditNoteEvent.TYPE, cn.noteView);
-		eventBus.addHandler(NoteChangedEvent.TYPE, cn.noteListView);
-		eventBus.addHandler(NotebookChangedEvent.TYPE, cn.notebookListView);
-		eventBus.addHandler(EditNoteDoneEvent.TYPE, cn.noteView);
-		eventBus.addHandler(EditNoteDoneEvent.TYPE, cn.searchView);
-		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.noteView);
-		eventBus.addHandler(NoNotesExistEvent.TYPE, cn.searchView);
-		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.noteView);
-		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, cn.searchView);
-		eventBus.addHandler(NoteSelectionChangedEvent.TYPE, cn.noteView);
-		eventBus.addHandler(TagChangedEvent.TYPE, cn.notebookListView);
+	public void setPersonal(boolean isPersonal) {
+		this.isPersonal = isPersonal;
+	}
+	private AppView appView;
+
+	public AppController(HandlerManager eventBus, LoginInfo login) {
+		AppController.singleton = this;
+		this.loginInfo = login;
+		this.eventBus = eventBus;
+	}
+	
+	public static AppController get() {
+		return singleton;
 	}
 
 	@Override
@@ -48,7 +39,11 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	}
 
 	@Override
-	public void go(final HasWidgets container) {
-		this.cn.go(container);
+	public void go(HasWidgets container) {
+		if (appView == null) {
+			appView = new AppView(eventBus,loginInfo);
+		}
+		
+		appView.go(container);
 	}
 }

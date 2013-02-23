@@ -14,17 +14,6 @@
 			text-align: left;
 		}
 	</ui:style>
-
-	<!-- <g:HTMLPanel styleName='{style.notesPanel}'> <table> <tr> <td valign='top' 
-		align='center'> <cn:ShowMorePagerPanel addStyleNames='{style.scrollable}' 
-		ui:field='pagerPanel' /> <cn:RangeLabelPager ui:field='rangeLabelPager' /> 
-		</td> </tr> <tr> <td align='center'> <cn:ShowMorePagerPanel ui:field='pager' 
-		/> </td> </tr> </table> </g:HTMLPanel> -->
-
-	<!-- <g:HTMLPanel styleName='{style.notesPanel}'> <table> <tr> <td valign='top' 
-		align='center'> <cn:ShowMorePagerPanel addStyleNames='{style.scrollable}' 
-		ui:field='pagerPanel' /> <cn:RangeLabelPager ui:field='rangeLabelPager' /> 
-		</td> </tr> </table> </g:HTMLPanel> -->
 	<cn:Container ui:field="container">
 		<cn:ShowMorePagerPanel addStyleNames='{style.scrollable}'
 			ui:field='pagerPanel' height="100%"/>

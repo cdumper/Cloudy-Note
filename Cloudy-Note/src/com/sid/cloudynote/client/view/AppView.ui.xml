@@ -1,0 +1,53 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
+	<ui:style>
+		.statusDiv {
+			text-align: right;
+			margin: 1em;
+		}
+		
+		.linksDiv {
+			text-align: right;
+		}
+		
+		.logo {
+			gwt-image: 'logo';
+			position: absolute;
+		}
+		}
+	</ui:style>
+	<cn:Container>
+		<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
+			<g:north size='8'>
+				<g:VerticalPanel height="100%" width="100%">
+					<g:HTMLPanel>
+						<div class='{style.logo}' />
+						<div class="{style.statusDiv}">
+							<div>
+								<g:Label ui:field="user" text="Welcome back, foo@example.com" />
+							</div>
+
+							<div class='{style.linksDiv}'>
+								<g:Anchor href='javascript:;' ui:field='signOutLink'>Sign Out
+								</g:Anchor>
+        &nbsp;
+								<g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
+							</div>
+						</div>
+					</g:HTMLPanel>
+				</g:VerticalPanel>
+			</g:north>
+			<g:center>
+				<g:DeckPanel ui:field="deck">
+					<cn:PersonalView ui:field='personalView'/>
+					<cn:SharingView ui:field='sharingView'/>
+				</g:DeckPanel>
+			</g:center>
+			<g:south size='5'>
+				<cn:BottomView ui:field='bottomView' />
+			</g:south>
+		</g:DockLayoutPanel>
+	</cn:Container>
+
+</ui:UiBinder> 
