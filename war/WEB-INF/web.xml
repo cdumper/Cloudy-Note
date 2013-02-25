@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                     http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- Servlets -->
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>Cloudy_Note.html</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>GetNotesListService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.GetNotesListServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>GetNotesListService</servlet-name>
+		<url-pattern>/cloudy_note/getNotesList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>TagService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.TagServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>TagService</servlet-name>
+		<url-pattern>/cloudy_note/tagService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>UserService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.UserServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UserService</servlet-name>
+		<url-pattern>/cloudy_note/userService</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>InfoNoteService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.InfoNoteServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>InfoNoteService</servlet-name>
+		<url-pattern>/cloudy_note/noteService</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>NotebookService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.NotebookServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>NotebookService</servlet-name>
+		<url-pattern>/cloudy_note/notebookService</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>loginService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.LoginServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>loginService</servlet-name>
+		<url-pattern>/cloudy_note/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>uploadService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.UploadServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>uploadService</servlet-name>
+		<url-pattern>/cloudy_note/uploadService</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>blobService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.BlobServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>blobService</servlet-name>
+		<url-pattern>/cloudy_note/blobService</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>uploadServlet</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.UploadServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>uploadServlet</servlet-name>
+		<url-pattern>/cloudy_note/upload</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>serveServlet</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.ServeServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>serveServlet</servlet-name>
+		<url-pattern>/cloudy_note/serve</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SystemServiceServlet</servlet-name>
+		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+		<init-param>
+			<param-name>services</param-name>
+			<param-value/>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SystemServiceServlet</servlet-name>
+		<url-pattern>/_ah/spi/*</url-pattern>
+	</servlet-mapping>
+
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>*</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+</web-app>
