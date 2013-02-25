@@ -11,12 +11,17 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.sharing.view.interfaces.IGroupView;
 import com.sid.cloudynote.client.view.Container;
 
-public class GroupView extends Composite{
+public class GroupView extends Composite implements IGroupView{
 	@UiField
 	Container container;
-	
+	public Container getContainer() {
+		return container;
+	}
+
+	private Presenter presenter;
 	private String PUBLIC = "Public";
 	private String SHARED_WITH_ME = "Shared with me";
 	private String GROUP = "Group";
@@ -41,15 +46,24 @@ public class GroupView extends Composite{
 			public void onSelectionChange(SelectionChangeEvent event) {
 				// TODO Auto-generated method stub
 				if (PUBLIC.equals(selectionModel.getSelectedObject())){
-					System.out.println("filter public");
-					
+					presenter.viewPublic();
 				} else if (SHARED_WITH_ME.equals(selectionModel.getSelectedObject())){
-					System.out.println("filter shared");
+					presenter.viewShared();
 				} else if (GROUP.equals(selectionModel.getSelectedObject())){
-					System.out.println("group");
+					presenter.viewGroups();
 				}
 			}
 		});
 		cellList.setSelectionModel(selectionModel);
+	}
+
+	@Override
+	public void setPresenter(Presenter presenter) {
+		this.presenter = presenter;
+	}
+	
+	@Override
+	public Widget asWidget(){
+		return this.cellList;
 	}
 }

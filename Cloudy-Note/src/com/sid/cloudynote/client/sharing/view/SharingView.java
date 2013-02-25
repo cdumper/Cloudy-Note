@@ -9,8 +9,9 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.presenter.Presenter;
-import com.sid.cloudynote.client.presenter.SharingNoteListPresenter;
-import com.sid.cloudynote.client.presenter.SharingSearchPresenter;
+import com.sid.cloudynote.client.sharing.presenter.GroupPresenter;
+import com.sid.cloudynote.client.sharing.presenter.SharingNoteListPresenter;
+import com.sid.cloudynote.client.sharing.presenter.SharingSearchPresenter;
 
 public class SharingView extends Composite implements Presenter{
 
@@ -24,6 +25,8 @@ public class SharingView extends Composite implements Presenter{
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
 	SharingSearchView searchView;
+	@UiField
+	GroupView groupView;
 	@UiField
 	SharingNoteListView noteListView;
 
@@ -54,15 +57,18 @@ public class SharingView extends Composite implements Presenter{
 				this.noteListView, eventBus);
 		SharingSearchPresenter searchPresenter = new SharingSearchPresenter(this.searchView,
 				eventBus);
+		GroupPresenter groupPresenter = new GroupPresenter(this.groupView, eventBus);
 //		NotePresenter notePresenter = new NotePresenter(
 //				this.noteView.asWidget(), eventBus);
 
 		this.noteListView.setPresenter(noteListPresenter);
 		this.searchView.setPresenter(searchPresenter);
+		this.groupView.setPresenter(groupPresenter);
 //		this.noteView.setPresenter(notePresenter);
 
 		noteListPresenter.go(noteListView.getContainer());
 		searchPresenter.go(searchView.getContainer());
+		groupPresenter.go(groupView.getContainer());
 //		notePresenter.go(noteView.getContainer());
 	}
 }

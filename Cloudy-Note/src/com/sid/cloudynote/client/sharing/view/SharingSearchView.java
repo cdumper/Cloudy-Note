@@ -9,8 +9,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.sharing.view.interfaces.ISharingSearchView;
 import com.sid.cloudynote.client.view.Container;
-import com.sid.cloudynote.client.view.interfaces.ISharingSearchView;
 
 public class SharingSearchView extends ResizeComposite implements ISharingSearchView{
 

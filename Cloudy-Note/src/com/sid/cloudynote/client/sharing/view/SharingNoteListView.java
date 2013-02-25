@@ -15,6 +15,7 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -23,8 +24,8 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteListView;
 import com.sid.cloudynote.client.view.Container;
-import com.sid.cloudynote.client.view.interfaces.ISharingNoteListView;
 import com.sid.cloudynote.shared.InfoNote;
 
 public class SharingNoteListView extends ResizeComposite implements ISharingNoteListView{
@@ -84,7 +85,7 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 					}
 				});
 		dataProvider.addDataDisplay(notesList);
-		this.tabNotes.add(notesList);
+		this.tabNotes.add(new ScrollPanel(notesList));
 		
 	}
 
@@ -135,7 +136,7 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 			sb.appendHtmlConstant("</td><td colspan='2'>");
 			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>",""));
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(note.getProperty().getCreatedTime().toString());
+			sb.appendEscaped(note.getCreatedTime().toString());
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}

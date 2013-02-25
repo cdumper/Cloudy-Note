@@ -1,9 +1,10 @@
-package com.sid.cloudynote.client.presenter;
+package com.sid.cloudynote.client.sharing.presenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.view.SharingSearchView;
-import com.sid.cloudynote.client.view.interfaces.ISharingSearchView;
+import com.sid.cloudynote.client.sharing.view.interfaces.ISharingSearchView;
 
 public class SharingSearchPresenter implements Presenter, ISharingSearchView.Presenter{
 	private final HandlerManager eventBus;

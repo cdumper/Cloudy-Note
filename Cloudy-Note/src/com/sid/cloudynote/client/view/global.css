@@ -98,7 +98,7 @@ a:link,a:visited,a:hover,a:active {
 
 /* tab panels css for SharingNoteListView*/
 .gwt-TabLayoutPanel {
-	height: 300px;
+	height: 100%;
 }
 
 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {

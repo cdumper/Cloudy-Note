@@ -2,6 +2,7 @@ package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,12 @@ public class InfoNote implements Serializable {
 	private String content;
 	@Persistent(defaultFetchGroup = "true")
 	private Notebook notebook;
-	@Persistent(defaultFetchGroup = "true")
-	private NoteProperty property;
+	@Persistent
+	private int visibility = Visibility.PRIVATE;
+	@Persistent
+	private Date createdTime;
+	@Persistent
+	private Date lastModifiedTime;
 	@Persistent
 	private List<Tag> tags;
 	@Persistent
@@ -43,6 +48,34 @@ public class InfoNote implements Serializable {
 
 	public Map<String, Integer> getAccess() {
 		return access;
+	}
+
+	public int getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public Date getLastModifiedTime() {
+		return lastModifiedTime;
+	}
+
+	public void setLastModifiedTime(Date lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
+
+	public void setAccess(Map<String, Integer> access) {
+		this.access = access;
 	}
 
 	public InfoNote() {
@@ -59,12 +92,10 @@ public class InfoNote implements Serializable {
 //		this.user = null;
 	}
 
-	public InfoNote(Notebook notebook, String title, String content,
-			NoteProperty property, List<String> attachments) {
+	public InfoNote(Notebook notebook, String title, String content, List<String> attachments) {
 		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
-		this.property = property;
 		this.attachments = attachments;
 	}
 
@@ -78,10 +109,6 @@ public class InfoNote implements Serializable {
 
 	public Notebook getNotebook() {
 		return notebook;
-	}
-
-	public NoteProperty getProperty() {
-		return property;
 	}
 
 	public String getTitle() {
@@ -106,10 +133,6 @@ public class InfoNote implements Serializable {
 
 	public void setNotebook(Notebook notebook) {
 		this.notebook = notebook;
-	}
-
-	public void setProperty(NoteProperty property) {
-		this.property = property;
 	}
 
 	public void setTitle(String title) {

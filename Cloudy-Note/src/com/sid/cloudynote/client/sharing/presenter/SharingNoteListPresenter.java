@@ -1,4 +1,4 @@
-package com.sid.cloudynote.client.presenter;
+package com.sid.cloudynote.client.sharing.presenter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +12,11 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
+import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.sharing.view.SharingNoteListView;
-import com.sid.cloudynote.client.view.interfaces.ISharingNoteListView;
+import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteListView;
 import com.sid.cloudynote.shared.InfoNote;
 
 public class SharingNoteListPresenter implements Presenter,

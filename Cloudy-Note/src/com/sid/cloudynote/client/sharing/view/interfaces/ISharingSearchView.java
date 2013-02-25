@@ -1,4 +1,4 @@
-package com.sid.cloudynote.client.view.interfaces;
+package com.sid.cloudynote.client.sharing.view.interfaces;
 
 import com.google.gwt.user.client.ui.Widget;
 

@@ -58,7 +58,7 @@ public class NonEditableNoteView extends Composite {
 	public void presentNote(InfoNote note) {
 		if (note != null) {
 			title.setText(note.getTitle());
-			datetime.setText("Created Time: "+note.getProperty().getCreatedTime()+"	Last Modified Time: "+note.getProperty().getLastModifiOedTime());
+			datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 			notebook.setText(DataManager.getCurrentNotebook().getName());
 			content.setText(note.getContent().replaceAll("\\<.*?>",""));
 			content.setWidth("90%");
