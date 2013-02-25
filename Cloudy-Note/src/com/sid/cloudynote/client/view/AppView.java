@@ -21,6 +21,8 @@ import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
+import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.client.view.PersonalView.GlobalResources;
@@ -81,8 +83,8 @@ public class AppView extends Composite implements Presenter{
 	}
 	
 	private void bindSharingEvents() {
-		// TODO Auto-generated method stub
-		
+		eventBus.addHandler(ViewPublicNotesEvent.TYPE, sharingView.noteListView);
+		eventBus.addHandler(ViewSharedNotesEvent.TYPE, sharingView.noteListView);
 	}
 
 	private void bindEvents() {

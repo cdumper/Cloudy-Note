@@ -22,13 +22,15 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.sid.cloudynote.client.AppController;
-import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
+import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
+import com.sid.cloudynote.client.event.interfaces.IViewPublicHandler;
+import com.sid.cloudynote.client.event.interfaces.IViewSharedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteListView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.InfoNote;
 
-public class SharingNoteListView extends ResizeComposite implements ISharingNoteListView{
+public class SharingNoteListView extends ResizeComposite implements ISharingNoteListView, IViewPublicHandler, IViewSharedHandler{
 	@UiField
 	Container container;
 	@UiField
@@ -132,7 +134,7 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
 			sb.appendEscaped(note.getTitle());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(AppController.get().getLoginInfo().getEmailAddress());
+			sb.appendEscaped(note.getUser().getEmail());
 			sb.appendHtmlConstant("</td><td colspan='2'>");
 			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>",""));
 			sb.appendHtmlConstant("</td></tr><tr><td>");
@@ -144,13 +146,25 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 	public void setNoteList(List<InfoNote> result){
 		List<InfoNote> notes = dataProvider.getList();
 		notes.clear();
-		notes.addAll(result);
-		if(DataManager.getCurrentNote()!=null)
-			selectionModel.setSelected(DataManager.getCurrentNote(), true);
+		selectionModel.clear();
+		if (result!=null && result.size()!=0){
+			notes.addAll(result);
+			selectionModel.setSelected(result.get(0), true);
+		}
 	}
 
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
+	}
+
+	@Override
+	public void onViewPublicNotes(ViewPublicNotesEvent event) {
+		presenter.loadPublicNoteList();
+	}
+
+	@Override
+	public void onViewSharedNotes(ViewSharedNotesEvent event) {
+		presenter.loadSharedNoteList(event.getUser().getId());
 	}
 }

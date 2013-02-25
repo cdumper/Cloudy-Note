@@ -9,16 +9,15 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.shared.InfoNote;
-import com.sid.cloudynote.shared.Note;
 
 public class NonEditableNoteView extends Composite {
-	private Note note;
+	private InfoNote note;
 
-	public Note getNote() {
+	public InfoNote getNote() {
 		return note;
 	}
 
-	public void setNote(Note note) {
+	public void setNote(InfoNote note) {
 		this.note = note;
 	}
 
@@ -33,11 +32,11 @@ public class NonEditableNoteView extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public NonEditableNoteView(Note note) {
+	public NonEditableNoteView(InfoNote note) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.note = note;
 		this.title.setText(note.getTitle());
-		this.datetime.setText("Created Time: "+note.getProperty().getCreatedTime()+"	Last Modified Time: "+note.getProperty().getLastModifiOedTime());
+		this.datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 		this.notebook.setText(note.getNotebook().getName());
 		this.content.setText(note.getContent());
 	}

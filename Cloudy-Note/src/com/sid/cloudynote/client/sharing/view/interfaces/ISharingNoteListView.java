@@ -8,7 +8,9 @@ import com.sid.cloudynote.shared.InfoNote;
 public interface ISharingNoteListView {
 	public interface Presenter {
 		void onNoteItemSelected(InfoNote clickedItem);
-		void loadNoteList();
+		void loadPublicNoteList();
+		void loadSharedNoteList(String id);
+		void loadGroups();
 		void startEditing(InfoNote infoNote);
 	}
 	

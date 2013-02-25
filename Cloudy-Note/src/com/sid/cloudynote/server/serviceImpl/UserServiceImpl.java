@@ -7,12 +7,14 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.User;
 
-public class UserServiceImpl extends RemoteServiceServlet implements UserService{
+public class UserServiceImpl extends RemoteServiceServlet implements
+		UserService {
 	/**
 	 * 
 	 */
@@ -25,11 +27,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 		Query q = pm.newQuery(User.class);
 		q.setFilter("emailAddress == emailAddressParam");
 		q.declareParameters("String emailAddressParam");
-		q.setRange(0,1);
+		q.setRange(0, 1);
 		List<User> results;
 		try {
 			Object obj = q.execute(email);
-			if (obj!=null) {
+			if (obj != null) {
 				results = (List<User>) obj;
 				results = new ArrayList<User>(pm.detachCopyAll(results));
 				results.size();
@@ -47,10 +49,17 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	}
 
 	@Override
-	public void addAccessEntry(String id,List<Key> notes, int permission) {
-		User user = this.getUser(id);
-		for (Key note : notes) {
-			user.getAccess().put(note, permission);
+	public void addAccessEntry(String email, List<Key> notes, int permission) {
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		User user = this.getUser(email);
+		if (user != null) {
+			for (Key note : notes) {
+				user.getAccess().put(note, permission);
+			}
+			pm.makePersistent(user);
+			pm.close();
+		} else {
+			GWT.log("User with email address:"+email+" does not exist");
 		}
 	}
 }

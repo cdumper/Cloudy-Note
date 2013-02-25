@@ -9,6 +9,6 @@ import com.sid.cloudynote.shared.User;
 
 @RemoteServiceRelativePath("userService")
 public interface UserService extends RemoteService{
-	User getUser(String id);
-	void addAccessEntry(String id,List<Key> notes, int permission);
+	User getUser(String email);
+	void addAccessEntry(String email,List<Key> notes, int permission);
 }

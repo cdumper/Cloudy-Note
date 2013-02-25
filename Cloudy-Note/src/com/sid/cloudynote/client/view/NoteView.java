@@ -10,15 +10,15 @@ import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.EditNoteEvent;
-import com.sid.cloudynote.client.event.IEditDoneButtonClickedHandler;
-import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
-import com.sid.cloudynote.client.event.IEditNoteHandler;
-import com.sid.cloudynote.client.event.INewNoteHandler;
-import com.sid.cloudynote.client.event.INoNotesExistHandler;
-import com.sid.cloudynote.client.event.INoteSelectionChangedHandler;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
+import com.sid.cloudynote.client.event.interfaces.IEditDoneButtonClickedHandler;
+import com.sid.cloudynote.client.event.interfaces.IEditNoteDoneHandler;
+import com.sid.cloudynote.client.event.interfaces.IEditNoteHandler;
+import com.sid.cloudynote.client.event.interfaces.INewNoteHandler;
+import com.sid.cloudynote.client.event.interfaces.INoNotesExistHandler;
+import com.sid.cloudynote.client.event.interfaces.INoteSelectionChangedHandler;
 import com.sid.cloudynote.client.view.interfaces.INoteView;
 
 public class NoteView extends ResizeComposite implements INoteView,

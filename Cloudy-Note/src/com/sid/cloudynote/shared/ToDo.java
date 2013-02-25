@@ -20,11 +20,6 @@ public class ToDo extends Note{
 	}
 
 	@Override
-	public NoteProperty getProperty() {
-		return null;
-	}
-
-	@Override
 	public String getTitle() {
 		return null;
 	}

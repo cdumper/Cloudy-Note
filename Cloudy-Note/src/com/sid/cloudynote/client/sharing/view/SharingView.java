@@ -24,11 +24,11 @@ public class SharingView extends Composite implements Presenter{
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
-	SharingSearchView searchView;
+	public SharingSearchView searchView;
 	@UiField
-	GroupView groupView;
+	public GroupView groupView;
 	@UiField
-	SharingNoteListView noteListView;
+	public SharingNoteListView noteListView;
 
 	private HandlerManager eventBus;
 
