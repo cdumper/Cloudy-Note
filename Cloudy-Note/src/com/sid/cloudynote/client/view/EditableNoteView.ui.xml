@@ -3,21 +3,9 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view"
 	xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
 	<ui:style>
-		.editPanel {
-			border-top: 1px solid #999;
-			border-left: 1px solid #999;
-			border-right: 1px solid #999;
-			border-bottom: 1px solid #999;
-		}
-		
-		.title {
-			background-color: #CCC;
-			border-bottom: 1px solid #000;
-		}
 	</ui:style>
 
-	<g:DockLayoutPanel styleName="{style.editPanel}"
-		unit="PCT">
+	<g:DockLayoutPanel unit="PCT">
 		<g:north size="20">
 			<g:VerticalPanel ui:field="topPanel">
 				<g:TextBox ui:field="title"></g:TextBox>

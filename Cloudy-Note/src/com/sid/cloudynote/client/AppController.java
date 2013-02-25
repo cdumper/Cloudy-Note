@@ -6,12 +6,15 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.view.AppView;
-import com.sid.cloudynote.shared.LoginInfo;
+import com.sid.cloudynote.shared.User;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
 	private static AppController singleton;
 	private final HandlerManager eventBus;
-	private LoginInfo loginInfo;
+	private User loginInfo;
+	public User getLoginInfo() {
+		return loginInfo;
+	}
 	boolean isPersonal = true;
 	public boolean isPersonal() {
 		return isPersonal;
@@ -22,7 +25,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	}
 	private AppView appView;
 
-	public AppController(HandlerManager eventBus, LoginInfo login) {
+	public AppController(HandlerManager eventBus, User login) {
 		AppController.singleton = this;
 		this.loginInfo = login;
 		this.eventBus = eventBus;

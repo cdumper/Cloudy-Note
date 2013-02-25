@@ -37,4 +37,8 @@ public interface InfoNoteServiceAsync {
 
 	void moveNoteTo(InfoNote note, Notebook notebook,
 			AsyncCallback<Void> callback);
+
+	void getPublicNotes(String id, AsyncCallback<List<InfoNote>> callback);
+
+	void getSharedNotes(String id, AsyncCallback<List<InfoNote>> callback);
 }

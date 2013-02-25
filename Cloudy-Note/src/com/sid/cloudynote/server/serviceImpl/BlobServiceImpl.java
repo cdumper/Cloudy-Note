@@ -16,6 +16,11 @@ import com.sid.cloudynote.shared.NotLoggedInException;
 public class BlobServiceImpl extends RemoteServiceServlet implements
 		BlobService {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 874980440598498197L;
+
 	@Override
 	public List<String> getBlobFileName(List<String> keys) {
 		try {

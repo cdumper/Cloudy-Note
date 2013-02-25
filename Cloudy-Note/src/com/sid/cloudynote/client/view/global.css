@@ -28,6 +28,7 @@ a:link,a:visited,a:hover,a:active {
 }
 
 .gwt-DialogBox .dialogContent {
+	
 }
 
 .gwt-DialogBox .gwt-Button {
@@ -64,9 +65,11 @@ a:link,a:visited,a:hover,a:active {
 }
 
 .gwt-DisclosurePanel {
+	
 }
 
 .gwt-DisclosurePanel .header {
+	
 }
 
 .gwt-DisclosurePanel .content {
@@ -74,12 +77,15 @@ a:link,a:visited,a:hover,a:active {
 }
 
 .gwt-DisclosurePanel-open {
+	
 }
 
 .gwt-DisclosurePanel-closed {
+	
 }
 
 .gwt-VerticalPanel {
+	
 }
 
 .gwt-PopupPanel {
@@ -88,4 +94,40 @@ a:link,a:visited,a:hover,a:active {
 	border-right: 1px solid #999 !important;
 	border-top: 1px solid #999 !important;
 	border-bottom: 1px solid #999 !important;
+}
+
+/* tab panels css for SharingNoteListView*/
+.gwt-TabLayoutPanel {
+	height: 300px;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
+	background: #FFFFFF;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
+	border-color: #e6e7e8;
+	border-style: solid;
+	border-width: 3px 2px 2px;
+	overflow: hidden;
+	padding: 6px;
+	background: #FFFFFF;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
+	margin-left: 6px;
+	padding: 3px 8px 3px 8px;
+	cursor: pointer;
+	cursor: hand;
+	color: black;
+	font-size: 1.2em;
+	color: #8bc53d;
+	text-align: center;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
+	cursor: default;
+	background: #8bc53d;
+	font-size: 1.2em;
+	color: #FFFFFF;
 }

@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sid.cloudynote.client.service.LoginService;
 import com.sid.cloudynote.client.service.LoginServiceAsync;
-import com.sid.cloudynote.shared.LoginInfo;
+import com.sid.cloudynote.shared.User;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -20,7 +20,7 @@ public class Cloudy_Note implements EntryPoint {
 	private AppController controller;
 
 	// following variables are for the login service
-	private LoginInfo loginInfo = null;
+	private User loginUser = null;
 	private VerticalPanel loginPanel = new VerticalPanel();
 	private Label loginLabel = new Label(
 			"Please sign in to your Google Account to access the Cloudy Note application.");
@@ -33,13 +33,13 @@ public class Cloudy_Note implements EntryPoint {
 		// Check login status using login service.
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(),
-				new AsyncCallback<LoginInfo>() {
+				new AsyncCallback<User>() {
 					public void onFailure(Throwable error) {
 					}
 
-					public void onSuccess(LoginInfo result) {
-						loginInfo = result;
-						if (loginInfo.isLoggedIn()) {
+					public void onSuccess(User result) {
+						loginUser = result;
+						if (loginUser.isLoggedIn()) {
 							loadApp();
 						} else {
 							loadLogin();
@@ -50,7 +50,7 @@ public class Cloudy_Note implements EntryPoint {
 
 	private void loadLogin() {
 		// Assemble login panel.
-		signInLink.setHref(loginInfo.getLoginUrl());
+		signInLink.setHref(loginUser.getLoginUrl());
 		loginPanel.add(loginLabel);
 		loginPanel.add(signInLink);
 		RootLayoutPanel.get().add(loginPanel);
@@ -58,7 +58,7 @@ public class Cloudy_Note implements EntryPoint {
 
 	private void loadApp() {
 		eventBus = new HandlerManager(null);
-		controller = new AppController(eventBus, loginInfo);
+		controller = new AppController(eventBus, loginUser);
 		
 		controller.go(RootLayoutPanel.get());
 	}

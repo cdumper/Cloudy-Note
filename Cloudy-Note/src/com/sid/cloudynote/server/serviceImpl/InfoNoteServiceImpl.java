@@ -116,10 +116,10 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
-				InfoNote entity = new InfoNote(notebook, title, content);
-				entity.setProperty(property);
+				InfoNote entity = new InfoNote(notebook, title, content, property, attachments);
 				entity.setUser(getUser());
-				entity.setAttachments(attachments);
+//				entity.setProperty(property);
+//				entity.setAttachments(attachments);
 				pm.deletePersistent(note);
 //				pm.deletePersistent(note.getProperty());
 				pm.makePersistent(entity);
@@ -280,5 +280,43 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	private User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
+	}
+
+	@Override
+	public List<InfoNote> getPublicNotes(String id)
+			throws NotLoggedInException {
+		//TODO
+		List<InfoNote> result = new ArrayList<InfoNote>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		
+//		Query q = pm.newQuery("select from " + InfoNote.class.getName() 
+//				  + " where "
+//				  + "credits.contains(c) && c.department == 'Philosophy' && "
+//				  + "year == 'Senior'");
+//				q.declareVariables(Credit.class.getName() + " c");
+				
+		Query q = pm.newQuery(InfoNote.class);
+		q.setFilter("id == idParam");
+		q.declareParameters("String idParam");
+		try {
+
+			Object obj = q.execute(id);
+			if (obj != null) {
+				result = (List<InfoNote>) obj;
+				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
+				result.size();
+			}
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+		return result;
+	}
+
+	@Override
+	public List<InfoNote> getSharedNotes(String id)
+			throws NotLoggedInException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -3,15 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style>
 		.notebooksPanel {
-			border-top: 1px solid #999;
-			border-left: 1px solid #999;
-			border-right: 1px solid #999;
-			border-bottom: 1px solid #999;
-		}
-		
-		.scrollable {
-			border: 1px solid #999; /*ccc*/
-			text-align: left;
+			border: 1px solid #999;
 		}
 	</ui:style>
 	<cn:Container ui:field="container" addStyleNames='{style.notebooksPanel}'>

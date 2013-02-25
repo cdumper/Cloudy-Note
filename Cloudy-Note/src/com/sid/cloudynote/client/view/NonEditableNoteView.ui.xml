@@ -2,21 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
-		.editPanel {
-			border-top: 1px solid #999;
-			border-left: 1px solid #999;
-			border-right: 1px solid #999;
-			border-bottom: 1px solid #999;
-		}
-		.title {
-			background-color: #CCC;
-			border-bottom: 1px solid #000;
-		}
+		
 	</ui:style>
-	<g:VerticalPanel styleName="{style.editPanel}">
-		<g:Label ui:field="title" text='title'/>
-		<g:Label ui:field="notebook" text='notebook'/>
-		<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:'/>
-		<g:TextArea ui:field="content" text='content'/>
+	<g:VerticalPanel>
+		<g:Label ui:field="title" text='title' />
+		<g:Label ui:field="notebook" text='notebook' />
+		<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
+		<g:TextArea ui:field="content" text='content' />
 	</g:VerticalPanel>
 </ui:UiBinder> 

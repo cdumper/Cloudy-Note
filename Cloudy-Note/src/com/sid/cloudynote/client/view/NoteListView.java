@@ -27,8 +27,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -59,6 +61,8 @@ public class NoteListView extends ResizeComposite implements
 	ShowMorePagerPanel pagerPanel;
 	@UiField
 	Container container;
+	@UiField
+	Label label;
 
 	public Container getContainer() {
 		return container;
@@ -147,7 +151,7 @@ public class NoteListView extends ResizeComposite implements
 			if ("contextmenu".equals(event.getType())){
 				noteContextMenu = new NoteContextMenu(value);
 				initialNoteContextMenu();
-//				noteContextMenu.setSelectedNote(value);
+				noteContextMenu.setSelectedNote(value);
 				noteContextMenu.setPopupPosition(event.getClientX(),
 						event.getClientY());
 				noteContextMenu.show();
@@ -189,7 +193,7 @@ public class NoteListView extends ResizeComposite implements
 		}
 		
 		List<String> OPERATION_LIST = new ArrayList<String>(Arrays.asList(
-				"Edit", "Delete"));
+				"Edit", "Share", "Delete"));
 		private NoteContextMenu noteContextMenu;
 		
 		private void initialNoteContextMenu(){
@@ -204,10 +208,12 @@ public class NoteListView extends ResizeComposite implements
 					if ("click".equals(event.getType())) {
 						noteContextMenu.hide();
 						if ("Edit".equals(value)) {
-//							selectionModel.setSelected(noteContextMenu.getSelectedNote(), true);
+							selectionModel.setSelected(noteContextMenu.getSelectedNote(), true);
 							presenter.startEditing(noteContextMenu.getSelectedNote());
 						} else if ("Delete".equals(value)) {
 							showDeletePanel();
+						} else if ("Share".equals(value)) {
+							showSharePanel(noteContextMenu.getSelectedNote());
 						} 
 					}
 				}
@@ -217,6 +223,39 @@ public class NoteListView extends ResizeComposite implements
 			content.add(operationList);
 		}
 		
+		public void showSharePanel(final InfoNote note) {
+			final DialogBox dialog = new DialogBox();
+			dialog.setText(note.getTitle());
+			VerticalPanel content = new VerticalPanel();
+			dialog.setWidget(content);
+
+			Label name = new Label(" Share with individuals</br>Invite others to view or edit this notebook. ");
+			final TextBox users = new TextBox();
+			final ListBox access = new ListBox();
+			access.addItem("Read-Only");
+			access.addItem("Write");
+
+			HorizontalPanel buttonPanel = new HorizontalPanel();
+			buttonPanel.add(new Button("Cancel", new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					dialog.hide();
+				}
+			}));
+			buttonPanel.add(new Button("OK", new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					presenter.shareNoteToUser(users.getText(),note,access.getItemText(access.getSelectedIndex()));
+					dialog.hide();
+				}
+			}));
+			content.add(name);
+			content.add(users);
+			content.add(access);
+			content.add(buttonPanel);
+
+			dialog.show();
+			dialog.center();
+		}
+
 		public void showDeletePanel() {
 			final DialogBox dialog = new DialogBox();
 			dialog.setText("Delete Note");
@@ -292,6 +331,10 @@ public class NoteListView extends ResizeComposite implements
 		notes.addAll(result);
 		if(DataManager.getCurrentNote()!=null)
 			selectionModel.setSelected(DataManager.getCurrentNote(), true);
+	}
+	
+	public void setLabel(String text){
+		this.label.setText(text);
 	}
 
 	@Override

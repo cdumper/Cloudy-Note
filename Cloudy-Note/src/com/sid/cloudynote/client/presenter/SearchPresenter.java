@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
-import com.sid.cloudynote.client.event.IEditDoneButtonClickedHandler;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.NotebookService;

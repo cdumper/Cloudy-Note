@@ -16,7 +16,7 @@
 		<servlet-name>GetNotesListService</servlet-name>
 		<url-pattern>/cloudy_note/getNotesList</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>TagService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.TagServiceImpl</servlet-class>
@@ -25,6 +25,16 @@
 	<servlet-mapping>
 		<servlet-name>TagService</servlet-name>
 		<url-pattern>/cloudy_note/tagService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>UserService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.UserServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UserService</servlet-name>
+		<url-pattern>/cloudy_note/userService</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -56,7 +66,7 @@
 		<servlet-name>loginService</servlet-name>
 		<url-pattern>/cloudy_note/login</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>uploadService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.UploadServiceImpl</servlet-class>
@@ -66,7 +76,7 @@
 		<servlet-name>uploadService</servlet-name>
 		<url-pattern>/cloudy_note/uploadService</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>blobService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.BlobServiceImpl</servlet-class>
@@ -76,7 +86,7 @@
 		<servlet-name>blobService</servlet-name>
 		<url-pattern>/cloudy_note/blobService</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>uploadServlet</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.UploadServlet</servlet-class>
@@ -86,7 +96,7 @@
 		<servlet-name>uploadServlet</servlet-name>
 		<url-pattern>/cloudy_note/upload</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>serveServlet</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.ServeServlet</servlet-class>

@@ -13,6 +13,10 @@ import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
 public class NoteProperty implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7312153645429635782L;
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;

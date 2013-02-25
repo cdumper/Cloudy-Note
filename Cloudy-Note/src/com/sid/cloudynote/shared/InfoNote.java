@@ -2,7 +2,9 @@ package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -14,8 +16,11 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
-// public class InfoNote extends Note{
 public class InfoNote implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8463139417096235807L;
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
@@ -33,6 +38,12 @@ public class InfoNote implements Serializable {
 	private List<Tag> tags;
 	@Persistent
 	private List<String> attachments;
+	@Persistent(serialized = "true", defaultFetchGroup = "true") 
+	private Map<String, Integer> access = new HashMap<String, Integer>();
+
+	public Map<String, Integer> getAccess() {
+		return access;
+	}
 
 	public InfoNote() {
 		super();
@@ -42,11 +53,10 @@ public class InfoNote implements Serializable {
 		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
-		this.property = null;
-		this.tags = null;
-//		this.attachments = new ArrayList<String>();
-		this.attachments = null;
-		this.user = null;
+//		this.property = null;
+//		this.tags = null;
+//		this.attachments = null;
+//		this.user = null;
 	}
 
 	public InfoNote(Notebook notebook, String title, String content,

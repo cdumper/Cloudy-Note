@@ -20,6 +20,11 @@ import com.sid.cloudynote.shared.Tag;
 
 public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1696604858964797961L;
+
 	@Override
 	public void add(Tag entity) throws NotLoggedInException {
 		checkLoggedIn();

@@ -1,4 +1,4 @@
-package com.sid.cloudynote.client.view;
+package com.sid.cloudynote.client.sharing.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -8,8 +8,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.presenter.SharingNoteListPresenter;
+import com.sid.cloudynote.client.presenter.SharingSearchPresenter;
 
 public class SharingView extends Composite implements Presenter{
 
@@ -22,14 +23,11 @@ public class SharingView extends Composite implements Presenter{
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
-	SearchView searchView;
+	SharingSearchView searchView;
 	@UiField
-	NoteListView noteListView;
-	@UiField
-	NoteView noteView;
+	SharingNoteListView noteListView;
 
 	private HandlerManager eventBus;
-	private AppController appViewer;
 
 	public SharingView() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -39,11 +37,32 @@ public class SharingView extends Composite implements Presenter{
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(this.dockLayoutPanel);
-//		bindPresentersAndViews();
 	}
 	
 	@Override
 	public Widget asWidget(){
 		return this.dockLayoutPanel;
+	}
+
+	public void seteEventBus(HandlerManager eventBus) {
+		this.eventBus = eventBus;
+		bindPresentersAndViews();
+	}
+	
+	private void bindPresentersAndViews() {
+		SharingNoteListPresenter noteListPresenter = new SharingNoteListPresenter(
+				this.noteListView, eventBus);
+		SharingSearchPresenter searchPresenter = new SharingSearchPresenter(this.searchView,
+				eventBus);
+//		NotePresenter notePresenter = new NotePresenter(
+//				this.noteView.asWidget(), eventBus);
+
+		this.noteListView.setPresenter(noteListPresenter);
+		this.searchView.setPresenter(searchPresenter);
+//		this.noteView.setPresenter(notePresenter);
+
+		noteListPresenter.go(noteListView.getContainer());
+		searchPresenter.go(searchView.getContainer());
+//		notePresenter.go(noteView.getContainer());
 	}
 }

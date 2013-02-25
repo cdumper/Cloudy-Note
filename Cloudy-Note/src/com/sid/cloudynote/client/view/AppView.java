@@ -22,8 +22,9 @@ import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.client.view.PersonalView.GlobalResources;
-import com.sid.cloudynote.shared.LoginInfo;
+import com.sid.cloudynote.shared.User;
 
 public class AppView extends Composite implements Presenter{
 	@UiField
@@ -44,13 +45,13 @@ public class AppView extends Composite implements Presenter{
 	SharingView sharingView;
 	
 	private HandlerManager eventBus;
-	private LoginInfo loginInfo = null;
+	private User loginInfo = null;
 	private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
 	
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
 	}
 	
-	public AppView(HandlerManager eventBus, LoginInfo login) {
+	public AppView(HandlerManager eventBus, User login) {
 		GWT.<GlobalResources> create(GlobalResources.class).css()
 		.ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));
@@ -72,11 +73,18 @@ public class AppView extends Composite implements Presenter{
 			if (sharingView == null) {
 				sharingView = new SharingView();
 			}
+			sharingView.seteEventBus(eventBus);
+			bindSharingEvents();
 			deck.showWidget(1);
 		}
 		container.add(dockLayoutPanel);
 	}
 	
+	private void bindSharingEvents() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void bindEvents() {
 		eventBus.addHandler(NewNoteEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(NewNoteEvent.TYPE, personalView.searchView);
