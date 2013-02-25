@@ -14,6 +14,10 @@ import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
 public class Tag implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6848861744579532168L;
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;

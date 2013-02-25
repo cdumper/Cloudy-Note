@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.sid.cloudynote.client.event.interfaces.INoteSelectionChangedHandler;
 import com.sid.cloudynote.shared.InfoNote;
 
 public class NoteSelectionChangedEvent extends GwtEvent<INoteSelectionChangedHandler>{

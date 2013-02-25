@@ -8,9 +8,9 @@
 	</ui:style>
 	<cn:Container ui:field="container">
 		<g:HorizontalPanel ui:field="content">
+			<g:TextBox ui:field='searchField' />
 			<g:Button ui:field='newNotebook' text='New Notebook'></g:Button>
 			<g:Button ui:field='newNote' text='New Note' />
-			<g:TextBox ui:field='searchField' />
 			<g:Button ui:field='edit' text='Edit'></g:Button>
 		</g:HorizontalPanel>
 	</cn:Container>

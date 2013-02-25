@@ -13,12 +13,12 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
-import com.sid.cloudynote.client.event.IEditDoneButtonClickedHandler;
-import com.sid.cloudynote.client.event.IEditNoteDoneHandler;
-import com.sid.cloudynote.client.event.INewNoteHandler;
-import com.sid.cloudynote.client.event.INoNotesExistHandler;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
+import com.sid.cloudynote.client.event.interfaces.IEditDoneButtonClickedHandler;
+import com.sid.cloudynote.client.event.interfaces.IEditNoteDoneHandler;
+import com.sid.cloudynote.client.event.interfaces.INewNoteHandler;
+import com.sid.cloudynote.client.event.interfaces.INoNotesExistHandler;
 import com.sid.cloudynote.client.view.interfaces.ISearchView;
 
 public class SearchView extends ResizeComposite implements ISearchView, INoNotesExistHandler, INewNoteHandler, IEditNoteDoneHandler, IEditDoneButtonClickedHandler{

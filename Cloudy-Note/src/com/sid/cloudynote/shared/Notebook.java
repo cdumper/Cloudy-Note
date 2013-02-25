@@ -16,6 +16,10 @@ import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
 public class Notebook implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3123511693757621679L;
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;

@@ -13,4 +13,6 @@ import com.sid.cloudynote.shared.Notebook;
 public interface InfoNoteService extends RemoteService, IDAO<InfoNote>{
 	List<InfoNote> getNotes(Notebook currentNotebook) throws NotLoggedInException;
 	void moveNoteTo(InfoNote note, Notebook notebook) throws NotLoggedInException;
+	List<InfoNote> getPublicNotes() throws NotLoggedInException;
+	List<InfoNote> getSharedNotes(String id) throws NotLoggedInException;
 }

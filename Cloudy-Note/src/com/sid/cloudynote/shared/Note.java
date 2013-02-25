@@ -7,7 +7,6 @@ public class Note implements INote {
 	private String title;
 	private Notebook notebook;
 	private String content;
-	private NoteProperty property;
 
 	public String getTitle() {
 		return title;
@@ -23,14 +22,6 @@ public class Note implements INote {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public NoteProperty getProperty() {
-		return property;
-	}
-
-	public void setProperty(NoteProperty property) {
-		this.property = property;
 	}
 
 	public Key getKey() {

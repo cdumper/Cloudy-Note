@@ -1,5 +1,6 @@
 package com.sid.cloudynote.client.presenter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.NoteListView;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.InfoNote;
@@ -61,6 +64,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 					eventBus.fireEvent(new NoNotesExistEvent());
 				}
 				view.setNoteList(result);
+				view.setLabel(notebook.getName());
 			}
 		};
 		service.getNotes(notebook, callback);
@@ -80,5 +84,28 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 //		else if(view.getEdit().getText().equals("Done"))
 //			view.getEdit().setText("Edit");
 		eventBus.fireEvent(new EditDoneButtonClickedEvent(value));
+	}
+
+	@Override
+	public void shareNoteToUser(String email, InfoNote note, String permission) {
+		// TODO perform share notes
+		//Add entry in Note acl
+		note.getAccess().put("sid@shen.com",1);
+		
+		//Add entry in User acl
+		UserServiceAsync service = GWT.create(UserService.class);
+		ArrayList<Key> notes = new ArrayList<Key>();
+		notes.add(note.getKey());
+		service.addAccessEntry(email, notes, 1, new AsyncCallback<Void>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Share notes failed");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				
+			}
+		});
 	}
 }

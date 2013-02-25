@@ -12,6 +12,7 @@ public interface INoteListView {
 		void onNoteItemRightClicked(InfoNote clickedItem);
 		void loadNoteList(Notebook notebook);
 		void startEditing(InfoNote infoNote);
+		void shareNoteToUser(String text, InfoNote note, String itemText);
 	}
 	
 	void setPresenter(Presenter presenter);

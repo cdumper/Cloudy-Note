@@ -3,6 +3,8 @@ package com.sid.cloudynote.server.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -18,8 +20,8 @@ import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
-import com.sid.cloudynote.shared.NoteProperty;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Visibility;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		InfoNoteService {
@@ -39,8 +41,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			NoteProperty property = new NoteProperty(new Date(), new Date());
-			note.setProperty(property);
+			note.setCreatedTime(new Date());
+			note.setLastModifiedTime(new Date());
 			note.setUser(getUser());
 			pm.makePersistent(note);
 			pm.currentTransaction().commit();
@@ -90,6 +92,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
+				note.setLastModifiedTime(new Date());
 				pm.makePersistent(note);
 			}
 			pm.currentTransaction().commit();
@@ -108,20 +111,21 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		String title = note.getTitle();
 		String content = note.getContent();
-		NoteProperty property = new NoteProperty(note.getProperty()
-				.getCreatedTime(), new Date());
 		List<String> attachments = note.getAttachments();
 		try {
 			pm.currentTransaction().begin();
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
-				InfoNote entity = new InfoNote(notebook, title, content);
-				entity.setProperty(property);
+				InfoNote entity = new InfoNote(notebook, title, content,
+						attachments);
+				entity.setCreatedTime(note.getCreatedTime());
+				entity.setLastModifiedTime(new Date());
 				entity.setUser(getUser());
-				entity.setAttachments(attachments);
+				// entity.setProperty(property);
+				// entity.setAttachments(attachments);
 				pm.deletePersistent(note);
-//				pm.deletePersistent(note.getProperty());
+				// pm.deletePersistent(note.getProperty());
 				pm.makePersistent(entity);
 			}
 			pm.currentTransaction().commit();
@@ -280,5 +284,81 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	private User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
+	}
+
+	@Override
+	public List<InfoNote> getPublicNotes() throws NotLoggedInException {
+		List<InfoNote> result = new ArrayList<InfoNote>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+
+		Query q = pm.newQuery(InfoNote.class);
+		q.setFilter("visibility == vParam");
+		q.declareParameters(Integer.class.getName()+" vParam");
+		try {
+			Object obj = q.execute(Visibility.PUBLIC);
+			if (obj != null) {
+				result = (List<InfoNote>) obj;
+				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
+				result.size();
+			}
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+		return result;
+	}
+
+	@Override
+	public List<InfoNote> getSharedNotes(String id) throws NotLoggedInException {
+		// TODO Auto-generated method stub
+		List<InfoNote> result = new ArrayList<InfoNote>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+
+		com.sid.cloudynote.shared.User user;
+		Query q = pm.newQuery(com.sid.cloudynote.shared.User.class);
+		q.setFilter("id == idParam");
+		q.declareParameters(String.class.getName()+" idParam");
+		q.setRange(0,1);
+		try {
+			List<com.sid.cloudynote.shared.User> users = (List<com.sid.cloudynote.shared.User>) q.execute(id);
+			if (users != null) {
+				users = new ArrayList<com.sid.cloudynote.shared.User>(pm.detachCopyAll(users));
+				users.size();
+				if (!users.isEmpty()) {
+					user = users.get(0);
+					Map<Key,Integer> access = user.getAccess();
+					result = this.getNotes(access.keySet());
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+		return result;
+	}
+	
+	public List<InfoNote> getNotes(Set<Key> keys){
+		List<InfoNote> result = new ArrayList<InfoNote>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			Query q = pm.newQuery(InfoNote.class);
+			q.setFilter("key == keyParam");
+			q.declareParameters(Key.class.getName() + " keyParam");
+			q.setRange(0,1);
+			
+			for (Key key : keys) {
+				Object obj = q.execute(key);
+				if (obj != null) {
+					List<InfoNote> notes = (List<InfoNote>) obj;
+					notes = new ArrayList<InfoNote>(pm.detachCopyAll(notes));
+					notes.size();
+					result.add(notes.get(0));
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+		return result;
 	}
 }

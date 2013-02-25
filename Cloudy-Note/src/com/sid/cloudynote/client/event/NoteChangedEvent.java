@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.sid.cloudynote.client.event.interfaces.INoteChangedHandler;
 import com.sid.cloudynote.shared.Notebook;
 
 public class NoteChangedEvent extends GwtEvent<INoteChangedHandler> {

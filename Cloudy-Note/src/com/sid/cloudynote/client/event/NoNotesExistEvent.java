@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.sid.cloudynote.client.event.interfaces.INoNotesExistHandler;
 
 public class NoNotesExistEvent extends GwtEvent<INoNotesExistHandler>{
 	public static final Type<INoNotesExistHandler> TYPE = new Type<INoNotesExistHandler>();
