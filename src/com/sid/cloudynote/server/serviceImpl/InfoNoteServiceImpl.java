@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.sid.cloudynote.shared.Visibility;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -21,7 +23,6 @@ import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
-import com.sid.cloudynote.shared.Visibility;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		InfoNoteService {
