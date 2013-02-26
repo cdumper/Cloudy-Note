@@ -15,6 +15,7 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.EditNoteEvent;
+import com.sid.cloudynote.client.event.HideSharingNoteViewEvent;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
@@ -22,6 +23,7 @@ import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
+import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.view.SharingView;
@@ -85,6 +87,8 @@ public class AppView extends Composite implements Presenter{
 	private void bindSharingEvents() {
 		eventBus.addHandler(ViewPublicNotesEvent.TYPE, sharingView.noteListView);
 		eventBus.addHandler(ViewSharedNotesEvent.TYPE, sharingView.noteListView);
+		eventBus.addHandler(ViewSharedNoteEvent.TYPE, sharingView);
+		eventBus.addHandler(HideSharingNoteViewEvent.TYPE, sharingView);
 	}
 
 	private void bindEvents() {

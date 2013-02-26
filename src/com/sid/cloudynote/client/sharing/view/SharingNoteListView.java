@@ -3,7 +3,10 @@ package com.sid.cloudynote.client.sharing.view;
 import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -77,13 +80,13 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 		// Add a selection model so we can select cells.
 		selectionModel = new SingleSelectionModel<InfoNote>(KEY_PROVIDER);
 		notesList.setSelectionModel(selectionModel);
-		noteCell.setSelectionModel(selectionModel);
 
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						InfoNote note = selectionModel.getSelectedObject();
-						presenter.onNoteItemSelected(note);
+//						InfoNote note = selectionModel.getSelectedObject();
+//						presenter.onNoteItemSelected(note);
+//						presenter.viewNote(note);
 					}
 				});
 		dataProvider.addDataDisplay(notesList);
@@ -101,29 +104,29 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 	}
 	
 	static class NoteCell extends AbstractCell<InfoNote> {
-		private SingleSelectionModel<InfoNote> selectionModel;
-
-		public SingleSelectionModel<InfoNote> getSelectionModel() {
-			return selectionModel;
-		}
-
-		public void setSelectionModel(SingleSelectionModel<InfoNote> selectionModel) {
-			this.selectionModel = selectionModel;
-		}
+		private Presenter presenter;
 
 		private final String imageHtml;
 
 		public NoteCell(ImageResource image) {
+			super("click");
 			this.imageHtml = AbstractImagePrototype.create(image).getHTML();
 		}
 
 		@Override
-		public void render(Context context, InfoNote note,
+		public void render(Context context, final InfoNote note,
 				SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
 			if (note == null) {
 				return;
 			}
+//			Anchor title = new Anchor(note.getTitle());
+//			title.addClickHandler(new ClickHandler(){
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					presenter.viewNote(note);
+//				}
+//			});
 
 			sb.appendHtmlConstant("<table>");
 
@@ -141,21 +144,36 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 			sb.appendEscaped(note.getCreatedTime().toString());
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
+
+		public void setPresenter(Presenter presenter) {
+			this.presenter = presenter;
+		}
+
+		@Override
+		public void onBrowserEvent(Context context, Element parent,
+				InfoNote value, NativeEvent event,
+				ValueUpdater<InfoNote> valueUpdater) {
+			if ("click".equals(event.getType())) {
+				presenter.viewNote(value);
+			}
+		}
 	}
 	
 	public void setNoteList(List<InfoNote> result){
 		List<InfoNote> notes = dataProvider.getList();
-		notes.clear();
 		selectionModel.clear();
+		notes.clear();
 		if (result!=null && result.size()!=0){
 			notes.addAll(result);
-			selectionModel.setSelected(result.get(0), true);
+//			selectionModel.setSelected(result.get(0), true);
 		}
+		notesList.redraw();
 	}
 
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
+		noteCell.setPresenter(presenter);
 	}
 
 	@Override

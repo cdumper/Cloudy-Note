@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
@@ -84,5 +85,10 @@ public class SharingNoteListPresenter implements Presenter,
 	@Override
 	public void startEditing(InfoNote infoNote) {
 		// TODO startEditing the note if have write access
+	}
+
+	@Override
+	public void viewNote(InfoNote note) {
+		eventBus.fireEvent(new ViewSharedNoteEvent(note));
 	}
 }
