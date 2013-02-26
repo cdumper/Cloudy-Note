@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -13,6 +15,7 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -83,7 +86,8 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						InfoNote note = selectionModel.getSelectedObject();
-						presenter.onNoteItemSelected(note);
+//						presenter.onNoteItemSelected(note);
+						presenter.viewNote(note);
 					}
 				});
 		dataProvider.addDataDisplay(notesList);
@@ -102,7 +106,7 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 	
 	static class NoteCell extends AbstractCell<InfoNote> {
 		private SingleSelectionModel<InfoNote> selectionModel;
-
+		private Presenter presenter;
 		public SingleSelectionModel<InfoNote> getSelectionModel() {
 			return selectionModel;
 		}
@@ -118,12 +122,19 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 		}
 
 		@Override
-		public void render(Context context, InfoNote note,
+		public void render(Context context, final InfoNote note,
 				SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
 			if (note == null) {
 				return;
 			}
+			Anchor title = new Anchor(note.getTitle());
+			title.addClickHandler(new ClickHandler(){
+				@Override
+				public void onClick(ClickEvent event) {
+					presenter.viewNote(note);
+				}
+			});
 
 			sb.appendHtmlConstant("<table>");
 
@@ -132,7 +143,7 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 			sb.appendHtmlConstant("</td>");
 
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
-			sb.appendEscaped(note.getTitle());
+			sb.appendEscaped(title.getHTML());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
 			sb.appendEscaped(note.getUser().getEmail());
 			sb.appendHtmlConstant("</td><td colspan='2'>");
@@ -140,6 +151,10 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 			sb.appendHtmlConstant("</td></tr><tr><td>");
 			sb.appendEscaped(note.getCreatedTime().toString());
 			sb.appendHtmlConstant("</td></tr></table>");
+		}
+
+		public void setPresenter(Presenter presenter) {
+			this.presenter = presenter;
 		}
 	}
 	
@@ -156,6 +171,7 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
+		noteCell.setPresenter(presenter);
 	}
 
 	@Override
