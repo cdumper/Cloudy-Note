@@ -43,4 +43,9 @@ public interface InfoNoteServiceAsync {
 	void getSharedNotes(String id, AsyncCallback<List<InfoNote>> callback);
 
 	void makeNotesPublic(List<InfoNote> notes, AsyncCallback<Void> callback);
+
+	void verifyEditAccess(InfoNote note, AsyncCallback<Boolean> callback);
+
+	void addAccessEntry(InfoNote note, List<String> users, int permission,
+			AsyncCallback<Void> callback);
 }

@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -153,5 +154,21 @@ public class SharingNoteView extends ResizeComposite implements
 		this.ckeditor.setData(note.getContent());
 		deckPanel.showWidget(1);
 		this.setVisible(true);
+	}
+
+	public void showAccessDeniedPanel() {
+		final DialogBox dialog = new DialogBox();
+		dialog.setText("Access Denied!");
+		VerticalPanel content = new VerticalPanel();
+		dialog.setWidget(content);
+		
+		content.add(new Label("You do not have the access to edit this note."));
+		content.add(new Button("OK",new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				dialog.hide();
+			}
+		}));
+		dialog.center();
 	}
 }

@@ -43,6 +43,11 @@ public class InfoNote implements Serializable {
 	private List<Tag> tags;
 	@Persistent
 	private List<String> attachments;
+	/**
+	 * access contains the access information of the note
+	 * String email
+	 * int permission
+	 */
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
 	private Map<String, Integer> access = new HashMap<String, Integer>();
 

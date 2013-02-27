@@ -16,4 +16,6 @@ public interface InfoNoteService extends RemoteService, IDAO<InfoNote>{
 	List<InfoNote> getPublicNotes() throws NotLoggedInException;
 	List<InfoNote> getSharedNotes(String id) throws NotLoggedInException;
 	void makeNotesPublic(List<InfoNote> notes) throws NotLoggedInException;
+	boolean verifyEditAccess(InfoNote note) throws NotLoggedInException;
+	void addAccessEntry(InfoNote note, List<String> users, int permission) throws NotLoggedInException;
 }

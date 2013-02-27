@@ -89,20 +89,35 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void shareNoteToUser(String email, InfoNote note, String permission) {
-		// TODO perform share notes
-		// Add entry in Note acl
-		// note.getAccess().put("sid@shen.com",1);
-
-		// Add entry in User acl
-		UserServiceAsync userService = GWT.create(UserService.class);
-		ArrayList<Key> notes = new ArrayList<Key>();
-		notes.add(note.getKey());
 		int _permission = 1;
 		if ("Read-Only".equals(permission)) {
 			_permission = 1;
 		} else if ("Write".equals(permission)) {
 			_permission = 2;
 		}
+		
+		// TODO perform share notes
+		// Add entry in Note acl
+		// note.getAccess().put("sid@shen.com",1);
+		ArrayList<String> users = new ArrayList<String>();
+		users.add(email);
+		InfoNoteServiceAsync noteService = GWT.create(InfoNoteService.class);
+		noteService.addAccessEntry(note,users,_permission, new AsyncCallback<Void>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Shared notes failed");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				
+			}
+		});
+
+		// Add entry in User acl
+		UserServiceAsync userService = GWT.create(UserService.class);
+		ArrayList<Key> notes = new ArrayList<Key>();
+		notes.add(note.getKey());
 		userService.addAccessEntry(email, notes, _permission, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {

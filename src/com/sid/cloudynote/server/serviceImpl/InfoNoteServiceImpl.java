@@ -9,8 +9,6 @@ import java.util.Set;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import com.sid.cloudynote.shared.Visibility;
-
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -23,6 +21,7 @@ import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Visibility;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		InfoNoteService {
@@ -295,7 +294,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 		Query q = pm.newQuery(InfoNote.class);
 		q.setFilter("visibility == vParam");
-		q.declareParameters(Integer.class.getName()+" vParam");
+		q.declareParameters(Integer.class.getName() + " vParam");
 		try {
 			Object obj = q.execute(Visibility.PUBLIC);
 			if (obj != null) {
@@ -320,16 +319,18 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		com.sid.cloudynote.shared.User user;
 		Query q = pm.newQuery(com.sid.cloudynote.shared.User.class);
 		q.setFilter("id == idParam");
-		q.declareParameters(String.class.getName()+" idParam");
-		q.setRange(0,1);
+		q.declareParameters(String.class.getName() + " idParam");
+		q.setRange(0, 1);
 		try {
-			List<com.sid.cloudynote.shared.User> users = (List<com.sid.cloudynote.shared.User>) q.execute(id);
+			List<com.sid.cloudynote.shared.User> users = (List<com.sid.cloudynote.shared.User>) q
+					.execute(id);
 			if (users != null) {
-				users = new ArrayList<com.sid.cloudynote.shared.User>(pm.detachCopyAll(users));
+				users = new ArrayList<com.sid.cloudynote.shared.User>(
+						pm.detachCopyAll(users));
 				users.size();
 				if (!users.isEmpty()) {
 					user = users.get(0);
-					Map<Key,Integer> access = user.getAccess();
+					Map<Key, Integer> access = user.getAccess();
 					result = this.getNotes(access.keySet());
 				}
 			}
@@ -339,17 +340,17 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 		return result;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<InfoNote> getNotes(Set<Key> keys){
+	public List<InfoNote> getNotes(Set<Key> keys) {
 		List<InfoNote> result = new ArrayList<InfoNote>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			Query q = pm.newQuery(InfoNote.class);
 			q.setFilter("key == keyParam");
 			q.declareParameters(Key.class.getName() + " keyParam");
-			q.setRange(0,1);
-			
+			q.setRange(0, 1);
+
 			for (Key key : keys) {
 				Object obj = q.execute(key);
 				if (obj != null) {
@@ -377,6 +378,56 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		try {
 			pm.currentTransaction().begin();
 			pm.makePersistentAll(notes);
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+	}
+
+	// TODO
+	@Override
+	public boolean verifyEditAccess(InfoNote note) throws NotLoggedInException {
+		this.checkLoggedIn();
+//		com.sid.cloudynote.shared.User user = AppController.get()
+//				.getLoginInfo();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+
+		Query q = pm.newQuery(InfoNote.class);
+		q.setFilter("key == keyParam");
+		q.declareParameters(Key.class.getName() + " keyParam");
+		q.setRange(0, 1);
+		// try {
+		// for (Key key : keys) {
+		// Object obj = q.execute(key);
+		// if (obj != null) {
+		// List<InfoNote> notes = (List<InfoNote>) obj;
+		// notes = new ArrayList<InfoNote>(pm.detachCopyAll(notes));
+		// notes.size();
+		// result.add(notes.get(0));
+		// }
+		// }
+		// } catch (Exception e) {
+		// } finally {
+		// pm.close();
+		// }
+
+		return false;
+	}
+
+	@Override
+	public void addAccessEntry(InfoNote note, List<String> users, int permission)
+			throws NotLoggedInException {
+		this.checkLoggedIn();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+
+		// TODO check if the user is the owner of the note
+		for (String user : users) {
+			note.getAccess().put(user, permission);
+		}
+		try {
+			pm.currentTransaction().begin();
+			pm.makePersistent(note);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 		} finally {

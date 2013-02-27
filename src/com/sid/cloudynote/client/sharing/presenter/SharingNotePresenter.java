@@ -2,6 +2,7 @@ package com.sid.cloudynote.client.sharing.presenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.event.HideSharingNoteViewEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.view.SharingNoteView;
@@ -32,9 +33,27 @@ public class SharingNotePresenter implements Presenter,
 	 */
 	@Override
 	public void startEditing(InfoNote infoNote) {
-		view.editNote();
+		if (verifyEditAccess(infoNote)) {
+			view.editNote();
+		} else {
+			view.showAccessDeniedPanel();
+		}
 	}
 	
+	private boolean verifyEditAccess(InfoNote infoNote) {
+		String userEmail = AppController.get().getLoginInfo().getEmailAddress();
+		if (infoNote.getAccess().containsKey(userEmail)) {
+			if (infoNote.getAccess().get(userEmail) == 1){
+				//read-only access
+				return false;
+			} else if (infoNote.getAccess().get(userEmail) == 2) {
+				//write access
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void presentNote() {
 		view.presentNote();
 	}
