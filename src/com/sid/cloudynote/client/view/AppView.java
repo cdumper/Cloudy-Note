@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
@@ -30,17 +29,23 @@ import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.sharing.presenter.FriendViewPresenter;
+import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.client.view.PersonalView.GlobalResources;
 import com.sid.cloudynote.shared.User;
 
-public class AppView extends Composite implements Presenter{
+public class AppView extends Composite implements Presenter {
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
-	Label user;
+	Anchor user;
 	@UiField
-	Anchor aboutLink;
+	Button aboutButton;
+	@UiField
+	Button notificationButton;
+	@UiField
+	Button settingsButton;
 	@UiField
 	Anchor signOutLink;
 	@UiField
@@ -55,23 +60,25 @@ public class AppView extends Composite implements Presenter{
 	Button othersNotesButton;
 	@UiField
 	Button friendsButton;
-	
-	
+	@UiField
+	FriendView friendsView;
+
 	private HandlerManager eventBus;
 	private User loginInfo = null;
+	private FriendViewPresenter friendsPresenter;
 	private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
-	
+
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
 	}
-	
+
 	public AppView(HandlerManager eventBus, User login) {
 		GWT.<GlobalResources> create(GlobalResources.class).css()
-		.ensureInjected();
+				.ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));
 		this.eventBus = eventBus;
 		this.loginInfo = login;
 		this.personalView.setEventBus(eventBus);
-		user.setText("Welcome back: " + loginInfo.getEmailAddress());
+		user.setText(loginInfo.getEmailAddress());
 		signOutLink.setHref(loginInfo.getLogoutUrl());
 		bindEvents();
 		deck.showWidget(0);
@@ -79,18 +86,43 @@ public class AppView extends Composite implements Presenter{
 
 	@Override
 	public void go(HasWidgets container) {
+		showMyNotes(container);
+	}
+	
+	public void showMyNotes(HasWidgets container){
 		container.clear();
-		if (AppController.get().isPersonal()) {
-			deck.showWidget(0);
-		} else {
-			if (sharingView == null) {
-				sharingView = new SharingView();
-			}
-			sharingView.seteEventBus(eventBus);
-			bindSharingEvents();
-			deck.showWidget(1);
-		}
+		deck.showWidget(0);
 		container.add(dockLayoutPanel);
+	}
+	
+	public void showOthersNotes(HasWidgets container) {
+		container.clear();
+		if (sharingView == null) {
+			sharingView = new SharingView(eventBus);
+		}
+		deck.showWidget(1);
+		container.add(dockLayoutPanel);
+	}
+
+	public void showFriends(HasWidgets container) {
+		container.clear();
+		if (friendsView == null) {
+			friendsView = new FriendView();
+			friendsPresenter = new FriendViewPresenter(friendsView,eventBus);
+			friendsView.setPresenter(friendsPresenter);
+		}
+		if (friendsPresenter == null) {
+			friendsPresenter = new FriendViewPresenter(friendsView,eventBus);
+			friendsView.setPresenter(friendsPresenter);
+		}
+		friendsPresenter.go(friendsView.getContainer());
+		bindFriendEvents();
+		deck.showWidget(2);
+		container.add(dockLayoutPanel);
+	}
+	
+	private void bindFriendEvents() {
+		
 	}
 	
 	private void bindSharingEvents() {
@@ -111,27 +143,31 @@ public class AppView extends Composite implements Presenter{
 		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.searchView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.searchView);
-		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE, personalView.noteView);
+		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
+				personalView.noteView);
 		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
 				personalView.searchView);
-		eventBus.addHandler(NoteSelectionChangedEvent.TYPE, personalView.noteView);
+		eventBus.addHandler(NoteSelectionChangedEvent.TYPE,
+				personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
 	}
-	
+
 	@UiHandler("myNotesButton")
 	void showMyNotes(ClickEvent e) {
-		AppController.get().setPersonal(true);
+		AppController.get().setPageState(AppController.PERSONAL_PAGE);
 		AppController.get().go(RootLayoutPanel.get());
 	}
-	
+
 	@UiHandler("othersNotesButton")
 	void showOthersNotes(ClickEvent e) {
-		AppController.get().setPersonal(false);
+		AppController.get().setPageState(AppController.SHARING_PAGE);
 		AppController.get().go(RootLayoutPanel.get());
 	}
-	
-	//TODO show friends
+
+	// TODO show friends
 	@UiHandler("friendsButton")
 	void showFriends(ClickEvent e) {
+		AppController.get().setPageState(AppController.FRIENDS_PAGE);
+		AppController.get().go(RootLayoutPanel.get());
 	}
 }

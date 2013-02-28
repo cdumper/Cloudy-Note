@@ -2,58 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn='urn:import:com.sid.cloudynote.client.view'
 	xmlns:s='urn:import:com.sid.cloudynote.client.sharing.view'>
-	<ui:style>
-		.left {
-			float: left !important;
-		}
-		
-		.right {
-			float: right !important;
-			display: inline-block;
-			display: inline;
-		}
-		
-		.header {
-			background-color: #006699;
-		}
-		
-		.header .nav {
-			color: #747474;
-			line-height: 18px;
-			font-family: helvetica, arial, sans-serif;
-			font-size: 13px;
-			text-align: left;
-			display: block;
-		}
-		
-		.header .nav .button {
-			border: 0px solid #006699;
-			background: #006699;
-			
-			text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
-			color: white;
-			font-size: 14px;
-			font-family: Georgia, serif;
-			vertical-align: middle;
-		}
-		
-		.header .nav .button:hover {
-			background: #327099;
-			color: #ffffff;
-		}
-		
-		.header .nav .button:active {
-			background: #1f4d6b;
-		}
-		
-		.header .nav .divider {
-			display: inline-block;
-			display: inline;
-			vertical-align: top;
-			border-left: 1px solid #308b26;
-			border-right: 1px solid #7abc72;
-		}
-	</ui:style>
+	<ui:style src="header.css" />
 	<cn:Container>
 		<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
 			<g:north size='5'>
@@ -69,10 +18,16 @@
 							<g:Button ui:field="friendsButton" addStyleNames="{style.button}">Friends</g:Button>
 						</div>
 						<div class="{style.right}">
-							<g:Label ui:field="user" text="Welcome back, foo@example.com" />
-							<g:Anchor href='javascript:;' ui:field='signOutLink'>Sign Out
+							<g:Button ui:field="notificationButton" addStyleNames="{style.button}">Notification</g:Button>
+							<div class="{style.divider}"></div>
+							<g:Button ui:field="settingsButton" addStyleNames="{style.button}">Settings</g:Button>
+							<div class="{style.divider}"></div>
+							<g:Button ui:field="aboutButton" addStyleNames="{style.button}">About</g:Button>
+							<div class="{style.divider}"></div>
+							<g:Anchor ui:field="user">Welcome back, foo@example.com</g:Anchor>
+							<div class="{style.divider}"></div>
+							<g:Anchor ui:field='signOutLink'>Sign Out
 							</g:Anchor>
-							<g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
 						</div>
 					</div>
 				</g:HTMLPanel>
@@ -81,6 +36,7 @@
 				<g:DeckPanel ui:field="deck">
 					<cn:PersonalView ui:field='personalView' />
 					<s:SharingView ui:field='sharingView' />
+					<s:FriendView ui:field='friendsView' />
 				</g:DeckPanel>
 			</g:center>
 			<!-- <g:south size='5'> <cn:BottomView ui:field='bottomView' /> </g:south> -->

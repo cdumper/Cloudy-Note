@@ -45,8 +45,15 @@ public class SharingView extends Composite implements Presenter, IViewSharedNote
 
 	public SharingView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		bindPresentersAndViews();
 	}
 
+	public SharingView(HandlerManager eventBus) {
+		this();
+		this.eventBus = eventBus;
+		bindPresentersAndViews();
+	}
+	
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
@@ -60,7 +67,6 @@ public class SharingView extends Composite implements Presenter, IViewSharedNote
 
 	public void seteEventBus(HandlerManager eventBus) {
 		this.eventBus = eventBus;
-		bindPresentersAndViews();
 	}
 	
 	private void bindPresentersAndViews() {

@@ -35,27 +35,27 @@ public class BottomView extends Composite {
 	void onPersonalClick(ClickEvent e) {
 		personalTabButton.setDown(true);
 		exploreTabButton.setDown(false);
-		showPersonal();
+//		showPersonal();
 	}
 
 	@UiHandler("exploreTabButton")
 	void onExploreClick(ClickEvent e) {
 		personalTabButton.setDown(false);
 		exploreTabButton.setDown(true);
-		showSharing();
+//		showSharing();
 	}
 
-	private void showPersonal() {
-		if (!AppController.get().isPersonal()) {
-			AppController.get().setPersonal(true);
-			AppController.get().go(RootLayoutPanel.get());
-		}
-	}
+//	private void showPersonal() {
+//		if (!AppController.get().isPersonal()) {
+//			AppController.get().setPersonal(true);
+//			AppController.get().go(RootLayoutPanel.get());
+//		}
+//	}
 
-	private void showSharing() {
-		if (AppController.get().isPersonal()) {
-			AppController.get().setPersonal(false);
-			AppController.get().go(RootLayoutPanel.get());
-		}
-	}
+//	private void showSharing() {
+//		if (AppController.get().isPersonal()) {
+//			AppController.get().setPersonal(false);
+//			AppController.get().go(RootLayoutPanel.get());
+//		}
+//	}
 }
