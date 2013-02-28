@@ -8,33 +8,7 @@
 		}
 	</ui:style>
 	<cn:Container ui:field="container" addStyleNames="{style.container}">
-		<g:DeckPanel>
-			<g:TabLayoutPanel barUnit='EM' barHeight='2' height="100%"
-				ui:field="tabPanel">
-				<g:tab>
-					<g:header size='7'>Notes</g:header>
-					<g:HTMLPanel ui:field="tabNotes">
-					</g:HTMLPanel>
-				</g:tab>
-				<g:tab>
-					<g:header size='7'>Tags</g:header>
-					<g:HTMLPanel ui:field="tabTags">
-						<g:Label>tags</g:Label>
-					</g:HTMLPanel>
-				</g:tab>
-				<g:tab>
-					<g:header size='7'>Groups</g:header>
-					<g:HTMLPanel ui:field="tabGroups">
-						<g:Label>groups</g:Label>
-					</g:HTMLPanel>
-				</g:tab>
-			</g:TabLayoutPanel>
-			<!-- <g:LayoutPanel>
-				<g:layer >
-				</g:layer>
-				<g:layer >
-				</g:layer>
-			</g:LayoutPanel> -->
-		</g:DeckPanel>
+		<g:HTMLPanel ui:field="content" height="100%" width="100%">
+		</g:HTMLPanel>
 	</cn:Container>
 </ui:UiBinder> 

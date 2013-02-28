@@ -6,6 +6,8 @@ body {
 	font-family: Helvetica, Arial, sans-serif;
 	color: #000;
 	background: #fff;
+    font-size: 100%;
+    line-height: 1;
 }
 
 a:link,a:visited,a:hover,a:active {

@@ -91,8 +91,6 @@ public class SharingView extends Composite implements Presenter, IViewSharedNote
 	}
 
 	private void viewNote(InfoNote note) {
-		this.noteListView.setWidth("28%");
-//		this.noteView.setWidth("80%");
 		this.noteView.setNote(note);
 		this.noteView.presentNote();
 	}
@@ -100,7 +98,5 @@ public class SharingView extends Composite implements Presenter, IViewSharedNote
 	@Override
 	public void onHideSharingNoteView(HideSharingNoteViewEvent event) {
 		// TODO Auto-generated method stub
-		this.noteListView.setWidth("100%");
-		this.noteView.setVisible(false);
 	}
 }

@@ -8,12 +8,12 @@
 		<g:north size='6'>
 			<s:SharingSearchView ui:field='searchView' />
 		</g:north>
-		<g:west size='12'>
+		<g:west size='15'>
 			<s:GroupView ui:field='groupView' />
 		</g:west>
 		<g:center>
 			<g:LayoutPanel width="100%" height="100%">
-				<g:layer left="0" width="88%">
+				<!-- <g:layer left="0" width="88%">
 					<s:SharingNoteListView ui:field='noteListView' />
 				</g:layer>
 				<g:layer left="25%" width="63%">
@@ -21,6 +21,12 @@
 				</g:layer>
 				<g:layer width="12%" right="0">
 					<s:FriendView ui:field='friendView' />
+				</g:layer> -->
+				<g:layer left="0" width="30%">
+					<s:SharingNoteListView ui:field='noteListView' />
+				</g:layer>
+				<g:layer right="0" width="70%">
+					<s:SharingNoteView ui:field='noteView' />
 				</g:layer>
 			</g:LayoutPanel>
 		</g:center>

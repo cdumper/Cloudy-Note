@@ -61,8 +61,6 @@ public class SharingNoteView extends ResizeComposite implements
 	@UiField
 	Label titleLabel;
 	@UiField
-	Button backButton;
-	@UiField
 	Button editButton;
 	@UiField
 	TextBox editTags;
@@ -92,15 +90,8 @@ public class SharingNoteView extends ResizeComposite implements
 				presenter.startEditing(note);
 			}
 		});
-		backButton.addClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event) {
-				presenter.backToList();
-			}
-		});
 		this.deckPanel.setAnimationEnabled(true);
 		this.deckPanel.showWidget(0);
-		this.setVisible(false);
 	}
 
 	public void editNote(InfoNote note) {
@@ -136,7 +127,6 @@ public class SharingNoteView extends ResizeComposite implements
 		this.viewContent.setText(this.note.getContent());
 		
 		this.deckPanel.showWidget(0);
-		this.setVisible(true);
 	}
 
 	@Override
@@ -153,7 +143,6 @@ public class SharingNoteView extends ResizeComposite implements
 		}
 		this.ckeditor.setData(note.getContent());
 		deckPanel.showWidget(1);
-		this.setVisible(true);
 	}
 
 	public void showAccessDeniedPanel() {

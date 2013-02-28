@@ -28,7 +28,6 @@
 								<g:Cell horizontalAlignment="ALIGN_RIGHT"
 									verticalAlignment="ALIGN_MIDDLE">
 									<g:FlowPanel>
-										<g:Button text="Back" ui:field="backButton" />
 										<g:Button text="Edit" ui:field="editButton" />
 									</g:FlowPanel>
 								</g:Cell>

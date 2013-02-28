@@ -1,15 +1,19 @@
 package com.sid.cloudynote.client.view;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
@@ -34,8 +38,6 @@ public class AppView extends Composite implements Presenter{
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
-	public BottomView bottomView;
-	@UiField
 	Label user;
 	@UiField
 	Anchor aboutLink;
@@ -47,6 +49,13 @@ public class AppView extends Composite implements Presenter{
 	PersonalView personalView;
 	@UiField
 	SharingView sharingView;
+	@UiField
+	Button myNotesButton;
+	@UiField
+	Button othersNotesButton;
+	@UiField
+	Button friendsButton;
+	
 	
 	private HandlerManager eventBus;
 	private User loginInfo = null;
@@ -107,5 +116,22 @@ public class AppView extends Composite implements Presenter{
 				personalView.searchView);
 		eventBus.addHandler(NoteSelectionChangedEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
+	}
+	
+	@UiHandler("myNotesButton")
+	void showMyNotes(ClickEvent e) {
+		AppController.get().setPersonal(true);
+		AppController.get().go(RootLayoutPanel.get());
+	}
+	
+	@UiHandler("othersNotesButton")
+	void showOthersNotes(ClickEvent e) {
+		AppController.get().setPersonal(false);
+		AppController.get().go(RootLayoutPanel.get());
+	}
+	
+	//TODO show friends
+	@UiHandler("friendsButton")
+	void showFriends(ClickEvent e) {
 	}
 }
