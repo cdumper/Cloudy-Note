@@ -26,7 +26,7 @@
 		<servlet-name>UserService</servlet-name>
 		<url-pattern>/cloudy_note/userService</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>GroupService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.GroupServiceImpl</servlet-class>
