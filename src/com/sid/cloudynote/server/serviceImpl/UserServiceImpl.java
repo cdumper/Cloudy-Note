@@ -2,6 +2,7 @@ package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -17,7 +18,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		UserService {
 	/**
 	 * 
-	 */ 
+	 */
 	private static final long serialVersionUID = -7824317844070590676L;
 
 	@Override
@@ -60,7 +61,21 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 			pm.makePersistent(user);
 			pm.close();
 		} else {
-			GWT.log("User with email address:"+email+" does not exist");
+			GWT.log("User with email address:" + email + " does not exist");
 		}
+	}
+
+	@Override
+	public List<User> getFriends(String email) {
+		List<User> friends = new ArrayList<User>();
+		User user = getUser(email);
+		if (user.getFriends() != null){
+			Set<String> friendsKeys = user.getFriends();
+			for (String key : friendsKeys) {
+				User friend = getUser(key);
+				friends.add(friend);
+			}
+		}
+		return friends;
 	}
 }

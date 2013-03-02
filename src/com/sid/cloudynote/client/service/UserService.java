@@ -11,4 +11,5 @@ import com.sid.cloudynote.shared.User;
 public interface UserService extends RemoteService{
 	User getUser(String email);
 	void addAccessEntry(String email,List<Key> notes, int permission);
+	List<User> getFriends(String email);
 }

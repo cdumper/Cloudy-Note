@@ -11,4 +11,6 @@ public interface UserServiceAsync {
 
 	void addAccessEntry(String email, List<Key> notes, int permission,
 			AsyncCallback<Void> callback);
+
+	void getFriends(String email, AsyncCallback<List<User>> callback);
 }

@@ -26,7 +26,6 @@ import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
-import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;

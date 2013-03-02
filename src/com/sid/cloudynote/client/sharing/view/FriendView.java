@@ -1,5 +1,6 @@
 package com.sid.cloudynote.client.sharing.view;
 
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
@@ -19,6 +20,7 @@ import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.IFriendView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.Group;
+import com.sid.cloudynote.shared.User;
 
 public class FriendView extends ResizeComposite implements IFriendView, IGroupsChangedHandler{
 	private Presenter presenter;
@@ -73,6 +75,11 @@ public class FriendView extends ResizeComposite implements IFriendView, IGroupsC
 
 	public void setGroupList(Set<Group> result) {
 		// TODO Auto-generated method stub
-		System.out.println("set group list in friend page");
+		System.out.println("set group list in friend page"+result.size());
+	}
+	
+	public void setFriendsList(List<User> friends) {
+		// TODO Auto-generated method stub
+		System.out.println("set friends list in friend page:"+friends.size());
 	}
 }

@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
@@ -12,9 +13,12 @@ import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.client.service.GroupServiceAsync;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.interfaces.IFriendView;
 import com.sid.cloudynote.shared.Group;
+import com.sid.cloudynote.shared.User;
 
 public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	private FriendView view;
@@ -94,5 +98,25 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 
 	@Override
 	public void go(HasWidgets container) {
+		container.clear();
+		this.loadGroupList();
+		this.loadFriendsList();
+		container.add(view.asWidget());
+	}
+
+	private void loadFriendsList() {
+		final String email = AppController.get().getLoginInfo().getEmailAddress();
+		UserServiceAsync userService = GWT.create(UserService.class);
+		userService.getFriends(email, new AsyncCallback<List<User>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to load group list of user : " + email);
+			}
+
+			@Override
+			public void onSuccess(List<User> friends) {
+				view.setFriendsList(friends);
+			}
+		});
 	}
 }
