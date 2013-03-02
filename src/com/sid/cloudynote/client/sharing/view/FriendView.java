@@ -80,6 +80,10 @@ public class FriendView extends ResizeComposite implements IFriendView, IGroupsC
 	
 	public void setFriendsList(List<User> friends) {
 		// TODO Auto-generated method stub
+		for(User user : friends){
+			FriendListItem item = new FriendListItem(user);
+			this.friendsListPanel.add(item);
+		}
 		System.out.println("set friends list in friend page:"+friends.size());
 	}
 }

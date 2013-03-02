@@ -5,9 +5,19 @@
 		.container {
 			border: 1px solid #999;
 		}
+		
+		.buttonPanel {
+			width: 100%;
+			height: 10%;
+			border:1px solid grey;
+			background: #D8D8D8;	
+			position: relative;		
+			vertical-align: middle;
+		}
 	</ui:style>
 	<cn:Container addStyleNames="{style.container}" ui:field="container">
-		<g:DockLayoutPanel width="100%" height="100%" unit="PCT" ui:field="content">
+		<g:DockLayoutPanel width="100%" height="100%" unit="PCT"
+			ui:field="content">
 			<g:west size="25" verticalAlignment="ALIGN_MIDDLE">
 				<g:FlowPanel height="100%" width="100%" ui:field="leftPanel">
 					<g:HTMLPanel width="100%" ui:field="friendsButtonListPanel">
@@ -15,7 +25,8 @@
 						<g:Button ui:field="allFriendsButton">All Friends</g:Button>
 						<g:Button ui:field="findFriendsButton">Find Friends</g:Button>
 					</g:HTMLPanel>
-					<g:SuggestBox width="80%" text="Search Friends" ui:field="searchBox" />
+					<g:SuggestBox width="80%" text="Search Friends"
+						ui:field="searchBox" />
 					<g:HTMLPanel width="100%" ui:field="groupsPanel">
 						<g:Label text="Groups" />
 						<g:Button>GWT(4)</g:Button>
@@ -23,13 +34,13 @@
 				</g:FlowPanel>
 			</g:west>
 			<g:center>
-				<g:HTMLPanel ui:field="centerPanel" >
-					<g:HTMLPanel width="100%" height="10%" ui:field="groupsButtonPanel">
+				<g:HTMLPanel ui:field="centerPanel">
+					<g:HTMLPanel ui:field="groupsButtonPanel" addStyleNames="{style.buttonPanel}">
 						<g:Button ui:field="createGroupButton">Create Group</g:Button>
 						<g:Button ui:field="editGroupButton">Edit Group</g:Button>
 						<g:Button ui:field="deleteGroupButton">Delete Group</g:Button>
 					</g:HTMLPanel>
-					<g:HTMLPanel height="90%" ui:field="friendsListPanel"/>
+					<g:HTMLPanel height="90%" ui:field="friendsListPanel" />
 				</g:HTMLPanel>
 			</g:center>
 		</g:DockLayoutPanel>
