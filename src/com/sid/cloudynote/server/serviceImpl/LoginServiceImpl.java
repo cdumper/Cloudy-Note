@@ -22,21 +22,23 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	 * 
 	 */
 	private static final long serialVersionUID = 2751853380762343814L;
+	private static final String[] FAKE_USER_DATA = { "jackie@jiang.com",
+			"chris@xue.com", "elena@chen.com", "shane@sheng.com" };
+	private com.google.appengine.api.users.User loginInfo;
 
 	/**
 	 * check if the user exist. If yes get the user from datastore and set
 	 * logged in If not create and return a new user
 	 */
-	private static final String[] FAKE_USER_DATA = { "jackie@jiang.com",
-			"chris@xue.com", "elena@chen.com", "shane@sheng.com" };
 
 	public User login(String requestUri) {
 		UserService userService = UserServiceFactory.getUserService();
-		com.google.appengine.api.users.User loginInfo = userService
-				.getCurrentUser();
+		this.loginInfo = userService.getCurrentUser();
+
 		User user;
 		if (loginInfo != null) {
-			user = getUser(loginInfo);
+			this.createFakeUsersIfNotExist();
+			user = getUser(loginInfo.getEmail());
 			user.setLoggedIn(true);
 			user.setLogoutUrl(userService.createLogoutURL(requestUri));
 		} else {
@@ -48,17 +50,16 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@SuppressWarnings("unchecked")
-	private User getUser(com.google.appengine.api.users.User loginInfo) {
-		this.createFakeUsersIfNotExist();
+	private User getUser(String email) {
 		User user = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query q = pm.newQuery(User.class);
-		q.setFilter("id == idParam");
-		q.declareParameters("String idParam");
+		q.setFilter("emailAddress == emailParam");
+		q.declareParameters("String emailParam");
 		q.setRange(0, 1);
 		List<User> results;
 		try {
-			Object obj = q.execute(loginInfo.getUserId());
+			Object obj = q.execute(email);
 			if (obj != null) {
 				results = (List<User>) obj;
 				results = new ArrayList<User>(pm.detachCopyAll(results));
@@ -67,7 +68,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 					user = results.get(0);
 				} else {
 					user = new User();
-					user.setEmailAddress(loginInfo.getEmail());
+					user.setEmailAddress(email);
 					// user.setId(loginInfo.getUserId());
 					user.setNickname(loginInfo.getNickname());
 					Set<String> friends = getFakeFriendsData();
@@ -96,22 +97,23 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	}
 
 	private void createFakeUsersIfNotExist() {
-		List<User> users = new ArrayList<User>();
-		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+//		List<User> users = new ArrayList<User>();
+//		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		for (String email : FAKE_USER_DATA) {
-			User user = new User();
-			user.setEmailAddress(email);
-			users.add(user);
+			// User user = new User();
+			// user.setEmailAddress(email);
+			// users.add(user);
+			this.getUser(email);
 		}
-		try {
-			pm.currentTransaction().begin();
-			pm.makePersistentAll(users);
-			pm.currentTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			pm.close();
-		}
-		pm.close();
+//		try {
+//			pm.currentTransaction().begin();
+//			pm.makePersistentAll(users);
+//			pm.currentTransaction().commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			pm.close();
+//		}
+//		pm.close();
 	}
 }

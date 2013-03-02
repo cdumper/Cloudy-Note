@@ -170,6 +170,6 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 
 	@Override
 	public void onViewSharedNotes(ViewSharedNotesEvent event) {
-		presenter.loadSharedNoteList(event.getUser().getId());
+		presenter.loadSharedNoteList(event.getUser().getEmailAddress());
 	}
 }

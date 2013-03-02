@@ -26,6 +26,10 @@ public class Group implements Serializable {
 	@Persistent
 	private String name;
 	@Persistent
+	private String owner;
+	@Persistent
+	private int visibility; 
+	@Persistent
 	private Set<String> members = new HashSet<String>();
 
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
@@ -34,9 +38,10 @@ public class Group implements Serializable {
 	public Group() {
 	}
 
-	public Group(String name, Set<String> members) {
+	public Group(String name,String owner, Set<String> members) {
 		super();
 		this.name = name;
+		this.owner = owner;
 		this.members = members;
 	}
 	
@@ -58,6 +63,22 @@ public class Group implements Serializable {
 
 	public void setKey(Key key) {
 		this.key = key;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public int getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
 	}
 
 	public Set<String> getMembers() {

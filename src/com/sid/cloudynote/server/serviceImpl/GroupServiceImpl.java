@@ -14,6 +14,7 @@ import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.User;
+import com.sid.cloudynote.shared.Visibility;
 
 public class GroupServiceImpl extends RemoteServiceServlet implements GroupService{
 
@@ -23,12 +24,17 @@ public class GroupServiceImpl extends RemoteServiceServlet implements GroupServi
 	private static final long serialVersionUID = -7135759983155196260L;
 
 	@Override
-	public void createGroup(String name, Set<String> users) {
+	public void createGroup(String name, String owner, Set<String> users) {
 		List<User> userList = new ArrayList<User>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		Group group = new Group(name,users);
+		//create the group with given name and members
+		Group group = new Group(name,owner,users);
+		//TODO add group privacy support
+		//set the visibility of the group to PRIVATE by default
+		group.setVisibility(Visibility.PRIVATE);
 		pm.makePersistent(group);
 		
+		// register the created group in each member's group list 
 		for ( String userEmail : users ) {
 			User user = getUser(userEmail);
 			if(user.getGroups() != null) user.getGroups().add(group.getKey());

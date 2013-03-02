@@ -59,7 +59,7 @@ public class SharingNoteListPresenter implements Presenter,
 	}
 
 	@Override
-	public void loadSharedNoteList(String id) {
+	public void loadSharedNoteList(String email) {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
 		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {
@@ -74,7 +74,7 @@ public class SharingNoteListPresenter implements Presenter,
 				view.setNoteList(result);
 			}
 		};
-		service.getSharedNotes(id, callback);
+		service.getSharedNotes(email, callback);
 	}
 
 	@Override

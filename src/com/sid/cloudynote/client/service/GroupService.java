@@ -8,6 +8,6 @@ import com.sid.cloudynote.shared.Group;
 
 @RemoteServiceRelativePath("groupService")
 public interface GroupService extends RemoteService {
-	void createGroup(String name, Set<String> users);
+	void createGroup(String name, String owner, Set<String> users);
 	Set<Group> getGroups(String userEmail);
 }

@@ -40,7 +40,7 @@ public interface InfoNoteServiceAsync {
 
 	void getPublicNotes(AsyncCallback<List<InfoNote>> callback);
 
-	void getSharedNotes(String id, AsyncCallback<List<InfoNote>> callback);
+	void getSharedNotes(String email, AsyncCallback<List<InfoNote>> callback);
 
 	void makeNotesPublic(List<InfoNote> notes, AsyncCallback<Void> callback);
 

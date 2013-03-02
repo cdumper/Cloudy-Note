@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -22,9 +20,9 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 6927452327804119956L;
 	@PrimaryKey
-	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
-	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
-	private String id;
+//	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
+//	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
+//	private String id;
 	@Persistent
 	private String emailAddress;
 	@Persistent
@@ -69,13 +67,13 @@ public class User implements Serializable {
 		this.friends = friends;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
+//	public String getId() {
+//		return id;
+//	}
+//
+//	public void setId(String id) {
+//		this.id = id;
+//	}
 
 	public boolean isLoggedIn() {
 		return loggedIn;

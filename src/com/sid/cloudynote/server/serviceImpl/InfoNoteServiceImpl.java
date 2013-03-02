@@ -311,19 +311,19 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<InfoNote> getSharedNotes(String id) throws NotLoggedInException {
+	public List<InfoNote> getSharedNotes(String email) throws NotLoggedInException {
 		// TODO Auto-generated method stub
 		List<InfoNote> result = new ArrayList<InfoNote>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 
 		com.sid.cloudynote.shared.User user;
 		Query q = pm.newQuery(com.sid.cloudynote.shared.User.class);
-		q.setFilter("id == idParam");
-		q.declareParameters(String.class.getName() + " idParam");
+		q.setFilter("email == emailParam");
+		q.declareParameters(String.class.getName() + " emailParam");
 		q.setRange(0, 1);
 		try {
 			List<com.sid.cloudynote.shared.User> users = (List<com.sid.cloudynote.shared.User>) q
-					.execute(id);
+					.execute(email);
 			if (users != null) {
 				users = new ArrayList<com.sid.cloudynote.shared.User>(
 						pm.detachCopyAll(users));

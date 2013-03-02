@@ -70,7 +70,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 		Set<String> members = new HashSet<String>();
 		members.add(AppController.get().getLoginInfo().getEmailAddress());
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
-		groupService.createGroup("My Group", members, new AsyncCallback<Void>(){
+		groupService.createGroup("My Group", AppController.get().getLoginInfo().getEmailAddress(), members, new AsyncCallback<Void>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log("Failed to create group:My Group");
