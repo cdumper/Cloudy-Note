@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.sharing.view;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -11,10 +12,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.event.GroupsChangedEvent;
+import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.IGroupView;
 import com.sid.cloudynote.client.view.Container;
+import com.sid.cloudynote.shared.Group;
 
-public class GroupView extends Composite implements IGroupView{
+public class GroupView extends Composite implements IGroupView, IGroupsChangedHandler{
 	@UiField
 	Container container;
 	public Container getContainer() {
@@ -49,12 +53,14 @@ public class GroupView extends Composite implements IGroupView{
 					presenter.viewPublic();
 				} else if (SHARED_WITH_ME.equals(selectionModel.getSelectedObject())){
 					presenter.viewShared();
-				} else if (GROUP.equals(selectionModel.getSelectedObject())){
-					presenter.viewGroups();
-				}
+				} 
+//				else if (GROUP.equals(selectionModel.getSelectedObject())){
+//					presenter.viewGroups();
+//				}
 			}
 		});
 		cellList.setSelectionModel(selectionModel);
+//		selectionModel.setSelected(PUBLIC, true);
 	}
 
 	@Override
@@ -65,5 +71,19 @@ public class GroupView extends Composite implements IGroupView{
 	@Override
 	public Widget asWidget(){
 		return this.cellList;
+	}
+	
+	@Override 
+	public void setGroupList (Set<Group> groups) {
+		if (groups != null && groups.size() != 0) {
+			for (Group g : groups) {
+				System.out.println(g.getName());
+			}
+		}
+	}
+
+	@Override
+	public void onGroupsChanged(GroupsChangedEvent event) {
+		presenter.loadGroupList();
 	}
 }

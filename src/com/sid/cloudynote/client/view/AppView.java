@@ -18,6 +18,7 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.EditNoteEvent;
+import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.HideSharingNoteViewEvent;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
@@ -25,6 +26,7 @@ import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
@@ -98,8 +100,10 @@ public class AppView extends Composite implements Presenter {
 	public void showOthersNotes(HasWidgets container) {
 		container.clear();
 		if (sharingView == null) {
-			sharingView = new SharingView(eventBus);
+			sharingView = new SharingView();
 		}
+		sharingView.seteEventBus(eventBus);
+		bindSharingEvents();
 		deck.showWidget(1);
 		container.add(dockLayoutPanel);
 	}
@@ -122,14 +126,16 @@ public class AppView extends Composite implements Presenter {
 	}
 	
 	private void bindFriendEvents() {
-		
+		eventBus.addHandler(GroupsChangedEvent.TYPE, friendsView);
 	}
 	
 	private void bindSharingEvents() {
 		eventBus.addHandler(ViewPublicNotesEvent.TYPE, sharingView.noteListView);
 		eventBus.addHandler(ViewSharedNotesEvent.TYPE, sharingView.noteListView);
+//		eventBus.addHandler(ViewGroupNotesEvent.TYPE, sharingView.noteListView);
 		eventBus.addHandler(ViewSharedNoteEvent.TYPE, sharingView);
 		eventBus.addHandler(HideSharingNoteViewEvent.TYPE, sharingView);
+		eventBus.addHandler(GroupsChangedEvent.TYPE, sharingView.groupView);
 	}
 
 	private void bindEvents() {

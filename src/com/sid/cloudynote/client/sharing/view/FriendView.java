@@ -1,8 +1,12 @@
 package com.sid.cloudynote.client.sharing.view;
 
+import java.util.Set;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -10,10 +14,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.event.GroupsChangedEvent;
+import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.IFriendView;
 import com.sid.cloudynote.client.view.Container;
+import com.sid.cloudynote.shared.Group;
 
-public class FriendView extends ResizeComposite implements IFriendView{
+public class FriendView extends ResizeComposite implements IFriendView, IGroupsChangedHandler{
 	private Presenter presenter;
 	private static FriendViewUiBinder uiBinder = GWT
 			.create(FriendViewUiBinder.class);
@@ -53,4 +60,19 @@ public class FriendView extends ResizeComposite implements IFriendView{
 		return this.container;
 	}
 	
+	
+	@UiHandler("createGroupButton")
+	void onCreateGroupButtonClicked(ClickEvent e){
+		presenter.createGroup();
+	}
+	
+	@Override
+	public void onGroupsChanged(GroupsChangedEvent event) {
+		presenter.loadGroupList();
+	}
+
+	public void setGroupList(Set<Group> result) {
+		// TODO Auto-generated method stub
+		System.out.println("set group list in friend page");
+	}
 }
