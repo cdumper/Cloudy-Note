@@ -12,4 +12,8 @@ public interface GroupServiceAsync {
 
 	void getGroups(String userEmail, AsyncCallback<Set<Group>> callback);
 
+	void modifyGroup(Group group, AsyncCallback<Void> callback);
+
+	void getMyGroups(String userEmail, AsyncCallback<Set<Group>> callback);
+
 }

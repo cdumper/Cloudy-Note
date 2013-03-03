@@ -10,11 +10,17 @@
 			border-bottom: 1px solid grey;
 			padding: 10px;
 		}
+		.hidden {
+			display: none;
+		}
 	</ui:style>
 	<cn:Container ui:field="container">
 		<g:HTMLPanel ui:field="content">
 			<table>
 				<tr>
+					<td rowspan="2" width="10px">
+						<g:CheckBox ui:field="checkBox" addStyleNames="{style.hidden}"></g:CheckBox>
+					</td>
 					<td rowspan="2" width="10%">user image profile</td>
 					<td width="20%">
 						<g:Button ui:field="userLink">user name</g:Button>
@@ -28,7 +34,7 @@
 				</tr>
 				<tr>
 					<td>
-						<g:Label ui:field="groupLabel">group</g:Label>
+						<g:Label ui:field="groupLabel">Group:</g:Label>
 					</td>
 				</tr>
 			</table>

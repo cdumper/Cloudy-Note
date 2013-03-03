@@ -9,14 +9,19 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.Group;
+import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.User;
 import com.sid.cloudynote.shared.Visibility;
 
-public class GroupServiceImpl extends RemoteServiceServlet implements GroupService{
+public class GroupServiceImpl extends RemoteServiceServlet implements
+		GroupService {
 
 	/**
 	 * 
@@ -27,23 +32,24 @@ public class GroupServiceImpl extends RemoteServiceServlet implements GroupServi
 	public void createGroup(String name, String owner, Set<String> users) {
 		List<User> userList = new ArrayList<User>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		//create the group with given name and members
-		Group group = new Group(name,owner,users);
-		//TODO add group privacy support
-		//set the visibility of the group to PRIVATE by default
+		// create the group with given name and members
+		Group group = new Group(name, owner, users);
+		// TODO add group privacy support
+		// set the visibility of the group to PRIVATE by default
 		group.setVisibility(Visibility.PRIVATE);
 		pm.makePersistent(group);
-		
-		// register the created group in each member's group list 
-		for ( String userEmail : users ) {
+
+		// register the created group in each member's group list
+		for (String userEmail : users) {
 			User user = getUser(userEmail);
-			if(user.getGroups() != null) user.getGroups().add(group.getKey());
+			if (user.getGroups() != null)
+				user.getGroups().add(group.getKey());
 			userList.add(user);
 		}
 		pm.makePersistentAll(userList);
 		pm.close();
 	}
-	
+
 	public User getUser(String email) {
 		User user = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
@@ -72,39 +78,25 @@ public class GroupServiceImpl extends RemoteServiceServlet implements GroupServi
 	}
 
 	@Override
-	public Set<Group> getGroups(String userEmail) {
+	public Set<Group> getGroups(String userEmail) throws NotLoggedInException {
+		checkLoggedIn();
+		User user = getUser(userEmail);
 		Set<Group> groups = new HashSet<Group>();
-		User user = null;
 		Set<Key> groupKeys;
-		List<User> results;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		Query userQuery = pm.newQuery(User.class);
-		userQuery.setFilter("emailAddress == emailAddressParam");
-		userQuery.declareParameters("String emailAddressParam");
-		userQuery.setRange(0, 1);
 		Query groupQuery = pm.newQuery(Group.class);
 		groupQuery.setFilter("key == keyParam");
-		groupQuery.declareParameters(Key.class.getName()+" keyParam");
+		groupQuery.declareParameters(Key.class.getName() + " keyParam");
 		try {
-			//get the user with userEmail
-			Object obj = userQuery.execute(userEmail);
-			if (obj != null) {
-				results = (List<User>) obj;
-				results = new ArrayList<User>(pm.detachCopyAll(results));
-				results.size();
-				if (!results.isEmpty()) {
-					user = results.get(0);
-				}
-			}
-			
-			if (user != null && user.getGroups()!=null ) {
+			if (user != null && user.getGroups() != null) {
 				List<Group> groupList;
 				groupKeys = user.getGroups();
 				for (Key key : groupKeys) {
 					Object o = groupQuery.execute(key);
-					if (o != null ) {
+					if (o != null) {
 						groupList = (List<Group>) o;
-						groupList = new ArrayList<Group>(pm.detachCopyAll(groupList));
+						groupList = new ArrayList<Group>(
+								pm.detachCopyAll(groupList));
 						groupList.size();
 						if (!groupList.isEmpty()) {
 							groups.add(groupList.get(0));
@@ -115,10 +107,70 @@ public class GroupServiceImpl extends RemoteServiceServlet implements GroupServi
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			userQuery.closeAll();
+			groupQuery.closeAll();
+			pm.close();
+		}
+		groups.addAll(getMyGroups(userEmail));
+		return groups;
+	}
+
+	@Override
+	public Set<Group> getMyGroups(String userEmail) throws NotLoggedInException {
+		checkLoggedIn();
+		Set<Group> groups = new HashSet<Group>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		Query groupQuery = pm.newQuery(Group.class);
+		groupQuery.setFilter("owner == ownerParam");
+		groupQuery.declareParameters("String ownerParam");
+		groupQuery.setRange(0, 1);
+		try {
+			List<Group> groupList;
+			Object o = groupQuery.execute(userEmail);
+			if (o != null) {
+				groupList = (List<Group>) o;
+				groupList = new ArrayList<Group>(pm.detachCopyAll(groupList));
+				groupList.size();
+				if (!groupList.isEmpty()) {
+					groups.add(groupList.get(0));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			groupQuery.closeAll();
 			pm.close();
 		}
 		return groups;
+	}
+
+	@Override
+	public void modifyGroup(Group group) throws NotLoggedInException {
+		checkLoggedIn();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			pm.currentTransaction().begin();
+			if (!group.getOwner().equals(getUser().getEmail())) {
+				GWT.log("You don't have the access to delete since you're not the ower of the group");
+			} else {
+				pm.makePersistent(group);
+			}
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+		} finally {
+			if (pm.currentTransaction().isActive())
+				pm.currentTransaction().rollback();
+			pm.close();
+		}
+	}
+
+	private void checkLoggedIn() throws NotLoggedInException {
+		if (getUser() == null) {
+			throw new NotLoggedInException("Not logged in.");
+		}
+	}
+
+	private com.google.appengine.api.users.User getUser() {
+		UserService userService = UserServiceFactory.getUserService();
+		return userService.getCurrentUser();
 	}
 }

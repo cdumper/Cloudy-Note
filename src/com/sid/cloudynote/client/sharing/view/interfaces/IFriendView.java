@@ -1,5 +1,8 @@
 package com.sid.cloudynote.client.sharing.view.interfaces;
 
+import java.util.Set;
+
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface IFriendView {
@@ -12,11 +15,11 @@ public interface IFriendView {
 
 		void showFriendsInGroup();
 
-		void createGroup();
+		void createGroup(String groupName, String owner, Set<String> members);
 
 		void deleteGroup();
 
-		void modifyGroup();
+		void modifyGroup(Key key, String groupName, Set<String> members);
 	}
 
 	void setPresenter(Presenter presenter);

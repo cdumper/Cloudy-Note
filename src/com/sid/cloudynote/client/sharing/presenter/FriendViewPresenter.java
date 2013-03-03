@@ -1,9 +1,9 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -66,19 +66,17 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	}
 
 	@Override
-	public void createGroup() {
-		Set<String> members = new HashSet<String>();
-		members.add(AppController.get().getLoginInfo().getEmailAddress());
+	public void createGroup(final String groupName, final String owner, final Set<String> members) {
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
-		groupService.createGroup("My Group", AppController.get().getLoginInfo().getEmailAddress(), members, new AsyncCallback<Void>(){
+		groupService.createGroup(groupName, owner, members, new AsyncCallback<Void>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Failed to create group:My Group");
+				GWT.log("Failed to create group:"+groupName);
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				GWT.log("Successfully created group: My Group");
+				GWT.log("Successfully created group:"+groupName);
 				eventBus.fireEvent(new GroupsChangedEvent());
 			}
 		});
@@ -86,12 +84,6 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 
 	@Override
 	public void deleteGroup() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void modifyGroup() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -116,6 +108,27 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			@Override
 			public void onSuccess(List<User> friends) {
 				view.setFriendsList(friends);
+			}
+		});
+	}
+
+	@Override
+	public void modifyGroup(Key key, String groupName, Set<String> members) {
+		Group group = new Group();
+		group.setKey(key);
+		group.setName(groupName);
+		group.setMembers(members);
+		GroupServiceAsync groupService = GWT.create(GroupService.class);
+		groupService.modifyGroup(group, new AsyncCallback<Void>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to create group:My Group");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully modified group");
+				eventBus.fireEvent(new GroupsChangedEvent());
 			}
 		});
 	}
