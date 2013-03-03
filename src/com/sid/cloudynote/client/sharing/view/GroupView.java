@@ -101,6 +101,7 @@ public class GroupView extends Composite implements IGroupView,
 					}
 				});
 				button.addClassName(style.groupItem());
+				button.addClassName(".gwt-Button");
 				li.appendChild(button);
 				groupList.appendChild(li);
 			}

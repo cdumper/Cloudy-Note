@@ -1,43 +1,25 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
-	<ui:style type="com.sid.cloudynote.client.sharing.view.FriendView.Style">
-		.container {
-			border: 1px solid #999;
-		}
-		
-		.buttonPanel {
-			width: 100%;
-			height: 10%;
-			border: 1px solid grey;
-			background: #D8D8D8;
-			position: relative;
-			vertical-align: middle;
-		}
-		
-		.hidden {
-			display: none;
-		}
-		
-		.visible {
-			display: block;
-		}
-	</ui:style>
-	<cn:Container addStyleNames="{style.container}" ui:field="container">
+	<ui:style type="com.sid.cloudynote.client.sharing.view.FriendView.Style"
+		src="leftPanel.css" />
+			
+		<cn:Container addStyleNames="{style.container}" ui:field="container">
 		<g:DockLayoutPanel width="100%" height="100%" unit="PCT"
 			ui:field="content">
-			<g:west size="25" verticalAlignment="ALIGN_MIDDLE">
-				<g:FlowPanel height="100%" width="100%" ui:field="leftPanel">
+			<g:west size="20">
+				<g:FlowPanel addStyleNames="{style.groupList}" ui:field="leftPanel">
 					<g:HTMLPanel width="100%" ui:field="friendsButtonListPanel">
-						<g:Label text="My Friends" />
-						<g:Button ui:field="allFriendsButton">All Friends</g:Button>
-						<g:Button ui:field="findFriendsButton">Find Friends</g:Button>
+						<g:Label addStyleNames="{style.label}" text="My Friends" />
+						<g:Button addStyleNames="{style.button}" ui:field="allFriendsButton">All
+							Friends</g:Button>
+						<g:Button addStyleNames="{style.button}" ui:field="findFriendsButton">Find
+							Friends</g:Button>
 					</g:HTMLPanel>
 					<g:SuggestBox width="80%" text="Search Friends"
 						ui:field="searchBox" />
+					<g:Label addStyleNames="{style.label}" text="Groups" />
 					<g:HTMLPanel width="100%" ui:field="groupsPanel">
-						<g:Label text="Groups" />
-						<g:Button>GWT(4)</g:Button>
 					</g:HTMLPanel>
 				</g:FlowPanel>
 			</g:west>

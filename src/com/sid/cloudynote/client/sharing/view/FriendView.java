@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,12 +31,17 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		IGroupsChangedHandler {
 	private Presenter presenter;
 	private Set<FriendListItem> friendsItemSet;
-	private boolean isEditing =false;
+	private boolean isEditing = false;
 	private Group currentGroup;
-	interface Style extends CssResource{
+
+	interface Style extends CssResource {
 		String hidden();
+
 		String visible();
+
+		String button();
 	}
+
 	private static FriendViewUiBinder uiBinder = GWT
 			.create(FriendViewUiBinder.class);
 	@UiField
@@ -102,36 +108,39 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			this.createGroupButton.setText("Done");
 			isEditing = true;
 		} else {
-			// gather the group name and members list for storage 
+			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
-			String userEmail = AppController.get().getLoginInfo().getEmailAddress();
+			String userEmail = AppController.get().getLoginInfo()
+					.getEmailAddress();
 			Set<String> members = new HashSet<String>();
-			for(FriendListItem item :friendsItemSet){
-				if(item.getSelected()){
+			for (FriendListItem item : friendsItemSet) {
+				if (item.getSelected()) {
 					members.add(item.getUser().getEmailAddress());
 				}
 			}
-			
-			//either create a new group if the variable currentGroup is null or modify the current one 
+
+			// either create a new group if the variable currentGroup is null or
+			// modify the current one
 			if (currentGroup == null) {
-				presenter.createGroup(groupName,userEmail,members);
+				presenter.createGroup(groupName, userEmail, members);
 			} else {
-				presenter.modifyGroup(currentGroup.getKey(),groupName,members);
+				presenter
+						.modifyGroup(currentGroup.getKey(), groupName, members);
 			}
-			
+
 			switchStyle(style.hidden());
 			this.createGroupButton.setText("Create Group");
 			isEditing = false;
 		}
 	}
-	
+
 	@UiHandler("editGroupButton")
-	void onEditGroup(ClickEvent e){
+	void onEditGroup(ClickEvent e) {
 	}
-	
-	void switchStyle(String style){
+
+	void switchStyle(String style) {
 		namePanel.setStyleName(style);
-		for(FriendListItem item :friendsItemSet){
+		for (FriendListItem item : friendsItemSet) {
 			item.checkBox.setStyleName(style);
 		}
 	}
@@ -142,8 +151,19 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	}
 
 	public void setGroupList(Set<Group> result) {
-		// TODO Auto-generated method stub
-		System.out.println("set group list in friend page:" + result.size());
+		this.groupsPanel.clear();
+		for (Group group : result) {
+			Button button = new Button(group.getName(), new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					// TODO on group item clicked
+					// show users in the group
+
+				}
+			});
+			button.addStyleName(style.button());
+			this.groupsPanel.add(button);
+		}
 	}
 
 	public void setFriendsList(List<User> friends) {
