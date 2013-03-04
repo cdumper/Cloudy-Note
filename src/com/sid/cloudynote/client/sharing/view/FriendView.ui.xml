@@ -31,11 +31,13 @@
 						<g:Button ui:field="editGroupButton">Edit Group</g:Button>
 						<g:Button ui:field="deleteGroupButton">Delete Group</g:Button>
 					</g:HTMLPanel>
-					<g:HTMLPanel addStyleNames="{style.hidden}" ui:field="namePanel">
+					<g:HTMLPanel addStyleNames="{style.hidden}" ui:field="namePanel" height="10%">
 						<g:Label>Group Name</g:Label>
 						<g:TextBox ui:field="groupNameBox">new group</g:TextBox>
 					</g:HTMLPanel>
-					<g:HTMLPanel height="90%" ui:field="friendsListPanel" />
+					<g:ScrollPanel width="100%">
+					<g:HTMLPanel ui:field="friendsListPanel"/>
+					</g:ScrollPanel>
 				</g:HTMLPanel>
 			</g:center>
 		</g:DockLayoutPanel>

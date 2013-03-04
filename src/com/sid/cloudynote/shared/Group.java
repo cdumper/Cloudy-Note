@@ -28,7 +28,7 @@ public class Group implements Serializable {
 	@Persistent
 	private String owner;
 	@Persistent
-	private int visibility; 
+	private int visibility = Visibility.PRIVATE; 
 	@Persistent
 	private Set<String> members = new HashSet<String>();
 

@@ -1,17 +1,26 @@
 package com.sid.cloudynote.client.service;
 
+import java.util.List;
 import java.util.Set;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.NotLoggedInException;
+import com.sid.cloudynote.shared.User;
 
 @RemoteServiceRelativePath("groupService")
 public interface GroupService extends RemoteService {
+	/**
+	 * The service to create a new group and persist in datastore.
+	 * @param name
+	 * @param owner
+	 * @param users
+	 */
 	void createGroup(String name, String owner, Set<String> users) ;
 	/**
-	 * The function to get groups the user is in, including the ones user owns
+	 * The service to get groups the user is in, including BOTH the ones user owns AND the ones user is in
 	 * @param userEmail
 	 * @return
 	 * @throws NotLoggedInException
@@ -19,11 +28,32 @@ public interface GroupService extends RemoteService {
 	Set<Group> getGroups(String userEmail) throws NotLoggedInException;
 	
 	/**
-	 * The function to get groups the user owns, not including the ones user is in
+	 * The service to get ONLY groups the user owns, NOT including the ones user is in
 	 * @param userEmail
 	 * @return
 	 * @throws NotLoggedInException
 	 */
 	Set<Group> getMyGroups(String userEmail) throws NotLoggedInException;
+	
+	/**
+	 * The service to get the user list in the given group
+	 * @param groupKey
+	 * @return
+	 * @throws NotLoggedInException
+	 */
+	List<User> getUsersInGroup(Key key) throws NotLoggedInException;
+	
+	/**
+	 * The service to modify an existing group
+	 * @param group
+	 * @throws NotLoggedInException
+	 */
 	void modifyGroup(Group group) throws NotLoggedInException;
+	
+	/**
+	 * The service to delete an existing group
+	 * @param group
+	 * @throws NotLoggedInException
+	 */
+	void deleteGroup(Group group) throws NotLoggedInException;
 }

@@ -39,9 +39,10 @@ public class FriendListItem extends ResizeComposite {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public FriendListItem(User user) {
+	public FriendListItem(User user, Boolean selected) {
 		this();
 		this.user = user;
+		this.checkBox.setValue(selected);
 		presentUser();
 	}
 

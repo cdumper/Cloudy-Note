@@ -50,6 +50,7 @@
 
 .groupList .button {
 	width: 100%;
+	margin: 0px auto;
 	padding-left: 20%;
 	position: relative;
 	display: block;

@@ -1,7 +1,11 @@
 package com.sid.cloudynote.client.sharing.view;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
@@ -30,11 +34,12 @@ import com.sid.cloudynote.shared.User;
 public class FriendView extends ResizeComposite implements IFriendView,
 		IGroupsChangedHandler {
 	private Presenter presenter;
+	private List<User> allFriends = new ArrayList<User>();
 	private Set<FriendListItem> friendsItemSet;
 	private boolean isEditing = false;
 	private Group currentGroup;
 
-	interface Style extends CssResource {
+	public interface Style extends CssResource {
 		String hidden();
 
 		String visible();
@@ -77,13 +82,29 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiField
 	HTMLPanel friendsListPanel;
 	@UiField
-	Style style;
+	public Style style;
 
 	interface FriendViewUiBinder extends UiBinder<Widget, FriendView> {
 	}
 
 	public FriendView() {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	public List<User> getAllFriends() {
+		return allFriends;
+	}
+
+	public void setAllFriends(List<User> allFriends) {
+		this.allFriends = allFriends;
+	}
+
+	public boolean isEditing() {
+		return isEditing;
+	}
+
+	public void setEditing(boolean isEditing) {
+		this.isEditing = isEditing;
 	}
 
 	@Override
@@ -104,9 +125,8 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	void onCreateGroupButtonClicked(ClickEvent e) {
 		if (!isEditing) {
 			currentGroup = null;
-			switchStyle(style.visible());
-			this.createGroupButton.setText("Done");
-			isEditing = true;
+			this.groupNameBox.setText("New Group");
+			this.presentFriends(allFriends,false);
 		} else {
 			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
@@ -124,21 +144,41 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			if (currentGroup == null) {
 				presenter.createGroup(groupName, userEmail, members);
 			} else {
-				presenter
-						.modifyGroup(currentGroup.getKey(), groupName, members);
+				presenter.modifyGroup(currentGroup.getKey(), groupName, members);
 			}
-
-			switchStyle(style.hidden());
-			this.createGroupButton.setText("Create Group");
-			isEditing = false;
 		}
+		changeEditingMode();
 	}
 
 	@UiHandler("editGroupButton")
 	void onEditGroup(ClickEvent e) {
+		this.groupNameBox.setText(this.currentGroup.getName());
+		presenter.editGroup(this.currentGroup);
+	}
+	
+	@UiHandler("deleteGroupButton")
+	void onDeleteGroup(ClickEvent e) {
+		presenter.deleteGroup(this.currentGroup);
 	}
 
-	void switchStyle(String style) {
+	@UiHandler("allFriendsButton")
+	void onAllFriends(ClickEvent e) {
+		this.currentGroup = null;
+		this.presentFriends(allFriends,false);
+	}
+
+	//switch between editing mode & non-editing mode
+	public void changeEditingMode() {
+		String style;
+		if (this.isEditing) {
+			style = this.style.hidden();
+			this.createGroupButton.setText("Create Group");
+			this.isEditing = false;
+		} else {
+			style = this.style.visible();
+			this.createGroupButton.setText("Done");
+			this.isEditing = true;
+		}
 		namePanel.setStyleName(style);
 		for (FriendListItem item : friendsItemSet) {
 			item.checkBox.setStyleName(style);
@@ -147,37 +187,50 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
-		presenter.loadGroupList();
+		presenter.loadMyGroupList(AppController.get().getLoginInfo().getEmailAddress());
+		this.presentFriends(allFriends,false);
 	}
 
 	public void setGroupList(Set<Group> result) {
 		this.groupsPanel.clear();
-		for (Group group : result) {
+		for (final Group group : result) {
 			Button button = new Button(group.getName(), new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					// TODO on group item clicked
-					// show users in the group
-
+					currentGroup = group;
+					presenter.showFriendsInGroup(group.getKey());
 				}
 			});
 			button.addStyleName(style.button());
 			this.groupsPanel.add(button);
 		}
 	}
+	
+	public void presentFriends(List<User> users, Boolean checked) {
+		Map<User,Boolean> map = new HashMap<User, Boolean>();
+		for(User u : users){
+			map.put(u, checked);
+		}
+		this.presentFriends(map);
+	}
 
-	public void setFriendsList(List<User> friends) {
+	public void presentFriends(Map<User,Boolean> users) {
 		if (friendsItemSet == null) {
 			friendsItemSet = new HashSet<FriendListItem>();
 		}
-		if (friends != null) {
+		if (users != null) {
 			friendsItemSet.clear();
 			this.friendsListPanel.clear();
-			for (User user : friends) {
-				FriendListItem item = new FriendListItem(user);
+			
+			for (Entry<User,Boolean> user : users.entrySet()) {
+				FriendListItem item = new FriendListItem(user.getKey(),user.getValue());
 				friendsItemSet.add(item);
 				this.friendsListPanel.add(item);
 			}
 		}
+	}
+	
+	public void setAllFriendsList (List<User> friends) {
+		this.allFriends = friends;
 	}
 }
