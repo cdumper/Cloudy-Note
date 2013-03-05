@@ -1,9 +1,9 @@
 package com.sid.cloudynote.client.presenter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
@@ -13,15 +13,22 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
+import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
+import com.sid.cloudynote.client.service.GroupService;
+import com.sid.cloudynote.client.service.GroupServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.client.service.ShareService;
+import com.sid.cloudynote.client.service.ShareServiceAsync;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.NoteListView;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
+import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.User;
 
 public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	private final HandlerManager eventBus;
@@ -88,40 +95,12 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	}
 
 	@Override
-	public void shareNoteToUser(String email, InfoNote note, String permission) {
-		int _permission = 1;
-		if ("Read-Only".equals(permission)) {
-			_permission = 1;
-		} else if ("Write".equals(permission)) {
-			_permission = 2;
-		}
-		
-		// TODO perform share notes
-		// Add entry in Note acl
-		// note.getAccess().put("sid@shen.com",1);
-		ArrayList<String> users = new ArrayList<String>();
-		users.add(email);
-		InfoNoteServiceAsync noteService = GWT.create(InfoNoteService.class);
-		noteService.addAccessEntry(note,users,_permission, new AsyncCallback<Void>(){
+	public void makeNotesPublic(List<InfoNote> notes) {
+		InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
+		service.makeNotesPublic(notes, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Shared notes failed");
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				
-			}
-		});
-
-		// Add entry in User acl
-		UserServiceAsync userService = GWT.create(UserService.class);
-		ArrayList<Key> notes = new ArrayList<Key>();
-		notes.add(note.getKey());
-		userService.addAccessEntry(email, notes, _permission, new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("Share notes failed");
+				GWT.log("Failed to make notes public");
 			}
 
 			@Override
@@ -132,18 +111,107 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	}
 
 	@Override
-	public void makeNotesPublic(List<InfoNote> notes) {
-		// TODO Auto-generated method stub
+	public void deleteNote(InfoNote note) {
 		InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
-		service.makeNotesPublic(notes, new AsyncCallback<Void>(){
+		service.delete(note, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Failed to make notes public");
+				GWT.log("Delete notebook failed!");
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				
+				loadNoteList(DataManager.getCurrentNotebook());
+			}
+		});
+	}
+
+	@Override
+	public void loadGroupList(final String email) {
+		GroupServiceAsync service = GWT.create(GroupService.class);
+		service.getGroups(email, new AsyncCallback<Set<Group>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to get groups of user:" + email);
+			}
+
+			@Override
+			public void onSuccess(Set<Group> result) {
+				view.setGroupSet(result);
+			}
+		});
+	}
+
+	@Override
+	public void loadFriendsList(final String email) {
+		UserServiceAsync service = GWT.create(UserService.class);
+		service.getFriends(email, new AsyncCallback<List<User>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to get friends list of user:" + email);
+			}
+
+			@Override
+			public void onSuccess(List<User> result) {
+				view.setFriendsList(result);
+			}
+		});
+	}
+
+	@Override
+	public void shareNoteToUsers(final InfoNote note, final Map<String,Integer> access) {
+		ShareServiceAsync service = GWT.create(ShareService.class);
+		service.shareNoteToUsers(note, access, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to share note to users");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully update sharing settings of note to users");
+				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
+			}
+			
+		});
+	}
+	
+	@Override
+	public void shareNoteToUsersAndGroups(InfoNote note,Map<String,Integer> userAccess, Map<Key,Integer> groupAccess) {
+		ShareServiceAsync service = GWT.create(ShareService.class);
+		service.shareNoteToUsersAndGroups(note, userAccess, groupAccess, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to share note to users and groups");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully update sharing settings of note to users and groups");
+				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
+			}
+			
+		});
+	}
+
+	@Override
+	public void shareNoteToGroups(InfoNote note, Map<Key,Integer> groupsAccess) {
+		ShareServiceAsync service = GWT.create(ShareService.class);
+		service.shareNoteToGroups(note, groupsAccess, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to share note to groups");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully update sharing settings of note to groups");
+				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
 			}
 		});
 	}

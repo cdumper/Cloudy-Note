@@ -2,8 +2,13 @@ package com.sid.cloudynote.client.view;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -21,35 +26,51 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.event.interfaces.INoteChangedHandler;
-import com.sid.cloudynote.client.service.InfoNoteService;
-import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
+import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.User;
 
 public class NoteListView extends ResizeComposite implements
-		INoteChangedHandler, INoteListView {
+		INoteChangedHandler, INoteListView, IGroupsChangedHandler {
 	@UiTemplate("NoteListView.ui.xml")
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListView> {
 	}
+
+//	interface MyCssResource extends CssResource {
+//		String userLabel();
+//	}
+//
+//	interface MyResources extends ClientBundle {
+//		@NotStrict
+//		@Source("global.css")
+//		MyCssResource css();
+//	}
+//	
+//	private MyCssResource css;
 
 	private static NoteListPanelUiBinder uiBinder = GWT
 			.create(NoteListPanelUiBinder.class);
@@ -68,12 +89,8 @@ public class NoteListView extends ResizeComposite implements
 		return container;
 	}
 
-	/**
-	 * The pager used to display the current range.
-	 */
-	// @UiField
-	// RangeLabelPager rangeLabelPager;
-
+	private Set<Group> groupsSet;
+	private List<User> friendsList;
 	private CellList<InfoNote> cellList;
 	private NoteCell noteCell;
 	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
@@ -91,18 +108,21 @@ public class NoteListView extends ResizeComposite implements
 	private SingleSelectionModel<InfoNote> selectionModel;
 	private Presenter presenter;
 
-	static class NoteCell extends AbstractCell<InfoNote> {
+	class NoteCell extends AbstractCell<InfoNote> {
+		List<GrantAccessItem> items = new ArrayList<GrantAccessItem>();
 		private SingleSelectionModel<InfoNote> selectionModel;
 
 		public SingleSelectionModel<InfoNote> getSelectionModel() {
 			return selectionModel;
 		}
 
-		public void setSelectionModel(SingleSelectionModel<InfoNote> selectionModel) {
+		public void setSelectionModel(
+				SingleSelectionModel<InfoNote> selectionModel) {
 			this.selectionModel = selectionModel;
 		}
 
 		Presenter presenter;
+
 		public Presenter getPresenter() {
 			return presenter;
 		}
@@ -119,14 +139,13 @@ public class NoteListView extends ResizeComposite implements
 		}
 
 		@Override
-		public void render(Context context, InfoNote note,
-				SafeHtmlBuilder sb) {
+		public void render(Context context, InfoNote note, SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
 			if (note == null) {
 				return;
 			}
 
-			sb.appendHtmlConstant("<table>");
+			sb.appendHtmlConstant("<table height='30px'>");
 
 			// Add the contact image.
 			sb.appendHtmlConstant("<tr><td rowspan='3'>");
@@ -137,7 +156,7 @@ public class NoteListView extends ResizeComposite implements
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
 			sb.appendEscaped(note.getTitle());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>",""));
+			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>", ""));
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 
@@ -147,8 +166,8 @@ public class NoteListView extends ResizeComposite implements
 				ValueUpdater<InfoNote> valueUpdater) {
 			event.preventDefault();
 			event.stopPropagation();
-			
-			if ("contextmenu".equals(event.getType())){
+
+			if ("contextmenu".equals(event.getType())) {
 				noteContextMenu = new NoteContextMenu(value);
 				initialNoteContextMenu();
 				noteContextMenu.setSelectedNote(value);
@@ -157,7 +176,7 @@ public class NoteListView extends ResizeComposite implements
 				noteContextMenu.show();
 			}
 		}
-		
+
 		private class NoteContextMenu extends PopupPanel {
 			private InfoNote selectedNote;
 
@@ -175,28 +194,13 @@ public class NoteListView extends ResizeComposite implements
 				this.setAutoHideEnabled(true);
 				this.setAnimationEnabled(true);
 			}
-
-			public void deleteNote() {
-				InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
-				service.delete(selectedNote, new AsyncCallback<Void>(){
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log("Delete notebook failed!");
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						presenter.loadNoteList(DataManager.getCurrentNotebook());
-					}
-				});
-			}
 		}
-		
+
 		List<String> OPERATION_LIST = new ArrayList<String>(Arrays.asList(
-				"Edit","Share","Delete"));
+				"Edit", "Share", "Delete"));
 		private NoteContextMenu noteContextMenu;
-		
-		private void initialNoteContextMenu(){
+
+		private void initialNoteContextMenu() {
 			VerticalPanel content = new VerticalPanel();
 			noteContextMenu.setAnimationEnabled(true);
 			noteContextMenu.setWidget(content);
@@ -208,13 +212,15 @@ public class NoteListView extends ResizeComposite implements
 					if ("click".equals(event.getType())) {
 						noteContextMenu.hide();
 						if ("Edit".equals(value)) {
-							selectionModel.setSelected(noteContextMenu.getSelectedNote(), true);
-							presenter.startEditing(noteContextMenu.getSelectedNote());
+							selectionModel.setSelected(
+									noteContextMenu.getSelectedNote(), true);
+							presenter.startEditing(noteContextMenu
+									.getSelectedNote());
 						} else if ("Delete".equals(value)) {
 							showDeletePanel();
 						} else if ("Share".equals(value)) {
 							showSharePanel();
-						} 
+						}
 					}
 				}
 			};
@@ -222,24 +228,69 @@ public class NoteListView extends ResizeComposite implements
 			operationList.setRowData(OPERATION_LIST);
 			content.add(operationList);
 		}
-		
+
 		public void showSharePanel() {
 			final DialogBox dialog = new DialogBox();
 			dialog.setText(noteContextMenu.getSelectedNote().getTitle());
-			
+
 			showChooseWayToSharePanel(dialog);
 			dialog.center();
 		}
 
 		private void showShareToIndividual(final DialogBox dialog) {
+			InfoNote note = noteContextMenu.getSelectedNote();
+
 			VerticalPanel content = new VerticalPanel();
 			dialog.setWidget(content);
-			
-			Label name = new Label(" Share with individuals</br>Invite others to view or edit this notebook. ");
-			final TextBox users = new TextBox();
-			final ListBox access = new ListBox();
-			access.addItem("Read-Only");
-			access.addItem("Write");
+			ScrollPanel scrollPanel = new ScrollPanel();
+			HTMLPanel scrollContent = new HTMLPanel("");
+
+			Label name = new Label("Share with individuals or groups");
+			if (groupsSet != null && groupsSet.size() != 0) {
+				scrollContent.add(new Label("Groups:"));
+				for (Group g : groupsSet) {
+					GrantAccessItem item;
+					boolean exist = false;
+					int permission = 1;
+					if (note.getGroupAccess() != null
+							&& note.getGroupAccess().size() != 0) {
+						for (Entry<Key, Integer> entry : note.getGroupAccess()
+								.entrySet()) {
+							if (entry.getKey().equals(g.getKey())) {
+								exist = true;
+								permission = entry.getValue();
+								// break;
+							}
+						}
+					}
+					item = new GrantAccessItem(g, exist, permission);
+					items.add(item);
+					scrollContent.add(item.asWidget());
+				}
+			}
+
+			if (friendsList != null && friendsList.size() != 0) {
+				scrollContent.add(new Label("Friends:"));
+				for (User user : friendsList) {
+					GrantAccessItem item;
+					boolean exist = false;
+					int permission = 1;
+					if (note.getUserAccess() != null
+							&& note.getUserAccess().size() != 0) {
+						for (Entry<String, Integer> entry : note
+								.getUserAccess().entrySet()) {
+							if (entry.getKey().equals(user.getEmail())) {
+								exist = true;
+								permission = entry.getValue();
+								// break;
+							}
+						}
+					}
+					item = new GrantAccessItem(user, exist, permission);
+					items.add(item);
+					scrollContent.add(item.asWidget());
+				}
+			}
 
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 			buttonPanel.add(new Button("Cancel", new ClickHandler() {
@@ -249,16 +300,40 @@ public class NoteListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					presenter.shareNoteToUser(users.getText(),noteContextMenu.getSelectedNote(),access.getItemText(access.getSelectedIndex()));
+					Map<String, Integer> users = new HashMap<String, Integer>();
+					Map<Key, Integer> groups = new HashMap<Key, Integer>();
+					// List<InfoNote> notes = new ArrayList<InfoNote>();
+					// notes.add(noteContextMenu.getSelectedNote());
+					for (GrantAccessItem item : items) {
+						if (item.checkBox.getValue()) {
+							String permission = item.access
+									.getItemText(item.access.getSelectedIndex());
+							int _permission = 1;
+							if ("Read-Only".equals(permission)) {
+								_permission = 1;
+							} else if ("Write".equals(permission)) {
+								_permission = 2;
+							}
+
+							if (item.item instanceof Group) {
+								groups.put(((Group) item.item).getKey(),
+										_permission);
+							} else if (item.item instanceof User) {
+								users.put(((User) item.item).getEmail(),
+										_permission);
+							}
+						}
+					}
+					presenter.shareNoteToUsersAndGroups(noteContextMenu.getSelectedNote(), users, groups);
 					dialog.hide();
 				}
 			}));
 			content.add(name);
-			content.add(users);
-			content.add(access);
+			scrollPanel.add(scrollContent);
+			content.add(scrollPanel);
 			content.add(buttonPanel);
 		}
-		
+
 		private void showMakePublic(DialogBox dialog) {
 			List<InfoNote> notes = new ArrayList<InfoNote>();
 			notes.add(noteContextMenu.getSelectedNote());
@@ -267,25 +342,26 @@ public class NoteListView extends ResizeComposite implements
 		}
 
 		private void showChooseWayToSharePanel(final DialogBox dialog) {
-			//the UI for choosing Share or Public
+			// the UI for choosing Share or Public
 			VerticalPanel content = new VerticalPanel();
 			dialog.setWidget(content);
-			
-			Label chooseLabel = new Label(" Share with individuals or Make it public");
+
+			Label chooseLabel = new Label(
+					" Share with individuals or Make it public");
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 			Button shareButton = new Button("Shared to individuals");
 			Button publicButton = new Button("Make public");
 			buttonPanel.add(shareButton);
 			buttonPanel.add(publicButton);
-			
-			shareButton.addClickHandler(new ClickHandler(){
+
+			shareButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					showShareToIndividual(dialog);
 				}
 			});
-			
-			publicButton.addClickHandler(new ClickHandler(){
+
+			publicButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					showMakePublic(dialog);
@@ -312,7 +388,7 @@ public class NoteListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					noteContextMenu.deleteNote();
+					presenter.deleteNote(noteContextMenu.getSelectedNote());
 					dialog.hide();
 				}
 			}));
@@ -323,8 +399,41 @@ public class NoteListView extends ResizeComposite implements
 		}
 	}
 
+	private class GrantAccessItem {
+		private HTMLPanel content = new HTMLPanel("");
+		private Object item = null;
+		private CheckBox checkBox = new CheckBox();
+		private Label label = new Label();
+		ListBox access = new ListBox();
+
+		public GrantAccessItem(Object item, boolean checked, int permission) {
+			this.item = item;
+			checkBox.setValue(checked);
+			access.addItem("Read-Only");
+			access.addItem("Write");
+			access.setSelectedIndex(permission - 1);
+			if (item instanceof Group) {
+				label.setText(((Group) item).getName());
+			} else if (item instanceof User) {
+				label.setText(((User) item).getEmail());
+			}
+			label.getElement().setId("item");
+//			label.setStyleName(css.userLabel());
+
+			content.add(checkBox);
+			content.add(access);
+			content.add(label);
+		}
+
+		public Widget asWidget() {
+			return this.content;
+		}
+	}
+
 	public NoteListView() {
 		initWidget(uiBinder.createAndBindUi(this));
+//		MyResources resource = GWT.create(MyResources.class);
+//		css = resource.css();
 		Images images = GWT.create(Images.class);
 
 		noteCell = new NoteCell(images.home());
@@ -344,7 +453,7 @@ public class NoteListView extends ResizeComposite implements
 					public void onSelectionChange(SelectionChangeEvent event) {
 						InfoNote note = selectionModel.getSelectedObject();
 						presenter.onNoteItemSelected(note);
-//						DataManager.setCurrentNote(note.getKey());
+						// DataManager.setCurrentNote(note.getKey());
 					}
 				});
 		dataProvider.addDataDisplay(cellList);
@@ -361,6 +470,10 @@ public class NoteListView extends ResizeComposite implements
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
 		noteCell.setPresenter(presenter);
+
+		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
+		presenter
+				.loadFriendsList(AppController.get().getLoginInfo().getEmail());
 	}
 
 	@Override
@@ -368,16 +481,29 @@ public class NoteListView extends ResizeComposite implements
 		List<InfoNote> notes = dataProvider.getList();
 		notes.clear();
 		notes.addAll(result);
-		if(DataManager.getCurrentNote()!=null)
+		if (DataManager.getCurrentNote() != null)
 			selectionModel.setSelected(DataManager.getCurrentNote(), true);
 	}
-	
-	public void setLabel(String text){
+
+	public void setLabel(String text) {
 		this.label.setText(text);
 	}
 
 	@Override
 	public Widget asWidget() {
 		return this.pagerPanel;
+	}
+
+	public void setFriendsList(List<User> result) {
+		this.friendsList = result;
+	}
+
+	public void setGroupSet(Set<Group> result) {
+		this.groupsSet = result;
+	}
+
+	@Override
+	public void onGroupsChanged(GroupsChangedEvent event) {
+		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
 	}
 }

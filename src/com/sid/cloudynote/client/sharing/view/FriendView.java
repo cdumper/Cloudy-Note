@@ -131,11 +131,11 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
 			String userEmail = AppController.get().getLoginInfo()
-					.getEmailAddress();
+					.getEmail();
 			Set<String> members = new HashSet<String>();
 			for (FriendListItem item : friendsItemSet) {
 				if (item.getSelected()) {
-					members.add(item.getUser().getEmailAddress());
+					members.add(item.getUser().getEmail());
 				}
 			}
 
@@ -187,7 +187,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
-		presenter.loadMyGroupList(AppController.get().getLoginInfo().getEmailAddress());
+		presenter.loadMyGroupList(AppController.get().getLoginInfo().getEmail());
 		this.presentFriends(allFriends,false);
 	}
 

@@ -97,7 +97,7 @@ public class GroupView extends Composite implements IGroupView,
 				DOM.sinkEvents(button, Event.ONCLICK);
 				DOM.setEventListener(button, new EventListener() {
 					public void onBrowserEvent(Event event) {
-						//TODO show all notes in the group g.getName()
+						presenter.onGroupItemSelected(g);
 					}
 				});
 				button.addClassName(style.groupItem());

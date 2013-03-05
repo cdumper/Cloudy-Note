@@ -44,15 +44,23 @@ public class InfoNote implements Serializable {
 	@Persistent
 	private List<String> attachments;
 	/**
-	 * access contains the access information of the note
+	 * user access contains the user access information of the note
 	 * String email
 	 * int permission
 	 */
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
-	private Map<String, Integer> access = new HashMap<String, Integer>();
+	private Map<String, Integer> userAccess = new HashMap<String, Integer>();
+	
+	/**
+	 * group access contains the group access information of the note
+	 * String email
+	 * int permission
+	 */
+	@Persistent(serialized = "true", defaultFetchGroup = "true") 
+	private Map<Key, Integer> groupAccess = new HashMap<Key, Integer>();
 
-	public Map<String, Integer> getAccess() {
-		return access;
+	public Map<String, Integer> getUserAccess() {
+		return userAccess;
 	}
 
 	public int getVisibility() {
@@ -79,8 +87,8 @@ public class InfoNote implements Serializable {
 		this.lastModifiedTime = lastModifiedTime;
 	}
 
-	public void setAccess(Map<String, Integer> access) {
-		this.access = access;
+	public void setUserAccess(Map<String, Integer> access) {
+		this.userAccess = access;
 	}
 
 	public InfoNote() {
@@ -161,5 +169,13 @@ public class InfoNote implements Serializable {
 
 	public void setAttachments(List<String> attachments) {
 		this.attachments = attachments;
+	}
+
+	public Map<Key, Integer> getGroupAccess() {
+		return groupAccess;
+	}
+
+	public void setGroupAccess(Map<Key, Integer> groupAccess) {
+		this.groupAccess = groupAccess;
 	}
 }

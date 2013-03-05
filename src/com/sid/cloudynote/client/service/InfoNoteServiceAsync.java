@@ -1,8 +1,9 @@
 package com.sid.cloudynote.client.service;
 
-
 import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
@@ -25,8 +26,7 @@ public interface InfoNoteServiceAsync {
 	void getPaginationData(long firstResult, long maxResult,
 			AsyncCallback<List<InfoNote>> callback);
 
-	void getPaginationData(String filter,
-			AsyncCallback<List<InfoNote>> callback);
+	void getPaginationData(String filter, AsyncCallback<List<InfoNote>> callback);
 
 	void getPaginationData(AsyncCallback<List<InfoNote>> callback);
 
@@ -46,6 +46,11 @@ public interface InfoNoteServiceAsync {
 
 	void verifyEditAccess(InfoNote note, AsyncCallback<Boolean> callback);
 
-	void addAccessEntry(InfoNote note, List<String> users, int permission,
+	void addUserAccessEntry(List<InfoNote> notes, Map<String, Integer> access,
 			AsyncCallback<Void> callback);
+
+	void addGroupAccessEntry(List<InfoNote> notes, Map<Key, Integer> access,
+			AsyncCallback<Void> callback);
+
+	void getNotesInGroup(Key groupKey, AsyncCallback<List<InfoNote>> callback);
 }

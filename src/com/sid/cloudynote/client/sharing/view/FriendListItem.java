@@ -47,20 +47,20 @@ public class FriendListItem extends ResizeComposite {
 	}
 
 	private void presentUser() {
-		userLink.setText(user.getEmailAddress());
+		userLink.setText(user.getEmail());
 		joinSinceLabel.setText("Member since:1999/9/9");
 		totalNotesLabel.setText("Total notes: 43");
 		// TODO
 		// get the group which the user is in
 		if (user.getGroups() != null && user.getGroups().size() != 0) {
 			GroupServiceAsync service = GWT.create(GroupService.class);
-			service.getGroups(user.getEmailAddress(),
+			service.getGroups(user.getEmail(),
 					new AsyncCallback<Set<Group>>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
 							GWT.log("Failed to read groups of user: "
-									+ user.getEmailAddress());
+									+ user.getEmail());
 						}
 
 						@Override

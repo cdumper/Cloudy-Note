@@ -96,9 +96,9 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		this.loadMyGroupList(AppController.get().getLoginInfo()
-				.getEmailAddress());
+				.getEmail());
 		this.loadAllFriendsList(AppController.get().getLoginInfo()
-				.getEmailAddress());
+				.getEmail());
 		container.add(view.asWidget());
 	}
 
@@ -106,7 +106,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	public void modifyGroup(Key key, String groupName, Set<String> members) {
 		Group group = new Group();
 		group.setKey(key);
-		group.setOwner(AppController.get().getLoginInfo().getEmailAddress());
+		group.setOwner(AppController.get().getLoginInfo().getEmail());
 		group.setName(groupName);
 		group.setMembers(members);
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
@@ -181,7 +181,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 						for (User u : view.getAllFriends()) {
 							boolean exist = false; 
 							for (Entry<User, Boolean> m : map.entrySet()) {
-								if(m.getKey().getEmailAddress().equals(u.getEmailAddress())) {
+								if(m.getKey().getEmail().equals(u.getEmail())) {
 									exist = true;
 								}
 							}

@@ -39,7 +39,7 @@ public class GroupPresenter implements Presenter, IGroupView.Presenter{
 	
 	@Override
 	public void loadGroupList() {
-		final String email = AppController.get().getLoginInfo().getEmailAddress();
+		final String email = AppController.get().getLoginInfo().getEmail();
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
 		groupService.getGroups(email, new AsyncCallback<Set<Group>>(){
 			@Override
@@ -55,7 +55,6 @@ public class GroupPresenter implements Presenter, IGroupView.Presenter{
 	}
 
 	public void onGroupItemSelected (Group group) {
-		// TODO view notes in the group
 		eventBus.fireEvent(new ViewGroupNotesEvent(group));
 	}
 

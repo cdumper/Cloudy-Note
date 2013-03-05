@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
@@ -56,4 +57,12 @@ public interface GroupService extends RemoteService {
 	 * @throws NotLoggedInException
 	 */
 	void deleteGroup(Group group) throws NotLoggedInException;
+	
+	/**
+	 * The service to add note access entry in a group
+	 * @param groupKeys
+	 * @param access
+	 * @throws NotLoggedInException
+	 */
+	void addNoteAccessEntry(List<Key> groupKeys, Map<Key,Integer> access) throws NotLoggedInException;
 }

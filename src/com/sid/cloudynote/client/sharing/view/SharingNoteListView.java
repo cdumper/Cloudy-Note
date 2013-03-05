@@ -21,8 +21,10 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
+import com.sid.cloudynote.client.event.interfaces.IViewGroupNotesHandler;
 import com.sid.cloudynote.client.event.interfaces.IViewPublicHandler;
 import com.sid.cloudynote.client.event.interfaces.IViewSharedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteListView;
@@ -30,7 +32,7 @@ import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Tag;
 
-public class SharingNoteListView extends ResizeComposite implements ISharingNoteListView, IViewPublicHandler, IViewSharedHandler{
+public class SharingNoteListView extends ResizeComposite implements ISharingNoteListView, IViewPublicHandler, IViewSharedHandler, IViewGroupNotesHandler{
 	@UiField
 	Container container;
 	@UiField
@@ -170,6 +172,11 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 
 	@Override
 	public void onViewSharedNotes(ViewSharedNotesEvent event) {
-		presenter.loadSharedNoteList(event.getUser().getEmailAddress());
+		presenter.loadSharedNoteList(event.getUser().getEmail());
+	}
+
+	@Override
+	public void onViewGroups(ViewGroupNotesEvent event) {
+		presenter.loadNotesInGroup(event.getGroup());
 	}
 }

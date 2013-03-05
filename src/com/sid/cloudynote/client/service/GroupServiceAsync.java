@@ -1,6 +1,7 @@
 package com.sid.cloudynote.client.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
@@ -22,5 +23,8 @@ public interface GroupServiceAsync {
 	void getUsersInGroup(Key key, AsyncCallback<List<User>> callback);
 
 	void deleteGroup(Group group, AsyncCallback<Void> callback);
+
+	void addNoteAccessEntry(List<Key> groupKeys, Map<Key, Integer> access,
+			AsyncCallback<Void> callback);
 
 }

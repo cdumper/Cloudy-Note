@@ -33,7 +33,7 @@ public class Group implements Serializable {
 	private Set<String> members = new HashSet<String>();
 
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
-	private Map<String, Integer> access = new HashMap<String, Integer>();
+	private Map<Key, Integer> access = new HashMap<Key, Integer>();
 	
 	public Group() {
 	}
@@ -85,11 +85,11 @@ public class Group implements Serializable {
 		return members;
 	}
 
-	public Map<String, Integer> getAccess() {
+	public Map<Key, Integer> getAccess() {
 		return access;
 	}
 
-	public void setAccess(Map<String, Integer> access) {
+	public void setAccess(Map<Key, Integer> access) {
 		this.access = access;
 	}
 }

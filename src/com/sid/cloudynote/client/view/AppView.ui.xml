@@ -15,7 +15,8 @@
 							<g:Button ui:field="othersNotesButton" addStyleNames="{style.button}">Others
 								Notes</g:Button>
 							<div class="{style.divider}"></div>
-							<g:Button ui:field="friendsButton" addStyleNames="{style.button}">Friends</g:Button>
+							<g:Button ui:field="friendsButton" addStyleNames="{style.button}">Groups</g:Button>
+							<g:Button ui:field="adminButton" addStyleNames="{style.button}">Admin</g:Button>
 						</div>
 						<div class="{style.right}">
 							<g:Button ui:field="notificationButton" addStyleNames="{style.button}">Notification</g:Button>

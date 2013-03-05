@@ -36,6 +36,16 @@
 		<servlet-name>GroupService</servlet-name>
 		<url-pattern>/cloudy_note/groupService</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ShareService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.ShareServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ShareService</servlet-name>
+		<url-pattern>/cloudy_note/shareService</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>InfoNoteService</servlet-name>

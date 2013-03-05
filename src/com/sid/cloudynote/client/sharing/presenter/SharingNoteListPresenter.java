@@ -12,6 +12,7 @@ import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.sharing.view.SharingNoteListView;
 import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteListView;
+import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 
 public class SharingNoteListPresenter implements Presenter,
@@ -78,11 +79,6 @@ public class SharingNoteListPresenter implements Presenter,
 	}
 
 	@Override
-	public void loadGroups() {
-		// TODO loadGroups
-	}
-
-	@Override
 	public void startEditing(InfoNote infoNote) {
 		// TODO startEditing the note if have write access
 	}
@@ -90,5 +86,23 @@ public class SharingNoteListPresenter implements Presenter,
 	@Override
 	public void viewNote(InfoNote note) {
 		eventBus.fireEvent(new ViewSharedNoteEvent(note));
+	}
+
+	@Override
+	public void loadNotesInGroup(final Group group) {
+		InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
+		service.getNotesInGroup(group.getKey(), new AsyncCallback<List<InfoNote>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to get note list in group:"+group.getName());
+			}
+
+			@Override
+			public void onSuccess(List<InfoNote> result) {
+				GWT.log("Successfully got note list in group:"+group.getName());
+				view.setNoteList(result);
+			}
+		});
 	}
 }

@@ -10,7 +10,7 @@
 			<g:west size="20">
 				<g:FlowPanel addStyleNames="{style.groupList}" ui:field="leftPanel">
 					<g:HTMLPanel width="100%" ui:field="friendsButtonListPanel">
-						<g:Label addStyleNames="{style.label}" text="My Friends" />
+						<g:Label addStyleNames="{style.label}" text="Friends" />
 						<g:Button addStyleNames="{style.button}" ui:field="allFriendsButton">All
 							Friends</g:Button>
 						<g:Button addStyleNames="{style.button}" ui:field="findFriendsButton">Find

@@ -24,7 +24,7 @@ public class User implements Serializable {
 //	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 //	private String id;
 	@Persistent
-	private String emailAddress;
+	private String email;
 	@Persistent
 	private String nickname;
 	@Persistent
@@ -99,12 +99,12 @@ public class User implements Serializable {
 		this.logoutUrl = logoutUrl;
 	}
 
-	public String getEmailAddress() {
-		return emailAddress;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
+	public void setEmail(String emailAddress) {
+		this.email = emailAddress;
 	}
 
 	public String getNickname() {

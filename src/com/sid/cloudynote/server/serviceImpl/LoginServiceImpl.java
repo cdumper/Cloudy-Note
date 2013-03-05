@@ -54,7 +54,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		User user = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query q = pm.newQuery(User.class);
-		q.setFilter("emailAddress == emailParam");
+		q.setFilter("email == emailParam");
 		q.declareParameters("String emailParam");
 		q.setRange(0, 1);
 		List<User> results;
@@ -68,7 +68,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 					user = results.get(0);
 				} else {
 					user = new User();
-					user.setEmailAddress(email);
+					user.setEmail(email);
 					// user.setId(loginInfo.getUserId());
 					user.setNickname(loginInfo.getNickname());
 					Set<String> friends = getFakeFriendsData();

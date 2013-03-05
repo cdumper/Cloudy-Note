@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.jdo.PersistenceManager;
@@ -18,6 +19,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
@@ -73,6 +75,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.deletePersistent(entity);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -97,6 +100,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (pm.currentTransaction().isActive())
 				pm.currentTransaction().rollback();
@@ -122,14 +126,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				entity.setCreatedTime(note.getCreatedTime());
 				entity.setLastModifiedTime(new Date());
 				entity.setUser(getUser());
-				// entity.setProperty(property);
-				// entity.setAttachments(attachments);
 				pm.deletePersistent(note);
-				// pm.deletePersistent(note.getProperty());
 				pm.makePersistent(entity);
 			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (pm.currentTransaction().isActive())
 				pm.currentTransaction().rollback();
@@ -168,11 +170,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			} else {
 				result = new ArrayList<InfoNote>();
 			}
-			// pm.currentTransaction().begin();
-			// Query query = pm.newQuery(InfoNote.class);
-			// result = (List<InfoNote>) query.execute("root");
-			// result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (pm.currentTransaction().isActive()) {
 				pm.currentTransaction().rollback();
@@ -269,6 +268,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				result.size();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -303,6 +303,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				result.size();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -311,7 +312,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<InfoNote> getSharedNotes(String email) throws NotLoggedInException {
+	public List<InfoNote> getSharedNotes(String email)
+			throws NotLoggedInException {
 		// TODO Auto-generated method stub
 		List<InfoNote> result = new ArrayList<InfoNote>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
@@ -335,6 +337,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -361,6 +364,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -380,6 +384,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.makePersistentAll(notes);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -387,51 +392,111 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	// TODO
 	@Override
-	public boolean verifyEditAccess(InfoNote note) throws NotLoggedInException {
+	public boolean verifyEditAccess(InfoNote infoNote) throws NotLoggedInException {
 		this.checkLoggedIn();
-//		com.sid.cloudynote.shared.User user = AppController.get()
-//				.getLoginInfo();
+		// com.sid.cloudynote.shared.User user = AppController.get()
+		// .getLoginInfo();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-
-		Query q = pm.newQuery(InfoNote.class);
-		q.setFilter("key == keyParam");
-		q.declareParameters(Key.class.getName() + " keyParam");
-		q.setRange(0, 1);
-		// try {
-		// for (Key key : keys) {
-		// Object obj = q.execute(key);
-		// if (obj != null) {
-		// List<InfoNote> notes = (List<InfoNote>) obj;
-		// notes = new ArrayList<InfoNote>(pm.detachCopyAll(notes));
-		// notes.size();
-		// result.add(notes.get(0));
-		// }
-		// }
-		// } catch (Exception e) {
-		// } finally {
-		// pm.close();
-		// }
-
-		return false;
+		boolean flag = false;
+		
+		//verify the user access
+		String userEmail = this.getUser().getEmail();
+		InfoNote note = pm.detachCopy(pm.getObjectById(InfoNote.class,infoNote.getKey()));
+		if (note.getUserAccess().containsKey(userEmail)) {
+			if (note.getUserAccess().get(userEmail) == 1){
+				//read-only access
+				flag = false;
+			} else if (note.getUserAccess().get(userEmail) == 2) {
+				//write access
+				flag = true;
+				return flag;
+			}
+		}
+		
+		//verify the group access
+		for(Entry<Key,Integer> entry : note.getGroupAccess().entrySet()) {
+			if (entry.getValue() == 2) {
+				Group group = pm.detachCopy(pm.getObjectById(Group.class,entry.getKey()));
+				if(group.getOwner().equals(userEmail) || group.getMembers().contains(userEmail)){
+					flag = true;
+					return flag;
+				}
+			}
+		}
+		return flag;
 	}
 
 	@Override
-	public void addAccessEntry(InfoNote note, List<String> users, int permission)
-			throws NotLoggedInException {
+	public void addUserAccessEntry(List<InfoNote> notes, Map<String,Integer> access) throws NotLoggedInException {
 		this.checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 
-		// TODO check if the user is the owner of the note
-		for (String user : users) {
-			note.getAccess().put(user, permission);
+		// if (!getUser().getEmail().equals(note.getUser().getEmail())) {
+		// GWT.log("Permission denied to add user access entry. Not owner of note:"
+		// + note.getKey() + " Request from " + getUser().getEmail());
+		// return;
+		// }
+		for (InfoNote note : notes) {
+			for(Entry<String, Integer> entry : access.entrySet()) {
+				note.getUserAccess().put(entry.getKey(), entry.getValue());
+			}
 		}
 		try {
 			pm.currentTransaction().begin();
-			pm.makePersistent(note);
+			pm.makePersistentAll(notes);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
 			pm.close();
 		}
+	}
+
+	@Override
+	public void addGroupAccessEntry(List<InfoNote> notes, Map<Key,Integer> access) throws NotLoggedInException {
+		this.checkLoggedIn();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+
+		// if (!getUser().getEmail().equals(note.getUser().getEmail())) {
+		// GWT.log("Permission denied to add group access entry. Not owner of note:"
+		// + note.getKey() + " Request from " + getUser().getEmail());
+		// return;
+		// }
+		for (InfoNote note : notes) {
+			for(Entry<Key, Integer> entry : access.entrySet()) {
+				note.getGroupAccess().put(entry.getKey(), entry.getValue());
+			}
+		}
+		try {
+			pm.currentTransaction().begin();
+			pm.makePersistentAll(notes);
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pm.currentTransaction().isActive()) {
+				pm.currentTransaction().rollback();
+			}
+			pm.close();
+		}
+	}
+	
+
+	@Override
+	public List<InfoNote> getNotesInGroup(Key groupKey)
+			throws NotLoggedInException {
+		this.checkLoggedIn();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		List<InfoNote> notes = new ArrayList<InfoNote>();
+		Group group = pm.detachCopy(pm.getObjectById(Group.class,groupKey));
+		if(group.getAccess()!=null) {
+			for(Key key: group.getAccess().keySet()) {
+				notes.add(pm.detachCopy(pm.getObjectById(InfoNote.class,key)));
+			}
+		}
+		return notes;
 	}
 }

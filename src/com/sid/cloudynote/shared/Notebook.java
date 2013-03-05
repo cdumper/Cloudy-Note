@@ -2,7 +2,9 @@ package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -30,6 +32,13 @@ public class Notebook implements Serializable{
 	@Persistent(mappedBy="notebook")
     @Element(dependent = "true")
 	private List<InfoNote> notes;
+	/**
+	 * access contains the access information of the note
+	 * String email
+	 * int permission
+	 */
+	@Persistent(serialized = "true", defaultFetchGroup = "true") 
+	private Map<String, Integer> access = new HashMap<String, Integer>();
 
 	public Notebook() {
 		super();
@@ -71,5 +80,13 @@ public class Notebook implements Serializable{
 
 	public void setNotes(List<InfoNote> notes) {
 		this.notes = notes;
+	}
+
+	public Map<String, Integer> getAccess() {
+		return access;
+	}
+
+	public void setAccess(Map<String, Integer> access) {
+		this.access = access;
 	}
 }

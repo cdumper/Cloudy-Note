@@ -34,7 +34,7 @@
 				</tr>
 				<tr>
 					<td>
-						<g:Label ui:field="groupLabel">Group:</g:Label>
+						<g:Label ui:field="groupLabel"/>
 					</td>
 				</tr>
 			</table>

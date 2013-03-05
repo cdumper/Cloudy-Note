@@ -3,6 +3,8 @@ package com.sid.cloudynote.server.serviceImpl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.jdo.PersistenceManager;
@@ -50,12 +52,13 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 		pm.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	public User getUser(String email) {
 		User user = null;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query q = pm.newQuery(User.class);
-		q.setFilter("emailAddress == emailAddressParam");
-		q.declareParameters("String emailAddressParam");
+		q.setFilter("email == emailParam");
+		q.declareParameters("String emailParam");
 		q.setRange(0, 1);
 		List<User> results;
 		try {
@@ -78,6 +81,7 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Set<Group> getGroups(String userEmail) throws NotLoggedInException {
 		checkLoggedIn();
 		User user = getUser(userEmail);
@@ -110,11 +114,21 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 			groupQuery.closeAll();
 			pm.close();
 		}
-		groups.addAll(getMyGroups(userEmail));
+		
+		for(Group group : getMyGroups(userEmail)) {
+			boolean exist = false;
+			for (Group g : groups) {
+				if (g.getKey()==group.getKey()) {
+					exist = true;
+				}
+			}
+			if(!exist) groups.add(group);
+		}
 		return groups;
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Set<Group> getMyGroups(String userEmail) throws NotLoggedInException {
 		checkLoggedIn();
 		Set<Group> groups = new HashSet<Group>();
@@ -158,6 +172,7 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (pm.currentTransaction().isActive())
 				pm.currentTransaction().rollback();
@@ -177,6 +192,7 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<User> getUsersInGroup(Key key) throws NotLoggedInException {
 		checkLoggedIn();
 		Group group;
@@ -184,21 +200,22 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query q = pm.newQuery(Group.class);
 		q.setFilter("key == keyParam");
-		q.declareParameters(Key.class.getName()+" keyParam");
-		q.setRange(0,1);
+		q.declareParameters(Key.class.getName() + " keyParam");
+		q.setRange(0, 1);
 		try {
 			Object o = q.execute(key);
-			if (o!=null) {
+			if (o != null) {
 				List<Group> groups = (List<Group>) o;
 				groups = new ArrayList<Group>(pm.detachCopyAll(groups));
 				groups.size();
 				group = groups.get(0);
-				for(String email : group.getMembers()){
+				for (String email : group.getMembers()) {
 					User user = this.getUser(email);
 					users.add(user);
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
@@ -206,8 +223,10 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	//TODO At the current stage, only delete the group entity. May need to implement reference delete in 
-	//		the future. I.E. when group is deleted, also delete the group from all its members' group list
+	// TODO At the current stage, only delete the group entity. May need to
+	// implement reference delete in
+	// the future. I.E. when group is deleted, also delete the group from all
+	// its members' group list
 	public void deleteGroup(Group group) throws NotLoggedInException {
 		checkLoggedIn();
 		if (!getUser().getEmail().equals(group.getOwner())) {
@@ -218,8 +237,37 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 		try {
 			pm.deletePersistent(group);
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			pm.close();
+		}
+	}
+
+	@Override
+	public void addNoteAccessEntry(List<Key> groupKeys, Map<Key,Integer> access) throws NotLoggedInException {
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		List<Group> groups = new ArrayList<Group>();
+		for (Key key : groupKeys) {
+			Group group = pm.getObjectById(Group.class, key);
+			groups.add(group);
+			for (Entry<Key,Integer> entry : access.entrySet()) {
+				group.getAccess().put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		if (groups != null && groups.size() != 0) {
+			try {
+				pm.currentTransaction().begin();
+				pm.makePersistentAll(groups);
+				pm.currentTransaction().commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (pm.currentTransaction().isActive()) {
+					pm.currentTransaction().rollback();
+				}
+				pm.close();
+			}
 		}
 	}
 }

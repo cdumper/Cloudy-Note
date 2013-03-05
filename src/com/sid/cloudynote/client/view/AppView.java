@@ -26,6 +26,7 @@ import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
@@ -62,6 +63,8 @@ public class AppView extends Composite implements Presenter {
 	@UiField
 	Button friendsButton;
 	@UiField
+	Button adminButton;
+	@UiField
 	FriendView friendsView;
 
 	private HandlerManager eventBus;
@@ -79,7 +82,7 @@ public class AppView extends Composite implements Presenter {
 		this.eventBus = eventBus;
 		this.loginInfo = login;
 		this.personalView.setEventBus(eventBus);
-		user.setText(loginInfo.getEmailAddress());
+		user.setText(loginInfo.getEmail());
 		signOutLink.setHref(loginInfo.getLogoutUrl());
 		bindEvents();
 		deck.showWidget(0);
@@ -131,7 +134,7 @@ public class AppView extends Composite implements Presenter {
 	private void bindSharingEvents() {
 		eventBus.addHandler(ViewPublicNotesEvent.TYPE, sharingView.noteListView);
 		eventBus.addHandler(ViewSharedNotesEvent.TYPE, sharingView.noteListView);
-//		eventBus.addHandler(ViewGroupNotesEvent.TYPE, sharingView.noteListView);
+		eventBus.addHandler(ViewGroupNotesEvent.TYPE, sharingView.noteListView);
 		eventBus.addHandler(ViewSharedNoteEvent.TYPE, sharingView);
 		eventBus.addHandler(HideSharingNoteViewEvent.TYPE, sharingView);
 		eventBus.addHandler(GroupsChangedEvent.TYPE, sharingView.groupView);
@@ -155,6 +158,7 @@ public class AppView extends Composite implements Presenter {
 		eventBus.addHandler(NoteSelectionChangedEvent.TYPE,
 				personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
+		eventBus.addHandler(GroupsChangedEvent.TYPE, personalView.noteListView);
 	}
 
 	@UiHandler("myNotesButton")
