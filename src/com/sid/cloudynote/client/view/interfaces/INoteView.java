@@ -5,16 +5,9 @@ import com.sid.cloudynote.shared.InfoNote;
 
 public interface INoteView {
 	public interface Presenter {
-		void saveNote();
-		void stopEdit();
-		boolean isEditing();
-		void setEditing(boolean isEditing);
-		void setView(Widget view);
-		void createNewNote(InfoNote note);
-		void updateNote(InfoNote note);
-		void setNewNote(boolean b);
-		void presentNote();
-		void startEdit(InfoNote note);
+		void presentNote(InfoNote note);
+		void editNote(InfoNote note);
+		void showNewNote();
 	}
 	
 	void setPresenter(Presenter presenter);

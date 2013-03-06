@@ -1,13 +1,24 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style>
-		
+		.buttonPanel {
+			border: 1px solid #ccc;
+			padding: 5px;
+			width: 100%;
+		}
 	</ui:style>
-	<g:VerticalPanel>
-		<g:Label ui:field="title" text='title' />
-		<g:Label ui:field="notebook" text='notebook' />
-		<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
-		<g:TextArea ui:field="content" text='content' />
-	</g:VerticalPanel>
+	<cn:Container ui:field="container" height="100%" width="100%">
+		<g:VerticalPanel ui:field="content" height="100%" width="100%">
+			<g:HTMLPanel addStyleNames='{style.buttonPanel}'>
+				<g:Button ui:field="editButton">Edit</g:Button>
+				<g:Button ui:field="shareButton">Share</g:Button>
+				<g:Button ui:field="deleteButton">Delete</g:Button>
+			</g:HTMLPanel>
+			<g:Label ui:field="title" text='title' />
+			<g:Label ui:field="notebook" text='notebook' />
+			<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
+			<g:TextArea ui:field="noteContent" text='content' />
+		</g:VerticalPanel>
+	</cn:Container>
 </ui:UiBinder> 

@@ -37,7 +37,9 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	public NoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
-		widget = new NonEditableNoteView();
+		NonEditableNoteView nonEditView = new NonEditableNoteView();
+		nonEditView.presentNote(DataManager.getCurrentNote());
+		this.widget = nonEditView;
 	}
 
 	public Container getContainer() {
@@ -58,49 +60,26 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	@Override
 	public void onEditNote(EditNoteEvent event) {
-		EditableNoteView editView = new EditableNoteView();
-		editView.setHeight("100%");
-		editView.setWidth("100%");
-		editView.presentNote(event.getNote());
-		this.container.clear();
-		this.container.add(editView);
-		presenter.setView(editView);
-		presenter.setEditing(true);
+		presenter.editNote(event.getNote());
 	}
 
 	@Override
 	public void onEditNoteDone(EditNoteDoneEvent event) {
-		NonEditableNoteView nonEditView = new NonEditableNoteView();
-		nonEditView.setHeight("100%");
-		nonEditView.setWidth("100%");
-		nonEditView.presentNote(DataManager.getCurrentNote());
-		this.container.clear();
-		this.container.add(nonEditView);
-		presenter.setView(nonEditView);
-		presenter.setEditing(false);
-		presenter.setNewNote(false);
+		presenter.presentNote(DataManager.getCurrentNote());
 	}
 
 	@Override
 	public void onNewNote(NewNoteEvent event) {
-		EditableNoteView editView = new EditableNoteView();
-		editView.setHeight("100%");
-		editView.setWidth("100%");
-		editView.newNote();
-		this.container.clear();
-		this.container.add(editView);
-		presenter.setView(editView);
-		presenter.setEditing(true);
-		presenter.setNewNote(true);
+		presenter.showNewNote();
 	}
 
 	@Override
 	public void onEditDoneButtonClicked(EditDoneButtonClickedEvent event) {
-		if (presenter.isEditing()) {
-			presenter.stopEdit();
-		} else {
-			presenter.startEdit(event.getNote());
-		}
+//		if (presenter.isEditing()) {
+//			presenter.stopEdit();
+//		} else {
+//			presenter.startEdit(event.getNote());
+//		}
 	}
 
 	@Override
@@ -110,8 +89,8 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	@Override
 	public void onNoteSelectionChanged(NoteSelectionChangedEvent event) {
-		presenter.stopEdit();
+//		presenter.stopEdit();
 		DataManager.setCurrentNote(event.getClickedItem());
-		presenter.presentNote();
+		presenter.presentNote(event.getClickedItem());
 	}
 }

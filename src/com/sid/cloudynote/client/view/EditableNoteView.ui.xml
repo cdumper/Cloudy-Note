@@ -5,17 +5,19 @@
 	<ui:style>
 		
 	</ui:style>
-
-	<g:DockLayoutPanel unit="PCT">
-		<g:north size="20">
-			<g:VerticalPanel ui:field="topPanel">
-				<g:TextBox ui:field="title"></g:TextBox>
-				<g:ListBox ui:field="notebook"></g:ListBox>
-				<g:Anchor ui:field="attach">Attach files</g:Anchor>
-			</g:VerticalPanel>
-		</g:north>
-		<g:center>
-			<ck:CKEditor ui:field='ckeditor' />
-		</g:center>
-	</g:DockLayoutPanel>
+	<cn:Container ui:field="container" height="100%" width="100%">
+		<g:DockLayoutPanel unit="PCT" ui:field="content" height="100%" width="100%">
+			<g:north size="6">
+				<g:Button ui:field="doneButton">Done</g:Button>
+			</g:north>
+			<g:center>
+				<g:VerticalPanel ui:field="topPanel">
+					<g:TextBox ui:field="title"></g:TextBox>
+					<g:ListBox ui:field="notebook"></g:ListBox>
+					<g:Anchor ui:field="attach">Attach files</g:Anchor>
+					<ck:CKEditor ui:field='ckeditor' />
+				</g:VerticalPanel>
+			</g:center>
+		</g:DockLayoutPanel>
+	</cn:Container>
 </ui:UiBinder> 

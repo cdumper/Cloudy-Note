@@ -5,9 +5,9 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
 
 	<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
-		<g:north size="6">
+		<!-- <g:north size="6">
 			<cn:SearchView ui:field='searchView' />
-		</g:north>
+		</g:north> -->
 		<g:west size='15'>
 			<cn:NotebookListView ui:field='notebookListView' />
 		</g:west>

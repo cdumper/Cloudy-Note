@@ -15,7 +15,6 @@ import com.sid.cloudynote.client.presenter.NoteListPresenter;
 import com.sid.cloudynote.client.presenter.NotePresenter;
 import com.sid.cloudynote.client.presenter.NotebookListPresenter;
 import com.sid.cloudynote.client.presenter.Presenter;
-import com.sid.cloudynote.client.presenter.SearchPresenter;
 
 public class PersonalView extends Composite implements Presenter {
 
@@ -33,8 +32,8 @@ public class PersonalView extends Composite implements Presenter {
 
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
-	@UiField
-	public SearchView searchView;
+//	@UiField
+//	public SearchView searchView;
 	@UiField
 	public NotebookListView notebookListView;
 	@UiField
@@ -66,19 +65,19 @@ public class PersonalView extends Composite implements Presenter {
 				this.notebookListView, eventBus);
 		NoteListPresenter noteListPresenter = new NoteListPresenter(
 				this.noteListView, eventBus);
-		SearchPresenter searchPresenter = new SearchPresenter(this.searchView,
-				eventBus);
+//		SearchPresenter searchPresenter = new SearchPresenter(this.searchView,
+//				eventBus);
 		NotePresenter notePresenter = new NotePresenter(
-				this.noteView.asWidget(), eventBus);
+				this.noteView, eventBus);
 
 		this.noteListView.setPresenter(noteListPresenter);
 		this.notebookListView.setPresenter(notebookListPresenter);
-		this.searchView.setPresenter(searchPresenter);
+//		this.searchView.setPresenter(searchPresenter);
 		this.noteView.setPresenter(notePresenter);
 
 		notebookListPresenter.go(notebookListView.getContainer());
 		noteListPresenter.go(noteListView.getContainer());
-		searchPresenter.go(searchView.getContainer());
+//		searchPresenter.go(searchView.getContainer());
 		notePresenter.go(noteView.getContainer());
 	}
 	

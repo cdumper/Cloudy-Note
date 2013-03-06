@@ -14,6 +14,8 @@ public interface INotebookListView {
 		void loadTagList();
 		void createNewNotebook(String text);
 		void createNewTag(String text);
+		void onNewNotebookButtonClicked();
+		void onNewNoteButtonClicked();
 	}
 	
 	void setPresenter(Presenter presenter);

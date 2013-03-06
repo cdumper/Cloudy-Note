@@ -6,10 +6,17 @@ import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
@@ -177,5 +184,47 @@ public class NotebookListPresenter implements Presenter,
 			}
 		};
 		service.add(new Tag(name), callback);
+	}
+	
+	@Override
+	public void onNewNotebookButtonClicked() {
+		newNotebookDialog().center();
+	}
+
+	@Override
+	public void onNewNoteButtonClicked() {
+		eventBus.fireEvent(new NewNoteEvent());
+//TODO	view.getEdit().setText("Done");
+	}
+	
+	private DialogBox newNotebookDialog() {
+		final DialogBox dialog = new DialogBox();
+		final TextBox name = new TextBox();
+		Button confirm = new Button("Confirm");
+		Button cancel = new Button("Cancel");
+		dialog.setTitle("Create new notebook");
+		VerticalPanel panel = new VerticalPanel();
+		dialog.add(panel);
+		panel.add(name);
+		panel.add(cancel);
+		panel.add(confirm);
+		panel.setSize("200", "200");
+
+		confirm.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// call rpc to create new notebook
+				createNewNotebook(name.getText());
+				dialog.hide();
+			}
+		});
+
+		cancel.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				dialog.hide();
+			}
+		});
+		return dialog;
 	}
 }

@@ -19,6 +19,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.DisclosureHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DisclosurePanelImages;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -96,6 +98,12 @@ public class NotebookListView extends ResizeComposite implements
 	@UiField
 	ScrollPanel content;
 	@UiField
+	HTMLPanel buttonPanel;
+	@UiField
+	Button newNotebookButton;
+	@UiField
+	Button newNoteButton;
+	@UiField
 	DisclosurePanel notebookPanel;
 //	@UiField
 //	DisclosurePanelHeader notebookHeader;
@@ -129,6 +137,16 @@ public class NotebookListView extends ResizeComposite implements
 			return tag == null ? null : tag.getKey();
 		}
 	};
+	
+	@UiHandler("newNoteButton")
+	void onClickNewNote(ClickEvent e) {
+		presenter.onNewNoteButtonClicked();
+	}
+
+	@UiHandler("newNotebookButton")
+	void onClickNewNotebook(ClickEvent e) {
+		presenter.onNewNotebookButtonClicked();
+	}
 
 	static class NotebookCell extends AbstractCell<Notebook> {
 		private Presenter presenter;

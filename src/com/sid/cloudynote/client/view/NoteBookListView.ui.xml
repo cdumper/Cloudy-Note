@@ -5,10 +5,22 @@
 		.notebooksPanel {
 			border: 1px solid #999;
 		}
+		
+		.buttonPanel {
+			border: 1px solid #ccc;
+			padding: 5px;
+			margin: auto;
+			width: 95%; 
+		}
+		
 	</ui:style>
 	<cn:Container ui:field="container" addStyleNames='{style.notebooksPanel}'>
 		<g:ScrollPanel ui:field="content" width='100%' height='100%'>
 			<g:VerticalPanel width='100%' height='100%'>
+				<g:HTMLPanel ui:field="buttonPanel" addStyleNames='{style.buttonPanel}'>
+					<g:Button ui:field="newNotebookButton" text="New Notebook"/>
+					<g:Button ui:field="newNoteButton" text="New Note"/>
+				</g:HTMLPanel>
 				<g:DisclosurePanel height="100%" width="100%"
 					ui:field="notebookPanel">
 					<g:header>

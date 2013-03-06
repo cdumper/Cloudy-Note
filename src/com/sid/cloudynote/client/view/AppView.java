@@ -142,19 +142,19 @@ public class AppView extends Composite implements Presenter {
 
 	private void bindEvents() {
 		eventBus.addHandler(NewNoteEvent.TYPE, personalView.noteView);
-		eventBus.addHandler(NewNoteEvent.TYPE, personalView.searchView);
+//		eventBus.addHandler(NewNoteEvent.TYPE, personalView.searchView);
 		eventBus.addHandler(EditNoteEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(NoteChangedEvent.TYPE, personalView.noteListView);
 		eventBus.addHandler(NotebookChangedEvent.TYPE,
 				personalView.notebookListView);
 		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.noteView);
-		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.searchView);
+//		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.searchView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.noteView);
-		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.searchView);
+//		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.searchView);
 		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
 				personalView.noteView);
-		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
-				personalView.searchView);
+//		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
+//				personalView.searchView);
 		eventBus.addHandler(NoteSelectionChangedEvent.TYPE,
 				personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
