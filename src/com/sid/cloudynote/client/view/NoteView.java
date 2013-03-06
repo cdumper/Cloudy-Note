@@ -7,13 +7,11 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.DataManager;
-import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
-import com.sid.cloudynote.client.event.interfaces.IEditDoneButtonClickedHandler;
 import com.sid.cloudynote.client.event.interfaces.IEditNoteDoneHandler;
 import com.sid.cloudynote.client.event.interfaces.IEditNoteHandler;
 import com.sid.cloudynote.client.event.interfaces.INewNoteHandler;
@@ -22,8 +20,7 @@ import com.sid.cloudynote.client.event.interfaces.INoteSelectionChangedHandler;
 import com.sid.cloudynote.client.view.interfaces.INoteView;
 
 public class NoteView extends ResizeComposite implements INoteView,
-		INewNoteHandler, IEditNoteHandler, IEditNoteDoneHandler,
-		IEditDoneButtonClickedHandler, INoNotesExistHandler, INoteSelectionChangedHandler{
+		INewNoteHandler, IEditNoteHandler, IEditNoteDoneHandler, INoNotesExistHandler, INoteSelectionChangedHandler{
 	@UiTemplate("NoteView.ui.xml")
 	interface NoteViewUiBinder extends UiBinder<Widget, NoteView> {
 	}
@@ -74,22 +71,12 @@ public class NoteView extends ResizeComposite implements INoteView,
 	}
 
 	@Override
-	public void onEditDoneButtonClicked(EditDoneButtonClickedEvent event) {
-//		if (presenter.isEditing()) {
-//			presenter.stopEdit();
-//		} else {
-//			presenter.startEdit(event.getNote());
-//		}
-	}
-
-	@Override
 	public void onNotesExistEvent(NoNotesExistEvent event) {
 		this.container.clear();
 	}
 
 	@Override
 	public void onNoteSelectionChanged(NoteSelectionChangedEvent event) {
-//		presenter.stopEdit();
 		DataManager.setCurrentNote(event.getClickedItem());
 		presenter.presentNote(event.getClickedItem());
 	}

@@ -11,7 +11,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
-import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
+import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
@@ -91,7 +91,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 		// view.getEdit().setText("Done");
 		// else if(view.getEdit().getText().equals("Done"))
 		// view.getEdit().setText("Edit");
-		eventBus.fireEvent(new EditDoneButtonClickedEvent(value));
+		eventBus.fireEvent(new EditNoteEvent(value));
 	}
 
 	@Override

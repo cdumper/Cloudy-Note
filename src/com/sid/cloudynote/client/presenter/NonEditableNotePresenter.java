@@ -29,7 +29,7 @@ public class NonEditableNotePresenter implements Presenter, INonEditableNoteView
 
 	@Override
 	public void presentAttachmentLinks(List<String> keys) {
-		// TODO Auto-generated method stub
+		// TODO NonEditableNotePresenter presentAttachmentLinks
 		BlobServiceAsync service = GWT.create(BlobService.class);
 		service.getBlobFileName(keys, new AsyncCallback<List<String>>() {
 			@Override
@@ -53,7 +53,7 @@ public class NonEditableNotePresenter implements Presenter, INonEditableNoteView
 
 	@Override
 	public void shareThroughEmail() {
-		// TODO Auto-generated method stub
+		// TODO shareThroughEmail
 		
 	}
 

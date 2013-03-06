@@ -12,6 +12,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	public static final int PERSONAL_PAGE = 1;
 	public static final int SHARING_PAGE = 2;
 	public static final int FRIENDS_PAGE = 3;
+	public static final int ADMIN_PAGE = 4;
 	private int pageState = PERSONAL_PAGE;
 	private static AppController singleton;
 	private final HandlerManager eventBus;
@@ -54,6 +55,8 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 			this.appView.showOthersNotes(container);
 		} else if (this.pageState == FRIENDS_PAGE) {
 			this.appView.showFriends(container);
+		} else if (this.pageState == ADMIN_PAGE) {
+			this.appView.showAdmin(container);
 		}
 	}
 }

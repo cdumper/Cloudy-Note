@@ -60,18 +60,6 @@ public class NoteListView extends ResizeComposite implements
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListView> {
 	}
 
-//	interface MyCssResource extends CssResource {
-//		String userLabel();
-//	}
-//
-//	interface MyResources extends ClientBundle {
-//		@NotStrict
-//		@Source("global.css")
-//		MyCssResource css();
-//	}
-//	
-//	private MyCssResource css;
-
 	private static NoteListPanelUiBinder uiBinder = GWT
 			.create(NoteListPanelUiBinder.class);
 
@@ -140,19 +128,16 @@ public class NoteListView extends ResizeComposite implements
 
 		@Override
 		public void render(Context context, InfoNote note, SafeHtmlBuilder sb) {
-			// Value can be null, so do a null check..
 			if (note == null) {
 				return;
 			}
 
 			sb.appendHtmlConstant("<table height='30px'>");
 
-			// Add the contact image.
 			sb.appendHtmlConstant("<tr><td rowspan='3'>");
 			sb.appendHtmlConstant(imageHtml);
 			sb.appendHtmlConstant("</td>");
 
-			// Add the name and address.
 			sb.appendHtmlConstant("<td style='font-size:95%;'>");
 			sb.appendEscaped(note.getTitle());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
@@ -418,7 +403,6 @@ public class NoteListView extends ResizeComposite implements
 				label.setText(((User) item).getEmail());
 			}
 			label.getElement().setId("item");
-//			label.setStyleName(css.userLabel());
 
 			content.add(checkBox);
 			content.add(access);
@@ -432,8 +416,6 @@ public class NoteListView extends ResizeComposite implements
 
 	public NoteListView() {
 		initWidget(uiBinder.createAndBindUi(this));
-//		MyResources resource = GWT.create(MyResources.class);
-//		css = resource.css();
 		Images images = GWT.create(Images.class);
 
 		noteCell = new NoteCell(images.home());

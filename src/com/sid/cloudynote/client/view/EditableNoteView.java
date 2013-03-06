@@ -56,8 +56,6 @@ public class EditableNoteView extends ResizeComposite implements IEditableNoteVi
 
 	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
-//		this.loadNotebooks();
-		// this.presentNote(DataManager.getCurrentNote());
 	}
 	
 	public boolean isNew() {
@@ -76,7 +74,6 @@ public class EditableNoteView extends ResizeComposite implements IEditableNoteVi
 			InfoNote note = DataManager.getCurrentNote();
 			note.setTitle(this.getInfoNote().getTitle());
 			note.setContent(this.getInfoNote().getContent());
-			// note.setNotebook(panel.getInfoNote().getNotebook());
 			if (!note.getNotebook().getKey()
 					.equals(this.getInfoNote().getNotebook().getKey())) {
 				presenter.moveNote(note, this.getInfoNote().getNotebook());

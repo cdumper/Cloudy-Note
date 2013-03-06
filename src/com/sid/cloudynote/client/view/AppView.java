@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
-import com.sid.cloudynote.client.event.EditDoneButtonClickedEvent;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
@@ -127,6 +126,13 @@ public class AppView extends Composite implements Presenter {
 		container.add(dockLayoutPanel);
 	}
 	
+	//TODO show admin page
+	public void showAdmin(HasWidgets container){
+		container.clear();
+		deck.showWidget(0);
+		container.add(dockLayoutPanel);
+	}
+	
 	private void bindFriendEvents() {
 		eventBus.addHandler(GroupsChangedEvent.TYPE, friendsView);
 	}
@@ -142,19 +148,12 @@ public class AppView extends Composite implements Presenter {
 
 	private void bindEvents() {
 		eventBus.addHandler(NewNoteEvent.TYPE, personalView.noteView);
-//		eventBus.addHandler(NewNoteEvent.TYPE, personalView.searchView);
 		eventBus.addHandler(EditNoteEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(NoteChangedEvent.TYPE, personalView.noteListView);
 		eventBus.addHandler(NotebookChangedEvent.TYPE,
 				personalView.notebookListView);
 		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.noteView);
-//		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.searchView);
 		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.noteView);
-//		eventBus.addHandler(NoNotesExistEvent.TYPE, personalView.searchView);
-		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
-				personalView.noteView);
-//		eventBus.addHandler(EditDoneButtonClickedEvent.TYPE,
-//				personalView.searchView);
 		eventBus.addHandler(NoteSelectionChangedEvent.TYPE,
 				personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
@@ -173,10 +172,15 @@ public class AppView extends Composite implements Presenter {
 		AppController.get().go(RootLayoutPanel.get());
 	}
 
-	// TODO show friends
 	@UiHandler("friendsButton")
 	void showFriends(ClickEvent e) {
 		AppController.get().setPageState(AppController.FRIENDS_PAGE);
+		AppController.get().go(RootLayoutPanel.get());
+	}
+	
+	@UiHandler("adminButton")
+	void showAdmin(ClickEvent e) {
+		AppController.get().setPageState(AppController.ADMIN_PAGE);
 		AppController.get().go(RootLayoutPanel.get());
 	}
 }

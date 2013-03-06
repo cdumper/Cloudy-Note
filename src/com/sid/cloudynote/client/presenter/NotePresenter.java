@@ -41,11 +41,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		container.add(widget);
 	}
 
-	// this function may be called when note selection changed
 	@Override
 	public void presentNote(InfoNote note) {
-//		eventBus.fireEvent(new EditNoteDoneEvent());
-		//TODO
 		NonEditableNoteView nonEditView = new NonEditableNoteView();
 		NonEditableNotePresenter presenter = new NonEditableNotePresenter(nonEditView,eventBus);
 		nonEditView.setPresenter(presenter);
@@ -66,11 +63,6 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		
 		this.go(view.getContainer());
 	}
-
-//	@Override
-//	public void setView(NoteView view) {
-//		this.view = view;
-//	}
 
 	@Override
 	public void showNewNote() {

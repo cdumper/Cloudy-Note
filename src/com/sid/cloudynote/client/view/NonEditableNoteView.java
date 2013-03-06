@@ -93,14 +93,14 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 			datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 			notebook.setText(note.getNotebook().getName());
 			noteContent.setText(note.getContent().replaceAll("\\<.*?>",""));
-//			noteContent.setWidth("90%");
-//			noteContent.setHeight("100px");
+			noteContent.setWidth("90%");
+			noteContent.setHeight("100px");
 		}
 	}
 
 	@Override
 	public void presentAttachmentLink(String fileName, String key) {
-		// TODO Auto-generated method stub
+		// TODO presentAttachmentLink
 		
 	}
 	
