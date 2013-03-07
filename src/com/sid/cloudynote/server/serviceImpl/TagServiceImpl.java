@@ -7,6 +7,7 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -169,6 +170,19 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 				result = new ArrayList<Tag>(pm.detachCopyAll(result));
 				result.size();
 			}
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Tag> getTags(List<Key> tagsKey) {
+		List<Tag> result = new ArrayList<Tag>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			result.addAll(pm.detachCopyAll(pm.getObjectsById(tagsKey)));
 		} catch (Exception e) {
 		} finally {
 			pm.close();

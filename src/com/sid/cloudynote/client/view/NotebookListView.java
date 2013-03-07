@@ -657,7 +657,6 @@ public class NotebookListView extends ResizeComposite implements
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Tag tag = tagSelectionModel.getSelectedObject();
 						if (tag != null) {
-							//TODO tag clicked!
 							presenter.loadNotesByTag(tag);
 						}
 					}

@@ -20,6 +20,7 @@ import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.PresentNotesEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
@@ -272,7 +273,7 @@ public class NotebookListPresenter implements Presenter,
 
 			@Override
 			public void onSuccess(List<InfoNote> result) {
-//				eventBus.fireEvent(new PresentNotesEvent());
+				eventBus.fireEvent(new PresentNotesEvent(result));
 			}
 			
 		});

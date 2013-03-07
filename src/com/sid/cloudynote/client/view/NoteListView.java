@@ -47,15 +47,17 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.PresentNotesEvent;
 import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.event.interfaces.INoteChangedHandler;
+import com.sid.cloudynote.client.event.interfaces.IPresentNotesHandler;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.User;
 
 public class NoteListView extends ResizeComposite implements
-		INoteChangedHandler, INoteListView, IGroupsChangedHandler {
+		INoteChangedHandler, IPresentNotesHandler, INoteListView, IGroupsChangedHandler {
 	@UiTemplate("NoteListView.ui.xml")
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListView> {
 	}
@@ -462,7 +464,7 @@ public class NoteListView extends ResizeComposite implements
 	public void setNoteList(List<InfoNote> result) {
 		List<InfoNote> notes = dataProvider.getList();
 		notes.clear();
-		notes.addAll(result);
+		if(result!=null)	notes.addAll(result);
 		if (DataManager.getCurrentNote() != null)
 			selectionModel.setSelected(DataManager.getCurrentNote(), true);
 	}
@@ -487,5 +489,10 @@ public class NoteListView extends ResizeComposite implements
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
+	}
+
+	@Override
+	public void onPresentNotes(PresentNotesEvent event) {
+		this.setNoteList(event.getNotes());
 	}
 }

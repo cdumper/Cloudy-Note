@@ -24,6 +24,7 @@ import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.PresentNotesEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
@@ -150,6 +151,7 @@ public class AppView extends Composite implements Presenter {
 		eventBus.addHandler(NewNoteEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(EditNoteEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(NoteChangedEvent.TYPE, personalView.noteListView);
+		eventBus.addHandler(PresentNotesEvent.TYPE, personalView.noteListView);
 		eventBus.addHandler(NotebookChangedEvent.TYPE,
 				personalView.notebookListView);
 		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.noteView);

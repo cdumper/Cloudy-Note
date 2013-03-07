@@ -148,8 +148,9 @@ public class EditableNoteView extends ResizeComposite implements
 
 	@UiHandler("doneButton")
 	void onClickDone(ClickEvent e) {
-		if (this.isNew)
+		if (this.isNew){
 			presenter.createNewNote(this.getInfoNote());
+		}
 		else {
 			InfoNote note = DataManager.getCurrentNote();
 			note.setTitle(this.getInfoNote().getTitle());
