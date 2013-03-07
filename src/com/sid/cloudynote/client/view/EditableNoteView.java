@@ -16,6 +16,8 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,7 +32,10 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -58,7 +63,7 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiField
 	HTMLPanel tagsEditPanel;
 	@UiField
-	TextBox tagInput;
+	SuggestBox tagInput;
 	@UiField
 	DivElement tagsEditLozengePanel;
 	@UiField
@@ -85,6 +90,7 @@ public class EditableNoteView extends ResizeComposite implements
 	private List<Key> notebookList = new ArrayList<Key>();
 	private List<Tag> allTags = new ArrayList<Tag>();
 	private List<Tag> tags = new ArrayList<Tag>();
+	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
 	interface EditPanelUiBinder extends UiBinder<Widget, EditableNoteView> {
 	}
@@ -92,42 +98,41 @@ public class EditableNoteView extends ResizeComposite implements
 	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.tagInput.setText(TAGINPUT_DEFAULT);
-//		this.tagInput.addValueChangeHandler(new ValueChangeHandler<String>(){
-//
-//			@Override
-//			public void onValueChange(ValueChangeEvent<String> event) {
-//				if(event.getValue().endsWith(",")) {
-//					System.out.println("add tag");
-//					addTag(event.getValue().split(",")[0]);
-//				}
-//			}
-//			
-//		});
-		
-		this.tagInput.addKeyPressHandler(new KeyPressHandler(){
+
+		this.tagInput.addSelectionHandler(new SelectionHandler<Suggestion>() {
+
+			@Override
+			public void onSelection(SelectionEvent<Suggestion> event) {
+				addTag(event.getSelectedItem().getReplacementString());
+			}
+
+		});
+
+		this.tagInput.addKeyPressHandler(new KeyPressHandler() {
 
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if(',' == event.getCharCode()){
-					((TextBox)event.getSource()).cancelKey();
-					addTag(tagInput.getText().split(",")[0]);
+				if (',' == event.getCharCode()) {
+					event.getNativeEvent().preventDefault();
+					if (!"".equals(tagInput.getText().split(",")[0].trim()))
+						addTag(tagInput.getText().split(",")[0]);
 				}
 			}
-			
+
 		});
-		
-		this.tagInput.addFocusHandler(new FocusHandler(){
+
+		this.tagInput.getTextBox().addFocusHandler(new FocusHandler() {
 
 			@Override
 			public void onFocus(FocusEvent event) {
-				if(tagInput.getText().equals(TAGINPUT_DEFAULT)){
+				if (tagInput.getText().equals(TAGINPUT_DEFAULT)) {
 					tagInput.setText("");
 				}
 			}
-			
+
 		});
-		
-		this.tagInput.addBlurHandler(new BlurHandler(){
+
+		this.tagInput.getTextBox().addBlurHandler(new BlurHandler() {
 
 			@Override
 			public void onBlur(BlurEvent event) {
@@ -135,8 +140,9 @@ public class EditableNoteView extends ResizeComposite implements
 					tagInput.setText(TAGINPUT_DEFAULT);
 				}
 			}
-			
+
 		});
+		oracle = (MultiWordSuggestOracle) this.tagInput.getSuggestOracle();
 	}
 
 	public boolean isNew() {
@@ -149,10 +155,9 @@ public class EditableNoteView extends ResizeComposite implements
 
 	@UiHandler("doneButton")
 	void onClickDone(ClickEvent e) {
-		if (this.isNew){
+		if (this.isNew) {
 			presenter.createNewNote(this.getInfoNote());
-		}
-		else {
+		} else {
 			InfoNote note = DataManager.getCurrentNote();
 			note.setTitle(this.getInfoNote().getTitle());
 			note.setContent(this.getInfoNote().getContent());
@@ -218,6 +223,11 @@ public class EditableNoteView extends ResizeComposite implements
 	@Override
 	public void setAllTagsList(List<Tag> tags) {
 		this.allTags = tags;
+		if (allTags != null && allTags.size() != 0) {
+			for (Tag tag : tags) {
+				this.oracle.add(tag.getName());
+			}
+		}
 	}
 
 	public Notebook getSelectedNotebook() {
@@ -268,15 +278,32 @@ public class EditableNoteView extends ResizeComposite implements
 		}
 		setSelectedNotebook(DataManager.getCurrentNotebookKey());
 	}
-	
-	private void addTag(String tagName){
+
+	private void addTag(String tagName) {
+		boolean exist = false;
 		Tag tag = new Tag(tagName);
 		tag.setCreatedTime(new Date());
 		tag.setUser(AppController.get().getLoginInfo().getEmail());
+
+		for (Tag t : this.tags) {
+			if (tagName.equals(t.getName())) {
+				exist = true;
+			}
+		}
+
+		for (Tag t : this.allTags) {
+			if (tagName.equals(t.getName())) {
+				tag = t;
+			}
+		}
+
 		if (this.tags == null) {
 			this.tags = new ArrayList<Tag>();
 		}
-		this.tags.add(tag);
+
+		if (!exist) {
+			this.tags.add(tag);
+		}
 		this.tagInput.setText("");
 		this.presentTags();
 	}

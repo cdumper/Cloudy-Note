@@ -441,6 +441,7 @@ public class NotebookListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					System.out.println("delete tag : "+tagContextMenu.selectedTag.getName());
 					presenter.deleteTag(tagContextMenu.selectedTag);
 					dialog.hide();
 				}

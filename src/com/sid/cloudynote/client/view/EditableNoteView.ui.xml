@@ -2,10 +2,9 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view"
 	xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
-	<ui:style type="com.sid.cloudynote.client.view.EditableNoteView.Style"
-		src="tags.css">
-			
-		</ui:style>
+	<ui:style type="com.sid.cloudynote.client.view.EditableNoteView.Style" src="tags.css">
+		
+	</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
 		<g:DockLayoutPanel unit="PCT" ui:field="content"
 			height="100%" width="100%">
@@ -24,7 +23,7 @@
 							<g:HTMLPanel addStyleNames='{style.tagsEditContainer}'>
 								<g:HTMLPanel ui:field="tagsEditPanel" addStyleNames='{style.tagsEditPanel}'>
 									<div ui:field="tagsEditLozengePanel">
-										<g:TextBox ui:field="tagInput">Add tags</g:TextBox>
+										<g:SuggestBox ui:field="tagInput">Add tags</g:SuggestBox>
 									</div>
 								</g:HTMLPanel>
 							</g:HTMLPanel>

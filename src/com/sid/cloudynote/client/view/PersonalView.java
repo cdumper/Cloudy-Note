@@ -2,9 +2,6 @@ package com.sid.cloudynote.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -15,6 +12,7 @@ import com.sid.cloudynote.client.presenter.NoteListPresenter;
 import com.sid.cloudynote.client.presenter.NotePresenter;
 import com.sid.cloudynote.client.presenter.NotebookListPresenter;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.view.AppView.GlobalResources;
 
 public class PersonalView extends Composite implements Presenter {
 
@@ -24,11 +22,7 @@ public class PersonalView extends Composite implements Presenter {
 	interface PersonalViewUiBinder extends UiBinder<Widget, PersonalView> {
 	}
 
-	interface GlobalResources extends ClientBundle {
-		@NotStrict
-		@Source("global.css")
-		CssResource css();
-	}
+	
 
 	@UiField
 	DockLayoutPanel dockLayoutPanel;

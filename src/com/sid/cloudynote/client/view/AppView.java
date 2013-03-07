@@ -3,6 +3,9 @@ package com.sid.cloudynote.client.view;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -34,7 +37,6 @@ import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.presenter.FriendViewPresenter;
 import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.SharingView;
-import com.sid.cloudynote.client.view.PersonalView.GlobalResources;
 import com.sid.cloudynote.shared.User;
 
 public class AppView extends Composite implements Presenter {
@@ -73,6 +75,12 @@ public class AppView extends Composite implements Presenter {
 	private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
 
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
+	}
+	
+	interface GlobalResources extends ClientBundle {
+		@NotStrict
+		@Source("global.css")
+		CssResource css();
 	}
 
 	public AppView(HandlerManager eventBus, User login) {

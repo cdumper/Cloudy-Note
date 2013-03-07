@@ -52,7 +52,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			if (!entity.getUser().equals(getUser())) {
+			if (!entity.getUser().equals(getUser().getEmail())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
 				pm.makePersistent(entity);
@@ -72,7 +72,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			// check the owner of the tag is the current user
-			if (!entity.getUser().equals(getUser())) {
+			if (!entity.getUser().equals(getUser().getEmail())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the tag");
 			} else {
 				pm.deletePersistent(entity);
@@ -178,6 +178,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<Tag> getTags(List<Key> tagsKey) {
 		List<Tag> result = new ArrayList<Tag>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
