@@ -12,7 +12,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -23,6 +22,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -283,17 +284,17 @@ public class EditableNoteView extends ResizeComposite implements
 	public void presentTags() {
 		if (this.tags != null && this.tags.size() != 0) {
 			this.tagsEditLozengePanel.setInnerText("");
-			for (Tag tag : this.tags) {
+			for (final Tag tag : this.tags) {
 				final Element div = DOM.createDiv();
 				div.addClassName(style.tagsEditLozenge());
 				Element span = DOM.createSpan();
 				span.setInnerText(tag.getName());
 				Image image = new Image();
 				image.addStyleName(style.tagsEditIcon());
-				image.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						System.out.println("remove");
+				DOM.sinkEvents(image.getElement(), Event.ONCLICK);
+				DOM.setEventListener(image.getElement(), new EventListener() {
+					public void onBrowserEvent(Event event) {
+						tags.remove(tag);
 						div.removeFromParent();
 					}
 				});
