@@ -17,18 +17,23 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.service.BlobService;
 import com.sid.cloudynote.client.service.BlobServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.client.service.TagService;
+import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.service.UploadService;
 import com.sid.cloudynote.client.service.UploadServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.IEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 
 public class EditableNotePresenter implements Presenter, IEditableNoteView.Presenter{
 	private IEditableNoteView view;
@@ -63,6 +68,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 				eventBus.fireEvent(new NoteChangedEvent(DataManager
 						.getCurrentNotebook()));
 				eventBus.fireEvent(new EditNoteDoneEvent());
+				eventBus.fireEvent(new TagChangedEvent());
 				GWT.log("New InfoNote added successfully!");
 			}
 		};
@@ -85,6 +91,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 				eventBus.fireEvent(new NoteChangedEvent(DataManager
 						.getCurrentNotebook()));
 				eventBus.fireEvent(new EditNoteDoneEvent());
+				eventBus.fireEvent(new TagChangedEvent());
 				GWT.log("Note updated successfully!");
 			}
 		};
@@ -107,6 +114,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 				eventBus.fireEvent(new NoteChangedEvent(DataManager
 						.getCurrentNotebook()));
 				eventBus.fireEvent(new EditNoteDoneEvent());
+				eventBus.fireEvent(new TagChangedEvent());
 				GWT.log("Note updated successfully!");
 			}
 		};
@@ -218,5 +226,23 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 			}
 		});
 		dialog.add(form);
+	}
+
+	@Override
+	public void loadAllTags() {
+		TagServiceAsync service = GWT.create(TagService.class);
+		service.getTags(AppController.get().getLoginInfo().getEmail(),new AsyncCallback<List<Tag>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to load tag list");
+			}
+
+			@Override
+			public void onSuccess(List<Tag> result) {
+				view.setAllTagsList(result);
+			}
+			
+		});
 	}
 }

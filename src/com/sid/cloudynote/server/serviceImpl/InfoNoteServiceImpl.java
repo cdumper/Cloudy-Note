@@ -23,6 +23,7 @@ import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 import com.sid.cloudynote.shared.Visibility;
 
 public class InfoNoteServiceImpl extends RemoteServiceServlet implements
@@ -496,6 +497,22 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			for(Key key: group.getAccess().keySet()) {
 				notes.add(pm.detachCopy(pm.getObjectById(InfoNote.class,key)));
 			}
+		}
+		return notes;
+	}
+
+	@Override
+	public List<InfoNote> getNotesByTag(Tag tag) {
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		List<InfoNote> notes = new ArrayList<InfoNote>();
+		Query q = pm.newQuery(InfoNote.class);
+		q.setFilter("tags.contains(:tagParam)");
+		q.declareParameters(Tag.class.getName()+" tagParam");
+		Object o = q.execute(tag);
+		if(o!=null) {
+			notes = (List<InfoNote>) o;
+			notes = new ArrayList<InfoNote>(pm.detachCopyAll(notes));
+			notes.size();
 		}
 		return notes;
 	}

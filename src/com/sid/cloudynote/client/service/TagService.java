@@ -10,5 +10,5 @@ import com.sid.cloudynote.shared.Tag;
 
 @RemoteServiceRelativePath("tagService")
 public interface TagService extends RemoteService, IDAO<Tag>{
-	List<Tag> getTags() throws NotLoggedInException;
+	List<Tag> getTags(String email) throws NotLoggedInException;
 }

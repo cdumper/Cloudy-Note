@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 
 public interface IEditableNoteView {
 	public interface Presenter {
@@ -24,6 +25,8 @@ public interface IEditableNoteView {
 		void moveNote(InfoNote note, Notebook notebook);
 
 		void updateNote(InfoNote note);
+
+		void loadAllTags();
 	}
 	
 	void newNote();
@@ -37,4 +40,6 @@ public interface IEditableNoteView {
 	void presentAttachmentLink(String fileName, String key);
 
 	Widget asWidget();
+
+	void setAllTagsList(List<Tag> tags);
 }

@@ -1,0 +1,88 @@
+.buttonPanel {
+	border: 1px solid #ccc;
+	padding: 5px;
+	width: 100%;
+}
+
+.container {
+	border: 1px solid #ccc;
+	height: 100%;
+	width: 100%;
+}
+
+.tagsEditLozenge {
+	background: none repeat scroll 0 0 #EDF6F7;
+	border: 1px solid #CAE0EE;
+	border-radius: 3px 3px 3px 3px;
+	color: #3A8FBA;
+	cursor: text;
+	display: inline-block;
+	font-size: 11px;
+	height: 13px;
+	margin-left: 3px;
+	margin-top: 2px;
+	padding: 2px 2px 0;
+}
+
+.tagsEditContainer {
+	padding: 5px 10px 10px 7px;
+}
+
+.tagsEditPanel {
+	background: none repeat scroll 0 0 white;
+	border: 1px solid #B3B3B3;
+	cursor: text;
+	font-size: 100%;
+	margin: 0;
+	outline: 0 none;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+.tagsEditPanel input[type="text"] {
+	border: 0 none;
+	margin: 0;
+	outline: medium none;
+	padding-bottom: 5px;
+	padding-left: 3px;
+	display: inline;
+}
+
+.tagsEditPanel input[type="text"]:focus {
+	outline: medium none;
+}
+
+.tagsEditLozenge {
+	background: none repeat scroll 0 0 #EDF6F7;
+	border: 1px solid #CAE0EE;
+	border-radius: 3px 3px 3px 3px;
+	color: #3A8FBA;
+	cursor: text;
+	display: inline-block;
+	font-size: 11px;
+	height: 13px;
+	margin-left: 3px;
+	margin-top: 2px;
+	padding: 2px 2px 0;
+}
+
+.tagsEditLozenge span {
+	cursor: default;
+	display: inline-block;
+	padding-left: 1px;
+}
+
+.tagsEditIcon {
+	background: url("favicon.png") no-repeat scroll 0 0 transparent;
+	height: 9px;
+	width: 9px;
+	border-left: 2px solid transparent;
+	cursor: pointer;
+	display: inline-block;
+	vertical-align: top;
+	visibility: hidden;
+}
+
+.tagsEditIcon:hover {
+	visibility: visible;
+}

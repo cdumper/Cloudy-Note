@@ -39,7 +39,7 @@ public class InfoNote implements Serializable {
 	private Date createdTime;
 	@Persistent
 	private Date lastModifiedTime;
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<Tag> tags;
 	@Persistent
 	private List<String> attachments;

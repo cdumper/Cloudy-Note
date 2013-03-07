@@ -29,6 +29,6 @@ public interface TagServiceAsync {
 
 	void modify(Tag entity, AsyncCallback<Void> callback);
 
-	void getTags(AsyncCallback<List<Tag>> callback);
+	void getTags(String email, AsyncCallback<List<Tag>> callback);
 
 }

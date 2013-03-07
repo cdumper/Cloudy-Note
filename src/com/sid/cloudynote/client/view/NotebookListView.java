@@ -339,39 +339,6 @@ public class NotebookListView extends ResizeComposite implements
 				this.setAutoHideEnabled(true);
 				this.setAnimationEnabled(true);
 			}
-
-			public void renameTag(String name) {
-				selectedTag.setName(name);
-				TagServiceAsync service = GWT.create(TagService.class);
-				service.modify(selectedTag, new AsyncCallback<Void>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log("Rename tag failed!");
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						presenter.loadTagList();
-					}
-				});
-			}
-
-			public void deleteTag() {
-				TagServiceAsync service = GWT.create(TagService.class);
-				service.delete(selectedTag, new AsyncCallback<Void>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log("Delete tag failed!");
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						presenter.loadTagList();
-					}
-				});
-			}
 		}
 
 		List<String> OPERATION_LIST = new ArrayList<String>(Arrays.asList(
@@ -448,7 +415,7 @@ public class NotebookListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					tagContextMenu.renameTag(name.getText());
+					presenter.renameTag(tagContextMenu.selectedTag,name.getText());
 					dialog.hide();
 				}
 			}));
@@ -474,7 +441,7 @@ public class NotebookListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					tagContextMenu.deleteTag();
+					presenter.deleteTag(tagContextMenu.selectedTag);
 					dialog.hide();
 				}
 			}));
@@ -691,6 +658,7 @@ public class NotebookListView extends ResizeComposite implements
 						Tag tag = tagSelectionModel.getSelectedObject();
 						if (tag != null) {
 							//TODO tag clicked!
+							presenter.loadNotesByTag(tag);
 						}
 					}
 				});

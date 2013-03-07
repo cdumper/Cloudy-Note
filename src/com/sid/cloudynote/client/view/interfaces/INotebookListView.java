@@ -9,13 +9,15 @@ import com.sid.cloudynote.shared.Tag;
 public interface INotebookListView {
 	public interface Presenter {
 		void onNotebookItemSelected(Notebook clickedItem);
-		void onNotebookItemRightClicked(Notebook clickedItem);
 		void loadNotebookList();
 		void loadTagList();
 		void createNewNotebook(String text);
 		void createNewTag(String text);
 		void onNewNotebookButtonClicked();
 		void onNewNoteButtonClicked();
+		void renameTag(Tag tag, String text);
+		void deleteTag(Tag tag);
+		void loadNotesByTag(Tag tag);
 	}
 	
 	void setPresenter(Presenter presenter);

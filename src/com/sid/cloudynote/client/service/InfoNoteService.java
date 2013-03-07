@@ -10,6 +10,7 @@ import com.sid.cloudynote.client.IDAO;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 
 @RemoteServiceRelativePath("noteService")
 public interface InfoNoteService extends RemoteService, IDAO<InfoNote> {
@@ -34,5 +35,7 @@ public interface InfoNoteService extends RemoteService, IDAO<InfoNote> {
 
 	void addGroupAccessEntry(List<InfoNote> notes, Map<Key,Integer> access)
 			throws NotLoggedInException;
+
+	List<InfoNote> getNotesByTag(Tag tag);
 
 }

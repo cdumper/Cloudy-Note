@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 
 public interface InfoNoteServiceAsync {
 
@@ -53,4 +54,7 @@ public interface InfoNoteServiceAsync {
 			AsyncCallback<Void> callback);
 
 	void getNotesInGroup(Key groupKey, AsyncCallback<List<InfoNote>> callback);
+
+	void getNotesByTag(Tag tag, AsyncCallback<List<InfoNote>> callback);
+
 }

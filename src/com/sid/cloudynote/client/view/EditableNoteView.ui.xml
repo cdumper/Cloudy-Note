@@ -2,21 +2,39 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view"
 	xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
-	<ui:style>
-		
-	</ui:style>
+	<ui:style type="com.sid.cloudynote.client.view.EditableNoteView.Style"
+		src="tags.css">
+			
+		</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
-		<g:DockLayoutPanel unit="PCT" ui:field="content" height="100%" width="100%">
+		<g:DockLayoutPanel unit="PCT" ui:field="content"
+			height="100%" width="100%">
 			<g:north size="6">
-				<g:Button ui:field="doneButton">Done</g:Button>
+				<g:HTMLPanel addStyleNames='{style.buttonPanel}'>
+					<g:Button ui:field="doneButton">Done</g:Button>
+				</g:HTMLPanel>
 			</g:north>
 			<g:center>
-				<g:VerticalPanel ui:field="topPanel">
-					<g:TextBox ui:field="title"></g:TextBox>
-					<g:ListBox ui:field="notebook"></g:ListBox>
-					<g:Anchor ui:field="attach">Attach files</g:Anchor>
-					<ck:CKEditor ui:field='ckeditor' />
-				</g:VerticalPanel>
+				<g:DockLayoutPanel unit="PCT" ui:field="centerContent">
+					<g:north size="20">
+						<g:VerticalPanel ui:field="topPanel"
+							addStyleNames='{style.container}'>
+							<g:TextBox ui:field="title"></g:TextBox>
+							<g:ListBox ui:field="notebook"></g:ListBox>
+							<g:HTMLPanel addStyleNames='{style.tagsEditContainer}'>
+								<g:HTMLPanel ui:field="tagsEditPanel" addStyleNames='{style.tagsEditPanel}'>
+									<div ui:field="tagsEditLozengePanel">
+										<g:TextBox ui:field="tagInput">Add tags</g:TextBox>
+									</div>
+								</g:HTMLPanel>
+							</g:HTMLPanel>
+							<g:Anchor ui:field="attach">Attach files</g:Anchor>
+						</g:VerticalPanel>
+					</g:north>
+					<g:center>
+						<ck:CKEditor ui:field='ckeditor' />
+					</g:center>
+				</g:DockLayoutPanel>
 			</g:center>
 		</g:DockLayoutPanel>
 	</cn:Container>

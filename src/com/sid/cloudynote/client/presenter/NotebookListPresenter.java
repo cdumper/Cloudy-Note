@@ -15,17 +15,21 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.service.InfoNoteService;
+import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.client.service.TagService;
 import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.interfaces.INotebookListView;
+import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
 
@@ -46,12 +50,6 @@ public class NotebookListPresenter implements Presenter,
 			eventBus.fireEvent(new NoteChangedEvent(clickedItem));
 			DataManager.setCurrentNotebook(clickedItem.getKey());
 		} 
-	}
-
-	@Override
-	public void onNotebookItemRightClicked(Notebook clickedItem) {
-		// TODO show context menu to be able to delete notebook
-
 	}
 
 	@Override
@@ -121,7 +119,7 @@ public class NotebookListPresenter implements Presenter,
 				}
 			}
 		};
-		service.getTags(callback);
+		service.getTags(AppController.get().getLoginInfo().getEmail(),callback);
 	}
 
 	private void createDefaultNotebook() {
@@ -194,7 +192,6 @@ public class NotebookListPresenter implements Presenter,
 	@Override
 	public void onNewNoteButtonClicked() {
 		eventBus.fireEvent(new NewNoteEvent());
-//TODO	view.getEdit().setText("Done");
 	}
 	
 	private DialogBox newNotebookDialog() {
@@ -226,5 +223,58 @@ public class NotebookListPresenter implements Presenter,
 			}
 		});
 		return dialog;
+	}
+
+	@Override
+	public void renameTag(Tag tag, String name) {
+		tag.setName(name);
+		TagServiceAsync service = GWT.create(TagService.class);
+		service.modify(tag, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Rename tag failed!");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				loadTagList();
+			}
+		});
+	}
+
+	@Override
+	public void deleteTag(Tag tag) {
+		TagServiceAsync service = GWT.create(TagService.class);
+		service.delete(tag, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Delete tag failed!");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				loadTagList();
+			}
+		});
+	}
+
+	@Override
+	public void loadNotesByTag(final Tag tag) {
+		InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
+		service.getNotesByTag(tag, new AsyncCallback<List<InfoNote>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to get notes by tag:"+tag.getName());
+			}
+
+			@Override
+			public void onSuccess(List<InfoNote> result) {
+//				eventBus.fireEvent(new PresentNotesEvent());
+			}
+			
+		});
 	}
 }

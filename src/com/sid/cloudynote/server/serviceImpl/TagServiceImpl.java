@@ -28,7 +28,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 	@Override
 	public void add(Tag entity) throws NotLoggedInException {
 		checkLoggedIn();
-		entity.setUser(getUser());
+		entity.setUser(getUser().getEmail());
 		entity.setCreatedTime(new Date());
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
@@ -154,7 +154,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Tag> getTags() throws NotLoggedInException {
+	public List<Tag> getTags(String email) throws NotLoggedInException {
 		checkLoggedIn();
 		List<Tag> result = new ArrayList<Tag>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
@@ -163,7 +163,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 			q.setFilter("user == userParam");
 			q.declareParameters(User.class.getName() + " userParam");
 
-			Object obj = q.execute(getUser());
+			Object obj = q.execute(email);
 			if (obj != null) {
 				result = (List<Tag>) obj;
 				result = new ArrayList<Tag>(pm.detachCopyAll(result));
