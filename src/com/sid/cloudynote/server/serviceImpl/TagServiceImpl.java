@@ -190,4 +190,18 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 		}
 		return result;
 	}
+
+	@Override
+	public List<Tag> createTags(List<Tag> tags) {
+		List<Tag> result = new ArrayList<Tag>();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			pm.makePersistentAll(tags);
+			result = new ArrayList<Tag>(pm.detachCopyAll(tags));
+		} catch (Exception e) {
+		} finally {
+			pm.close();
+		}
+		return result;
+	}
 }

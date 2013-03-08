@@ -46,6 +46,7 @@
 	padding-bottom: 5px;
 	padding-left: 3px;
 	display: inline;
+	width: 200px;
 }
 
 .tagsEditPanel input[type="text"]:focus {
@@ -70,11 +71,10 @@
 	cursor: default;
 	display: inline-block;
 	padding-left: 1px;
-	padding-right: 1px;
 }
 
-.tagsEditLozenge .tagsEditIcon {
-	background: url("images/trash.png");
+.tagsEditIcon {
+	background: url("images/trash.png") no-repeat scroll 0 0 transparent;
 	background-size: 9px;
 	height: 9px;
 	width: 9px;

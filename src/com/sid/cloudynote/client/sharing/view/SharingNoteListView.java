@@ -121,9 +121,10 @@ public class SharingNoteListView extends ResizeComposite implements ISharingNote
 				sb.appendHtmlConstant("</td></tr>");
 				sb.appendHtmlConstant("<tr><td colspan=\"2\">");
 				sb.appendHtmlConstant("Tags:");
-				for (Tag tag : note.getTags()) {
-					sb.appendEscaped(" "+tag.getName());
-				}
+				//TODO present tags in the sharingNoteListView
+//				for (Tag tag : note.getTags()) {
+//					sb.appendEscaped(" "+tag.getName());
+//				}
 				sb.appendHtmlConstant("</td></tr>");
 			}
 			

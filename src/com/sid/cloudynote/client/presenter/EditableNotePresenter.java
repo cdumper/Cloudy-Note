@@ -1,7 +1,10 @@
 package com.sid.cloudynote.client.presenter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
@@ -30,6 +33,7 @@ import com.sid.cloudynote.client.service.TagService;
 import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.service.UploadService;
 import com.sid.cloudynote.client.service.UploadServiceAsync;
+import com.sid.cloudynote.client.view.EditableNoteView;
 import com.sid.cloudynote.client.view.interfaces.IEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
@@ -44,6 +48,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 		super();
 		this.view = view;
 		this.eventBus = eventBus;
+		eventBus.addHandler(TagChangedEvent.TYPE, (EditableNoteView)view);
 	}
 
 	@Override
@@ -53,72 +58,152 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 	}
 
 	@Override
-	public void createNewNote(InfoNote note) {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+	public void createNewNote(final InfoNote note,final Map<Key, Tag> tags) {
+		final List<Tag> tagsToCreate = new ArrayList<Tag>();
+		final List<Tag> tagsCreated = new ArrayList<Tag>();
+		for(Entry<Key,Tag> entry : tags.entrySet()) {
+			if(entry.getKey()==null){
+				tagsToCreate.add(entry.getValue());
+			} else {
+				tagsCreated.add(entry.getValue());
+			}
+		}
+		TagServiceAsync tagService = GWT.create(TagService.class);
+		tagService.createTags(tagsToCreate, new AsyncCallback<List<Tag>>(){
+
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("falied! getNotesList");
-				caught.printStackTrace();
+				GWT.log("Failed to create tags");
 			}
 
 			@Override
-			public void onSuccess(Void result) {
-				eventBus.fireEvent(new NoteChangedEvent(DataManager
-						.getCurrentNotebook()));
-				eventBus.fireEvent(new EditNoteDoneEvent());
+			public void onSuccess(List<Tag> result) {
 				eventBus.fireEvent(new TagChangedEvent());
-				GWT.log("New InfoNote added successfully!");
+				tagsCreated.addAll(result);
+				List<Key> keys = new ArrayList<Key>();
+				for(Tag tag : tagsCreated){
+					keys.add(tag.getKey());
+				}
+				note.setTags(keys);
+				
+				InfoNoteServiceAsync noteService = (InfoNoteServiceAsync) GWT
+						.create(InfoNoteService.class);
+				noteService.add(note, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("falied! getNotesList");
+						caught.printStackTrace();
+					}
+					
+					@Override
+					public void onSuccess(Void result) {
+						eventBus.fireEvent(new NoteChangedEvent(DataManager
+								.getCurrentNotebook()));
+						eventBus.fireEvent(new EditNoteDoneEvent());
+						GWT.log("New InfoNote added successfully!");
+					}
+				});
 			}
-		};
-		service.add(note, callback);
+			
+		});
 	}
 
 	@Override
-	public void moveNote(InfoNote note, Notebook notebook) {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+	public void moveNote(final InfoNote note, final Notebook notebook,final Map<Key, Tag> tags) {
+		final List<Tag> tagsToCreate = new ArrayList<Tag>();
+		final List<Tag> tagsCreated = new ArrayList<Tag>();
+		for(Entry<Key,Tag> entry : tags.entrySet()) {
+			if(entry.getKey()==null){
+				tagsToCreate.add(entry.getValue());
+			} else {
+				tagsCreated.add(entry.getValue());
+			}
+		}
+		TagServiceAsync tagService = GWT.create(TagService.class);
+		tagService.createTags(tagsToCreate, new AsyncCallback<List<Tag>>(){
+
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("update note failed");
-				caught.printStackTrace();
+				GWT.log("Failed to create tags");
 			}
 
 			@Override
-			public void onSuccess(Void result) {
-				eventBus.fireEvent(new NoteChangedEvent(DataManager
-						.getCurrentNotebook()));
-				eventBus.fireEvent(new EditNoteDoneEvent());
+			public void onSuccess(List<Tag> result) {
 				eventBus.fireEvent(new TagChangedEvent());
-				GWT.log("Note updated successfully!");
+				tagsCreated.addAll(result);
+				List<Key> keys = new ArrayList<Key>();
+				for(Tag tag : tagsCreated){
+					keys.add(tag.getKey());
+				}
+				note.setTags(keys);
+				InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
+						.create(InfoNoteService.class);
+				service.moveNoteTo(note, notebook, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("update note failed");
+						caught.printStackTrace();
+					}
+					
+					@Override
+					public void onSuccess(Void result) {
+						eventBus.fireEvent(new NoteChangedEvent(DataManager
+								.getCurrentNotebook()));
+						eventBus.fireEvent(new EditNoteDoneEvent());
+						GWT.log("Note updated successfully!");
+					}
+				});
 			}
-		};
-		service.moveNoteTo(note, notebook, callback);
+		});
 	}
 
 	@Override
-	public void updateNote(InfoNote note) {
-		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
-				.create(InfoNoteService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+	public void updateNote(final InfoNote note,final Map<Key, Tag> tags) {
+		final List<Tag> tagsToCreate = new ArrayList<Tag>();
+		final List<Tag> tagsCreated = new ArrayList<Tag>();
+		for(Entry<Key,Tag> entry : tags.entrySet()) {
+			if(entry.getKey()==null){
+				tagsToCreate.add(entry.getValue());
+			} else {
+				tagsCreated.add(entry.getValue());
+			}
+		}
+		TagServiceAsync tagService = GWT.create(TagService.class);
+		tagService.createTags(tagsToCreate, new AsyncCallback<List<Tag>>(){
+
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("update note failed");
-				caught.printStackTrace();
+				GWT.log("Failed to create tags");
 			}
 
 			@Override
-			public void onSuccess(Void result) {
-				eventBus.fireEvent(new NoteChangedEvent(DataManager
-						.getCurrentNotebook()));
-				eventBus.fireEvent(new EditNoteDoneEvent());
+			public void onSuccess(List<Tag> result) {
 				eventBus.fireEvent(new TagChangedEvent());
-				GWT.log("Note updated successfully!");
+				tagsCreated.addAll(result);
+				List<Key> keys = new ArrayList<Key>();
+				for(Tag tag : tagsCreated){
+					keys.add(tag.getKey());
+				}
+				note.setTags(keys);
+				InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
+						.create(InfoNoteService.class);
+				service.modify(note, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("update note failed");
+						caught.printStackTrace();
+					}
+					
+					@Override
+					public void onSuccess(Void result) {
+						eventBus.fireEvent(new NoteChangedEvent(DataManager
+								.getCurrentNotebook()));
+						eventBus.fireEvent(new EditNoteDoneEvent());
+						GWT.log("Note updated successfully!");
+					}
+				});
 			}
-		};
-		service.modify(note, callback);
+		});
 	}
 
 	@Override
@@ -240,7 +325,11 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 
 			@Override
 			public void onSuccess(List<Tag> result) {
-				view.setAllTagsList(result);
+				Map<Key,Tag> tags = new HashMap<Key,Tag>();
+				for(Tag tag : result) {
+					tags.put(tag.getKey(), tag);
+				}
+				view.setAllTagsList(tags);
 			}
 			
 		});

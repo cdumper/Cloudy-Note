@@ -14,4 +14,6 @@ public interface TagService extends RemoteService, IDAO<Tag>{
 	List<Tag> getTags(String email) throws NotLoggedInException;
 
 	List<Tag> getTags(List<Key> tagsKey);
+
+	List<Tag> createTags(List<Tag> tags);
 }

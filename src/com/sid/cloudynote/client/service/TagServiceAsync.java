@@ -34,4 +34,6 @@ public interface TagServiceAsync {
 
 	void getTags(List<Key> tagsKey, AsyncCallback<List<Tag>> callback);
 
+	void createTags(List<Tag> tags, AsyncCallback<List<Tag>> callback);
+
 }

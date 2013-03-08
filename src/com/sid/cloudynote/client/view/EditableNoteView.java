@@ -2,6 +2,7 @@ package com.sid.cloudynote.client.view;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,13 +42,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
+import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.interfaces.ITagChangedHandler;
 import com.sid.cloudynote.client.view.interfaces.IEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
 
 public class EditableNoteView extends ResizeComposite implements
-		IEditableNoteView {
+		IEditableNoteView, ITagChangedHandler {
 
 	private static EditPanelUiBinder uiBinder = GWT
 			.create(EditPanelUiBinder.class);
@@ -88,8 +91,8 @@ public class EditableNoteView extends ResizeComposite implements
 	private Presenter presenter;
 	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
-	private List<Tag> allTags = new ArrayList<Tag>();
-	private List<Tag> tags = new ArrayList<Tag>();
+	private Map<Key,Tag> allTags = new HashMap<Key,Tag>();
+	private Map<Key,Tag> tags = new HashMap<Key,Tag>();
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
 	interface EditPanelUiBinder extends UiBinder<Widget, EditableNoteView> {
@@ -156,7 +159,7 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiHandler("doneButton")
 	void onClickDone(ClickEvent e) {
 		if (this.isNew) {
-			presenter.createNewNote(this.getInfoNote());
+			presenter.createNewNote(this.getInfoNote(),this.getTags());
 		} else {
 			InfoNote note = DataManager.getCurrentNote();
 			note.setTitle(this.getInfoNote().getTitle());
@@ -164,9 +167,9 @@ public class EditableNoteView extends ResizeComposite implements
 			note.setTags(this.getInfoNote().getTags());
 			if (!note.getNotebook().getKey()
 					.equals(this.getInfoNote().getNotebook().getKey())) {
-				presenter.moveNote(note, this.getInfoNote().getNotebook());
+				presenter.moveNote(note, this.getInfoNote().getNotebook(),this.getTags());
 			} else {
-				presenter.updateNote(note);
+				presenter.updateNote(note,this.getTags());
 			}
 		}
 	}
@@ -187,7 +190,11 @@ public class EditableNoteView extends ResizeComposite implements
 			if (note.getAttachments() != null) {
 				presentAttachmentLinks(note.getAttachments());
 			}
-			this.tags = note.getTags();
+			if(note.getTags()!=null && note.getTags().size()!=0){
+				for(Key key : note.getTags()) {
+					this.tags.put(key, this.allTags.get(key));
+				}
+			}
 			this.presentTags();
 		}
 	}
@@ -195,8 +202,11 @@ public class EditableNoteView extends ResizeComposite implements
 	public InfoNote getInfoNote() {
 		InfoNote note = new InfoNote(getSelectedNotebook(), title.getText(),
 				ckeditor.getData());
-		note.setTags(this.tags);
 		return note;
+	}
+	
+	public Map<Key,Tag> getTags() {
+		return this.tags;
 	}
 
 	// private String removeHTMLTags(String data) {
@@ -221,10 +231,10 @@ public class EditableNoteView extends ResizeComposite implements
 	}
 
 	@Override
-	public void setAllTagsList(List<Tag> tags) {
+	public void setAllTagsList(Map<Key,Tag> tags) {
 		this.allTags = tags;
 		if (allTags != null && allTags.size() != 0) {
-			for (Tag tag : tags) {
+			for (Tag tag : tags.values()) {
 				this.oracle.add(tag.getName());
 			}
 		}
@@ -285,24 +295,24 @@ public class EditableNoteView extends ResizeComposite implements
 		tag.setCreatedTime(new Date());
 		tag.setUser(AppController.get().getLoginInfo().getEmail());
 
-		for (Tag t : this.tags) {
+		for (Tag t : this.tags.values()) {
 			if (tagName.equals(t.getName())) {
 				exist = true;
 			}
 		}
 
-		for (Tag t : this.allTags) {
+		for (Tag t : this.allTags.values()) {
 			if (tagName.equals(t.getName())) {
 				tag = t;
 			}
 		}
 
 		if (this.tags == null) {
-			this.tags = new ArrayList<Tag>();
+			this.tags = new HashMap<Key,Tag>();
 		}
 
 		if (!exist) {
-			this.tags.add(tag);
+			this.tags.put(null,tag);
 		}
 		this.tagInput.setText("");
 		this.presentTags();
@@ -311,7 +321,7 @@ public class EditableNoteView extends ResizeComposite implements
 	public void presentTags() {
 		if (this.tags != null && this.tags.size() != 0) {
 			this.tagsEditLozengePanel.setInnerText("");
-			for (final Tag tag : this.tags) {
+			for (final Tag tag : this.tags.values()) {
 				final Element div = DOM.createDiv();
 				div.addClassName(style.tagsEditLozenge());
 				Element span = DOM.createSpan();
@@ -321,7 +331,7 @@ public class EditableNoteView extends ResizeComposite implements
 				DOM.sinkEvents(image.getElement(), Event.ONCLICK);
 				DOM.setEventListener(image.getElement(), new EventListener() {
 					public void onBrowserEvent(Event event) {
-						tags.remove(tag);
+						tags.remove(tag.getKey());
 						div.removeFromParent();
 					}
 				});
@@ -333,5 +343,10 @@ public class EditableNoteView extends ResizeComposite implements
 			this.tagsEditLozengePanel.appendChild(this.tagInput.getElement());
 			this.tagInput.setFocus(true);
 		}
+	}
+
+	@Override
+	public void onTagChanged(TagChangedEvent event) {
+		this.loadAllTags();
 	}
 }

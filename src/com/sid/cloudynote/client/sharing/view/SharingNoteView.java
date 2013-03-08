@@ -116,9 +116,10 @@ public class SharingNoteView extends ResizeComposite implements
 		this.titleLabel.setText(this.note.getTitle());
 		if (note.getTags() != null && note.getTags().size() != 0) {
 			String tags = "Tags: ";
-			for (Tag tag : note.getTags()) {
-				tags+=tag.getName();
-			}
+//			TODO show tags in sharingNoteView
+//			for (Tag tag : note.getTags()) {
+//				tags+=tag.getName();
+//			}
 			this.tagsLabel.setText(tags);
 		} else {
 			this.tagsLabel.setVisible(false);
@@ -134,9 +135,10 @@ public class SharingNoteView extends ResizeComposite implements
 		this.editTitle.setText(note.getTitle());
 		if (note.getTags() != null && note.getTags().size() != 0) {
 			String tags = "Tags: ";
-			for (Tag tag : note.getTags()) {
-				tags+=tag.getName()+" ";
-			}
+			//TODO show tags in sharingNoteView
+//			for (Tag tag : note.getTags()) {
+//				tags+=tag.getName()+" ";
+//			}
 			this.editTags.setText(tags);
 		} else {
 			this.editTags.setText("Add tags");

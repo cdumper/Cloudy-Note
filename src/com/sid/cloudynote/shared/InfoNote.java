@@ -40,7 +40,7 @@ public class InfoNote implements Serializable {
 	@Persistent
 	private Date lastModifiedTime;
 	@Persistent(defaultFetchGroup = "true")
-	private List<Tag> tags;
+	private List<Key> tags;
 	@Persistent
 	private List<String> attachments;
 	/**
@@ -153,11 +153,11 @@ public class InfoNote implements Serializable {
 	}
 	
 	
-	public List<Tag> getTags() {
+	public List<Key> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(List<Key> tags) {
 		this.tags = tags;
 	}
 

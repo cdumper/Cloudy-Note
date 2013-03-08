@@ -47,10 +47,12 @@ public class NotebookListPresenter implements Presenter,
 
 	@Override
 	public void onNotebookItemSelected(Notebook clickedItem) {
-		if (clickedItem.getKey() != DataManager.getCurrentNotebookKey()) {
+		//check if the clicked notebook is current notebook or not
+		//if yes then do nothing, if no then load the notes
+//		if (clickedItem.getKey() != DataManager.getCurrentNotebookKey()) {
 			eventBus.fireEvent(new NoteChangedEvent(clickedItem));
 			DataManager.setCurrentNotebook(clickedItem.getKey());
-		} 
+//		} 
 	}
 
 	@Override
