@@ -30,7 +30,6 @@ import com.sid.cloudynote.client.event.interfaces.IViewSharedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteListView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.InfoNote;
-import com.sid.cloudynote.shared.Tag;
 
 public class SharingNoteListView extends ResizeComposite implements ISharingNoteListView, IViewPublicHandler, IViewSharedHandler, IViewGroupNotesHandler{
 	@UiField

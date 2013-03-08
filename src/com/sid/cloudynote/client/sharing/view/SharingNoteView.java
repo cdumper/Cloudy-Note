@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.sharing.view.interfaces.ISharingNoteView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.InfoNote;
-import com.sid.cloudynote.shared.Tag;
 
 public class SharingNoteView extends ResizeComposite implements
 		ISharingNoteView {

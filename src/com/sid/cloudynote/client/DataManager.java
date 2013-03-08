@@ -6,6 +6,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
+import com.sid.cloudynote.shared.Tag;
 
 public class DataManager {
 	static Map<Key, Notebook> notebooks;
@@ -14,6 +15,15 @@ public class DataManager {
 	static Key currentNotebookKey;
 	static Notebook currentNotebook;
 	static InfoNote currentNote;
+	static Map<Key, Tag> allTags;
+
+	public static Map<Key, Tag> getAllTags() {
+		return allTags;
+	}
+
+	public static void setAllTags(Map<Key, Tag> allTags) {
+		DataManager.allTags = allTags;
+	}
 
 	public static Map<Key, Notebook> getNotebooks() {
 		return notebooks;

@@ -117,6 +117,7 @@ public class NotebookListPresenter implements Presenter,
 					for (Tag tag : result) {
 						tagMap.put(tag.getKey(), tag);
 					}
+					DataManager.setAllTags(tagMap);
 				} else {
 					GWT.log("No tags exist!");
 				}

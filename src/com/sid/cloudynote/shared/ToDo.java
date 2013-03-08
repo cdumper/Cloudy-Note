@@ -11,6 +11,10 @@ import com.google.appengine.api.datastore.Key;
 //TODO todo note model to be implemented
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
 public class ToDo extends Note{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
 	private Key key;

@@ -3,6 +3,10 @@ package com.sid.cloudynote.shared;
 import com.google.appengine.api.datastore.Key;
 
 public class Note implements INote {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3710454120906372920L;
 	private Key key;
 	private String title;
 	private Notebook notebook;

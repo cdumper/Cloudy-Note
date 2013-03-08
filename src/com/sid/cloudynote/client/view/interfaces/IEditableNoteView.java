@@ -31,9 +31,11 @@ public interface IEditableNoteView {
 	
 	void newNote();
 
-	void presentNote(InfoNote note);
+	void presentNote();
 	
 	void setPresenter(Presenter presenter);
+	
+	void setNote(InfoNote note);
 	
 	void setNotebookMap(Map<Key, Notebook> notebookMap);
 

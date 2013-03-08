@@ -58,6 +58,7 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 		return note;
 	}
 
+	@Override
 	public void setNote(InfoNote note) {
 		this.note = note;
 	}
@@ -86,9 +87,8 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public void presentNote(InfoNote note) {
+	public void presentNote() {
 		if (note != null) {
-			this.note = note;
 			title.setText(note.getTitle());
 			datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 			notebook.setText(note.getNotebook().getName());

@@ -35,7 +35,8 @@ public class NoteView extends ResizeComposite implements INoteView,
 	public NoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		NonEditableNoteView nonEditView = new NonEditableNoteView();
-		nonEditView.presentNote(DataManager.getCurrentNote());
+		nonEditView.setNote(DataManager.getCurrentNote());
+		nonEditView.presentNote();
 		this.widget = nonEditView;
 	}
 

@@ -89,9 +89,18 @@ public class EditableNoteView extends ResizeComposite implements
 	private static final String TAGINPUT_DEFAULT = "Add tags seperated by comma";
 	private boolean isNew;
 	private Presenter presenter;
+	private InfoNote note;
+	public InfoNote getNote() {
+		return note;
+	}
+
+	@Override
+	public void setNote(InfoNote note) {
+		this.note = note;
+	}
+
 	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
-	private Map<Key,Tag> allTags = new HashMap<Key,Tag>();
 	private Map<Key,Tag> tags = new HashMap<Key,Tag>();
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
@@ -161,10 +170,10 @@ public class EditableNoteView extends ResizeComposite implements
 		if (this.isNew) {
 			presenter.createNewNote(this.getInfoNote(),this.getTags());
 		} else {
-			InfoNote note = DataManager.getCurrentNote();
-			note.setTitle(this.getInfoNote().getTitle());
-			note.setContent(this.getInfoNote().getContent());
-			note.setTags(this.getInfoNote().getTags());
+//			InfoNote note = DataManager.getCurrentNote();
+//			note.setTitle(this.getInfoNote().getTitle());
+//			note.setContent(this.getInfoNote().getContent());
+//			note.setTags(this.getInfoNote().getTags());
 			if (!note.getNotebook().getKey()
 					.equals(this.getInfoNote().getNotebook().getKey())) {
 				presenter.moveNote(note, this.getInfoNote().getNotebook(),this.getTags());
@@ -172,6 +181,7 @@ public class EditableNoteView extends ResizeComposite implements
 				presenter.updateNote(note,this.getTags());
 			}
 		}
+		this.tags.clear();
 	}
 
 	@Override
@@ -182,7 +192,7 @@ public class EditableNoteView extends ResizeComposite implements
 	}
 
 	@Override
-	public void presentNote(InfoNote note) {
+	public void presentNote() {
 		if (note != null) {
 			title.setText(note.getTitle());
 			setSelectedNotebook(DataManager.getCurrentNotebookKey());
@@ -192,7 +202,7 @@ public class EditableNoteView extends ResizeComposite implements
 			}
 			if(note.getTags()!=null && note.getTags().size()!=0){
 				for(Key key : note.getTags()) {
-					this.tags.put(key, this.allTags.get(key));
+					this.tags.put(key, DataManager.getAllTags().get(key));
 				}
 			}
 			this.presentTags();
@@ -200,8 +210,11 @@ public class EditableNoteView extends ResizeComposite implements
 	}
 
 	public InfoNote getInfoNote() {
-		InfoNote note = new InfoNote(getSelectedNotebook(), title.getText(),
-				ckeditor.getData());
+		note.setTitle(title.getText());
+		note.setNotebook(getSelectedNotebook());
+		note.setContent(ckeditor.getData());
+//		InfoNote note = new InfoNote(getSelectedNotebook(), title.getText(),
+//				ckeditor.getData());
 		return note;
 	}
 	
@@ -232,8 +245,8 @@ public class EditableNoteView extends ResizeComposite implements
 
 	@Override
 	public void setAllTagsList(Map<Key,Tag> tags) {
-		this.allTags = tags;
-		if (allTags != null && allTags.size() != 0) {
+		DataManager.setAllTags(tags);
+		if (tags != null && tags.size() != 0) {
 			for (Tag tag : tags.values()) {
 				this.oracle.add(tag.getName());
 			}
@@ -301,7 +314,7 @@ public class EditableNoteView extends ResizeComposite implements
 			}
 		}
 
-		for (Tag t : this.allTags.values()) {
+		for (Tag t : DataManager.getAllTags().values()) {
 			if (tagName.equals(t.getName())) {
 				tag = t;
 			}

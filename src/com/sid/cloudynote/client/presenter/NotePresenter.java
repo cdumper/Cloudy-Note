@@ -41,7 +41,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		if(nonEditView==null)	nonEditView = new NonEditableNoteView();
 		if(nonEditablePresenter==null)	nonEditablePresenter = new NonEditableNotePresenter(nonEditView,eventBus);
 		nonEditView.setPresenter(nonEditablePresenter);
-		nonEditView.presentNote(DataManager.getCurrentNote());
+		nonEditView.setNote(DataManager.getCurrentNote());
+		nonEditView.presentNote();
 		this.content = nonEditView;
 	}
 
@@ -50,7 +51,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		if(nonEditView==null)	nonEditView = new NonEditableNoteView();
 		if(nonEditablePresenter==null)	nonEditablePresenter = new NonEditableNotePresenter(nonEditView,eventBus);
 		nonEditView.setPresenter(nonEditablePresenter);
-		nonEditView.presentNote(note);
+		nonEditView.setNote(note);
+		nonEditView.presentNote();
 		this.setContent(nonEditView);
 		
 		this.go(view.getContainer());
@@ -61,7 +63,9 @@ public class NotePresenter extends SimplePanel implements Presenter,
 		if(editView==null)	editView = new EditableNoteView();
 		if(editablePresenter==null)	editablePresenter = new EditableNotePresenter(editView,eventBus);
 		editView.setPresenter(editablePresenter);
-		editView.presentNote(note);
+		editView.setNote(note);
+		editView.presentNote();
+//		editView.presentNote(note);
 		editView.setNew(false);
 		this.setContent(editView);
 		

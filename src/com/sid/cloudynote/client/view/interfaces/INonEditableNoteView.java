@@ -17,7 +17,9 @@ public interface INonEditableNoteView {
 		void deleteNote(InfoNote note);
 	}
 
-	void presentNote(InfoNote note);
+	void presentNote();
+	
+	void setNote(InfoNote note);
 
 	void setPresenter(Presenter presenter);
 

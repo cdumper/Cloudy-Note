@@ -2,8 +2,11 @@ package com.sid.cloudynote.client.view;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -49,14 +52,13 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.event.interfaces.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.interfaces.ITagChangedHandler;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
-import com.sid.cloudynote.client.service.TagService;
-import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.INotebookListView;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
@@ -689,9 +691,14 @@ public class NotebookListView extends ResizeComposite implements
 	
 	@Override
 	public void setTagList(List<Tag> result) {
-		List<Tag> tags = tagDataProvider.getList();
-		tags.clear();
-		tags.addAll(result);
+		Map<Key,Tag> tags = new HashMap<Key, Tag>();
+		for(Tag tag: result) {
+			tags.put(tag.getKey(), tag);
+		}
+		DataManager.setAllTags(tags);
+		tagDataProvider.getList().clear();
+		tagDataProvider.getList().addAll(result);
+		this.tagsCellList.redraw();
 	}
 
 	@Override
