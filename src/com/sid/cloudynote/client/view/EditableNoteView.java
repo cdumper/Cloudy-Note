@@ -186,6 +186,7 @@ public class EditableNoteView extends ResizeComposite implements
 
 	@Override
 	public void newNote() {
+		note = new InfoNote();
 		title.setText("Untitled");
 		setSelectedNotebook(DataManager.getCurrentNotebookKey());
 		ckeditor.setData("Content...");
@@ -206,15 +207,13 @@ public class EditableNoteView extends ResizeComposite implements
 				}
 			}
 			this.presentTags();
-		}
+		} 
 	}
 
 	public InfoNote getInfoNote() {
 		note.setTitle(title.getText());
 		note.setNotebook(getSelectedNotebook());
 		note.setContent(ckeditor.getData());
-//		InfoNote note = new InfoNote(getSelectedNotebook(), title.getText(),
-//				ckeditor.getData());
 		return note;
 	}
 	
@@ -295,6 +294,8 @@ public class EditableNoteView extends ResizeComposite implements
 	@Override
 	public void setNotebookMap(Map<Key, Notebook> notebookMap) {
 		this.notebookMap = notebookMap;
+		notebookList.clear();
+		notebook.clear();
 		for (Notebook nb : notebookMap.values()) {
 			notebookList.add(nb.getKey());
 			notebook.addItem(nb.getName());

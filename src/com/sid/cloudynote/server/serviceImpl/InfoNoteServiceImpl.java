@@ -17,7 +17,6 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.InfoNoteService;
-import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
@@ -138,116 +137,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
-	}
-
-	/**
-	 * @param filter
-	 *            查询过滤条件
-	 * @param ordering
-	 *            查询后排序条件
-	 * @param firstResult
-	 *            开始记录
-	 * @param maxResult
-	 *            检索结果的最大数量
-	 * @return 查询处理好的数据
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<InfoNote> getPaginationData(String filter, String ordering,
-			long firstResult, long maxResult) throws NotLoggedInException {
-		checkLoggedIn();
-		List<InfoNote> result = null;
-		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		try {
-			pm.currentTransaction().begin();
-			Query query = GSQLUtil.getSelectSqlStr(pm, InfoNote.class, filter,
-					ordering, firstResult, maxResult);
-			Object obj = query.execute("root");
-			if (obj != null) {
-				result = (List<InfoNote>) obj;
-				result = new ArrayList<InfoNote>(pm.detachCopyAll(result));
-				result.size();
-			} else {
-				result = new ArrayList<InfoNote>();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (pm.currentTransaction().isActive()) {
-				pm.currentTransaction().rollback();
-			}
-			pm.close();
-		}
-		return result;
-	}
-
-	/**
-	 * @param filter
-	 *            查询过滤条件
-	 * @param odering
-	 *            查询后排序条件
-	 * @return 查询处理好的数据
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<InfoNote> getPaginationData(String filter, String ordering)
-			throws NotLoggedInException {
-		long min = -1;
-		return getPaginationData(filter, ordering, min, min);
-	}
-
-	/**
-	 * 
-	 * @param filter
-	 *            查询过滤条件
-	 * @param firstResult
-	 *            开始记录
-	 * @param maxResult
-	 *            检索结果的最大数量
-	 * @return 查询处理好的数据
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<InfoNote> getPaginationData(String filter, long firstResult,
-			long maxResult) throws NotLoggedInException {
-		return getPaginationData(filter, null, firstResult, maxResult);
-	}
-
-	/**
-	 * 
-	 * @param firstResult
-	 *            开始记录
-	 * @param maxResult
-	 *            检索结果的最大数量
-	 * @return 查询处理好的数据
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<InfoNote> getPaginationData(long firstResult, long maxResult)
-			throws NotLoggedInException {
-		return getPaginationData(null, null, firstResult, maxResult);
-	}
-
-	/**
-	 * @param filter
-	 *            查询过滤条件
-	 * @return 查询处理好的数据
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<InfoNote> getPaginationData(String filter)
-			throws NotLoggedInException {
-		return getPaginationData(filter, null);
-	}
-
-	/**
-	 * @return 查询处理好的数据
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<InfoNote> getPaginationData() throws NotLoggedInException {
-		return getPaginationData(null);
 	}
 
 	@SuppressWarnings("unchecked")

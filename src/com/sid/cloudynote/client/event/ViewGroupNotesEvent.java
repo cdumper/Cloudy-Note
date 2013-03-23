@@ -28,6 +28,7 @@ public class ViewGroupNotesEvent extends GwtEvent<IViewGroupNotesHandler>{
 
 	@Override
 	protected void dispatch(IViewGroupNotesHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onViewGroups(this);
 	}
 }

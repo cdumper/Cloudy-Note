@@ -9,6 +9,7 @@ public class NotebookChangedEvent extends GwtEvent<INotebookChangedHandler> {
 
 	@Override
 	protected void dispatch(INotebookChangedHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onNotebookChanged(this);
 	}
 

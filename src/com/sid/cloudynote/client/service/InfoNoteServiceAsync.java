@@ -15,22 +15,6 @@ public interface InfoNoteServiceAsync {
 
 	void delete(InfoNote entity, AsyncCallback<Void> callback);
 
-	void getPaginationData(String filter, String ordering, long firstResult,
-			long maxResult, AsyncCallback<List<InfoNote>> callback);
-
-	void getPaginationData(String filter, String ordering,
-			AsyncCallback<List<InfoNote>> callback);
-
-	void getPaginationData(String filter, long firstResult, long maxResult,
-			AsyncCallback<List<InfoNote>> callback);
-
-	void getPaginationData(long firstResult, long maxResult,
-			AsyncCallback<List<InfoNote>> callback);
-
-	void getPaginationData(String filter, AsyncCallback<List<InfoNote>> callback);
-
-	void getPaginationData(AsyncCallback<List<InfoNote>> callback);
-
 	void modify(InfoNote entity, AsyncCallback<Void> callback);
 
 	void getNotes(Notebook currentNotebook,

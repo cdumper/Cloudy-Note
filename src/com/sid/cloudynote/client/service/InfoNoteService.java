@@ -6,14 +6,13 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.sid.cloudynote.client.IDAO;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
 
 @RemoteServiceRelativePath("noteService")
-public interface InfoNoteService extends RemoteService, IDAO<InfoNote> {
+public interface InfoNoteService extends RemoteService {
 	List<InfoNote> getNotes(Notebook currentNotebook)
 			throws NotLoggedInException;
 
@@ -36,6 +35,12 @@ public interface InfoNoteService extends RemoteService, IDAO<InfoNote> {
 	void addGroupAccessEntry(List<InfoNote> notes, Map<Key,Integer> access)
 			throws NotLoggedInException;
 
-	List<InfoNote> getNotesByTag(Tag tag);
+	List<InfoNote> getNotesByTag(Tag tag) throws NotLoggedInException;
+
+	void add(InfoNote entity) throws NotLoggedInException;
+
+	void modify(InfoNote entity) throws NotLoggedInException;
+
+	void delete(InfoNote entity) throws NotLoggedInException;
 
 }

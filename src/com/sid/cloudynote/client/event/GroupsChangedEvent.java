@@ -12,6 +12,7 @@ public class GroupsChangedEvent extends GwtEvent<IGroupsChangedHandler>{
 
 	@Override
 	protected void dispatch(IGroupsChangedHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onGroupsChanged(this);
 	}
 

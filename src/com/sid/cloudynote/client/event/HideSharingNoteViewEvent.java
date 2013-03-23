@@ -12,6 +12,7 @@ public class HideSharingNoteViewEvent extends GwtEvent<IHideSharingNoteViewHandl
 
 	@Override
 	protected void dispatch(IHideSharingNoteViewHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onHideSharingNoteView(this);
 	}
 

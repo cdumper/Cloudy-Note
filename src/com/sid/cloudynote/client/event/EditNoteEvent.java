@@ -28,6 +28,7 @@ public class EditNoteEvent extends GwtEvent<IEditNoteHandler>{
 
 	@Override
 	protected void dispatch(IEditNoteHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onEditNote(this);
 	}
 

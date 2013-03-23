@@ -3,11 +3,15 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn='urn:import:com.sid.cloudynote.client.view'
 	xmlns:s='urn:import:com.sid.cloudynote.client.sharing.view'>
 	<ui:style src="header.css" />
+		
 	<cn:Container>
 		<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
 			<g:north size='5'>
 				<g:HTMLPanel height="100%" width="100%" addStyleNames="{style.header}">
 					<div class="{style.nav}">
+						<div class="{style.logo}">
+							<img src="images/logo.png" />
+						</div>
 						<div class="{style.left}">
 							<g:Button ui:field="myNotesButton" addStyleNames="{style.button}">My
 								Notes</g:Button>

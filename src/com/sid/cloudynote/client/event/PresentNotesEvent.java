@@ -29,6 +29,7 @@ public class PresentNotesEvent extends GwtEvent<IPresentNotesHandler>{
 
 	@Override
 	protected void dispatch(IPresentNotesHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onPresentNotes(this);
 	}
 

@@ -13,6 +13,7 @@ public class EditNoteDoneEvent extends GwtEvent<IEditNoteDoneHandler> {
 
 	@Override
 	protected void dispatch(IEditNoteDoneHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onEditNoteDone(this);
 	}
 

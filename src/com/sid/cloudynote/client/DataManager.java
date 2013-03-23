@@ -79,7 +79,6 @@ public class DataManager {
 			}
 		}
 		return DataManager.currentNote;
-
 	}
 
 	/**

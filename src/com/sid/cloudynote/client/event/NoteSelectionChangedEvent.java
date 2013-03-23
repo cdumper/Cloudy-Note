@@ -27,6 +27,7 @@ public class NoteSelectionChangedEvent extends GwtEvent<INoteSelectionChangedHan
 
 	@Override
 	protected void dispatch(INoteSelectionChangedHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onNoteSelectionChanged(this);
 	}
 

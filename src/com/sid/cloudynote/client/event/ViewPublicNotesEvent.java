@@ -12,6 +12,7 @@ public class ViewPublicNotesEvent extends GwtEvent<IViewPublicHandler>{
 
 	@Override
 	protected void dispatch(IViewPublicHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onViewPublicNotes(this);
 	}
 }

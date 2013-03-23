@@ -23,6 +23,7 @@ public class NoteChangedEvent extends GwtEvent<INoteChangedHandler> {
 
 	@Override
 	protected void dispatch(INoteChangedHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onNoteChanged(this);
 	}
 

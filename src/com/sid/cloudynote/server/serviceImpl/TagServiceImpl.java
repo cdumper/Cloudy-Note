@@ -14,7 +14,6 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.TagService;
-import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Tag;
@@ -83,65 +82,6 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 		}
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Tag> getPaginationData(String filter, String ordering,
-			long firstResult, long maxResult) throws NotLoggedInException {
-		checkLoggedIn();
-		List<Tag> result = null;
-		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		try {
-			pm.currentTransaction().begin();
-			Query query = GSQLUtil.getSelectSqlStr(pm, Tag.class, filter,
-					ordering, firstResult, maxResult);
-			Object obj = query.execute("root");
-			if (obj != null) {
-				result = (List<Tag>) obj;
-				result = new ArrayList<Tag>(pm.detachCopyAll(result));
-				result.size();
-			} else {
-				result = new ArrayList<Tag>();
-			}
-		} catch (Exception e) {
-		} finally {
-			if (pm.currentTransaction().isActive()) {
-				pm.currentTransaction().rollback();
-			}
-			pm.close();
-		}
-		return result;
-	}
-
-	@Override
-	public List<Tag> getPaginationData(String filter, String ordering)
-			throws NotLoggedInException {
-		long min = -1;
-		return getPaginationData(filter, ordering, min, min);
-	}
-
-	@Override
-	public List<Tag> getPaginationData(String filter, long firstResult,
-			long maxResult) throws NotLoggedInException {
-		return getPaginationData(filter, null, firstResult, maxResult);
-	}
-
-	@Override
-	public List<Tag> getPaginationData(long firstResult, long maxResult)
-			throws NotLoggedInException {
-		return getPaginationData(null,null,firstResult,maxResult);
-	}
-
-	@Override
-	public List<Tag> getPaginationData(String filter)
-			throws NotLoggedInException {
-		return getPaginationData(filter,null);
-	}
-
-	@Override
-	public List<Tag> getPaginationData() throws NotLoggedInException {
-		return getPaginationData(null);
-	}
-
 	private void checkLoggedIn() throws NotLoggedInException {
 		if (getUser() == null) {
 			throw new NotLoggedInException("Not logged in.");
@@ -179,7 +119,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Tag> getTags(List<Key> tagsKey) {
+	public List<Tag> getTags(List<Key> tagsKey) throws NotLoggedInException{
 		List<Tag> result = new ArrayList<Tag>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
@@ -192,7 +132,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService{
 	}
 
 	@Override
-	public List<Tag> createTags(List<Tag> tags) {
+	public List<Tag> createTags(List<Tag> tags) throws NotLoggedInException{
 		List<Tag> result = new ArrayList<Tag>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {

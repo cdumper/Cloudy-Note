@@ -12,6 +12,7 @@ public class NoNotesExistEvent extends GwtEvent<INoNotesExistHandler>{
 
 	@Override
 	protected void dispatch(INoNotesExistHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onNotesExistEvent(this);
 	}
 

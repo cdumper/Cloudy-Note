@@ -18,6 +18,7 @@ public class NewNoteEvent extends GwtEvent<INewNoteHandler>{
 
 	@Override
 	protected void dispatch(INewNoteHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onNewNote(this);
 	}
 }

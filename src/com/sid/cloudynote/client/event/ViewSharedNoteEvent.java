@@ -28,6 +28,7 @@ public class ViewSharedNoteEvent extends GwtEvent<IViewSharedNoteHandler>{
 
 	@Override
 	protected void dispatch(IViewSharedNoteHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onViewSharedNote(this);
 	}
 

@@ -13,6 +13,7 @@ public class TagChangedEvent extends GwtEvent<ITagChangedHandler>{
 
 	@Override
 	protected void dispatch(ITagChangedHandler handler) {
+		System.out.println(this.getClass().getName());
 		handler.onTagChanged(this);
 	}
 }

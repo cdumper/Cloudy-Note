@@ -1,12 +1,23 @@
 .left {
-	float: left !important;
-	margin-left: 165px
+	position: absolute;
+	margin-left: 15%;
 }
 
 .right {
 	float: right !important;
 	display: inline-block;
 	display: inline;
+}
+
+div.logo {
+	float: left !important;
+	width: 15%;
+}
+
+div.logo img{
+	width: 90px;
+	height: 60px;
+	margin: 0px 40px;
 }
 
 .header {

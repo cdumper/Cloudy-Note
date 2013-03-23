@@ -11,7 +11,6 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.NotebookService;
-import com.sid.cloudynote.server.GSQLUtil;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.Notebook;
@@ -81,122 +80,6 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 		} finally {
 			pm.close();
 		}
-	}
-
-	/**
-	 * @param filter
-	 *            查询过滤条件
-	 * @param ordering
-	 *            查询后排序条件
-	 * @param firstResult
-	 *            开始记录
-	 * @param maxResult
-	 *            检索结果的最大数量
-	 * @return 查询处理好的数据
-	 * @author kyle
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Notebook> getPaginationData(String filter, String ordering,
-			long firstResult, long maxResult) throws NotLoggedInException {
-		checkLoggedIn();
-		List<Notebook> result = new ArrayList<Notebook>();
-		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		try {
-			pm.currentTransaction().begin();
-			Query query = GSQLUtil.getSelectSqlStr(pm, Notebook.class, filter,
-					ordering, firstResult, maxResult);
-			Object obj = query.execute();
-			if (obj != null) {
-				result = (List<Notebook>) obj;
-				result = new ArrayList<Notebook>(pm.detachCopyAll(result));
-				result.size();
-			} else {
-				result = new ArrayList<Notebook>();
-			}
-
-		} catch (Exception e) {
-		} finally {
-			if (pm.currentTransaction().isActive()) {
-				pm.currentTransaction().rollback();
-			}
-			pm.close();
-		}
-		return result;
-	}
-
-	/**
-	 * @param filter
-	 *            查询过滤条件
-	 * @param odering
-	 *            查询后排序条件
-	 * @return 查询处理好的数据
-	 * @author kyle
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<Notebook> getPaginationData(String filter, String ordering)
-			throws NotLoggedInException {
-		long min = -1;
-		return getPaginationData(filter, ordering, min, min);
-	}
-
-	/**
-	 * 
-	 * @param filter
-	 *            查询过滤条件
-	 * @param firstResult
-	 *            开始记录
-	 * @param maxResult
-	 *            检索结果的最大数量
-	 * @return 查询处理好的数据
-	 * @author kyle
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<Notebook> getPaginationData(String filter, long firstResult,
-			long maxResult) throws NotLoggedInException {
-		return getPaginationData(filter, null, firstResult, maxResult);
-	}
-
-	/**
-	 * 
-	 * @param firstResult
-	 *            开始记录
-	 * @param maxResult
-	 *            检索结果的最大数量
-	 * @return 查询处理好的数据
-	 * @author kyle
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<Notebook> getPaginationData(long firstResult, long maxResult)
-			throws NotLoggedInException {
-		return getPaginationData(null, null, firstResult, maxResult);
-	}
-
-	/**
-	 * @param filter
-	 *            查询过滤条件
-	 * @return 查询处理好的数据
-	 * @author kyle
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<Notebook> getPaginationData(String filter)
-			throws NotLoggedInException {
-		return getPaginationData(filter, null);
-	}
-
-	/**
-	 * @return 查询处理好的数据
-	 * @author kyle
-	 * @throws NotLoggedInException
-	 */
-	@Override
-	public List<Notebook> getPaginationData() throws NotLoggedInException {
-		return getPaginationData(null);
 	}
 
 	@Override
