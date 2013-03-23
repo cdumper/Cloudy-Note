@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.service.UserService;
@@ -47,7 +48,6 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		IGroupsChangedHandler {
 	private final String SEARCHBOX_TEXT = "Search Friends...";
 	private Presenter presenter;
-	private List<User> allFriends = new ArrayList<User>();
 	private Set<FriendListItem> friendsItemSet;
 	private boolean isEditing = false;
 	private Group currentGroup;
@@ -122,18 +122,9 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		this.searchBox.addKeyUpHandler(new KeyUpHandler(){
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
-				System.out.println("Value changed");
 				presenter.findFriend(searchBox.getText());
 			}
 		});
-	}
-
-	public List<User> getAllFriends() {
-		return allFriends;
-	}
-
-	public void setAllFriends(List<User> allFriends) {
-		this.allFriends = allFriends;
 	}
 
 	public boolean isEditing() {
@@ -163,7 +154,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		if (!isEditing) {
 			currentGroup = null;
 			this.groupNameBox.setText("New Group");
-			this.presentFriends(allFriends,false);
+			this.presentFriends(new ArrayList<User>(DataManager.getAllFriends().values()),false);
 		} else {
 			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
@@ -201,7 +192,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiHandler("allFriendsButton")
 	void onAllFriends(ClickEvent e) {
 		this.currentGroup = null;
-		this.presentFriends(allFriends,false);
+		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends().values()),false);
 	}
 
 	@UiHandler("findFriendsButton")
@@ -284,7 +275,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		presenter.loadMyGroupList(AppController.get().getLoginInfo().getEmail());
-		this.presentFriends(allFriends,false);
+		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends().values()),false);
 	}
 
 	public void setGroupList(Set<Group> result) {

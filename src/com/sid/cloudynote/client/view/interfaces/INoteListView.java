@@ -12,8 +12,6 @@ public interface INoteListView {
 	public interface Presenter {
 		void onNoteItemSelected(InfoNote clickedItem);
 
-		void onNoteItemRightClicked(InfoNote clickedItem);
-
 		void loadNoteList(Notebook notebook);
 
 		void startEditing(InfoNote infoNote);

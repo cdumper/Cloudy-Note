@@ -13,6 +13,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.AppController;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.GroupService;
@@ -37,7 +38,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	@Override
 	public void findFriend(String string) {
 		List<User> result = new ArrayList<User>();
-		for(User user : view.getAllFriends()){
+		for(User user : DataManager.getAllFriends().values()){
 			if(user.getEmail().contains(string) || user.getNickname().contains(string)){
 				result.add(user);
 			}
@@ -57,6 +58,12 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			@Override
 			public void onSuccess(Set<Group> result) {
 				view.setGroupList(result);
+				
+				Map<Key, Group> myGroups = new HashMap<Key, Group>();
+				for(Group group : result) {
+					myGroups.put(group.getKey(), group);
+				}
+				DataManager.setMyGroups(myGroups);
 			}
 		});
 	}
@@ -142,7 +149,12 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			@Override
 			public void onSuccess(List<User> friends) {
 				view.presentFriends(friends, false);
-				view.setAllFriends(friends);
+				
+				Map<String, User> allFriends = new HashMap<String, User>();
+				for(User user : friends) {
+					allFriends.put(user.getEmail(), user);
+				}
+				DataManager.setAllFriends(allFriends);
 			}
 		});
 	}
@@ -184,7 +196,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 						for (User u : result) {
 							map.put(u, true);
 						}
-						for (User u : view.getAllFriends()) {
+						for (User u : DataManager.getAllFriends().values()) {
 							boolean exist = false; 
 							for (Entry<User, Boolean> m : map.entrySet()) {
 								if(m.getKey().getEmail().equals(u.getEmail())) {

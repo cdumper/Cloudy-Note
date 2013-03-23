@@ -5,7 +5,6 @@
 
 .right {
 	float: right !important;
-	display: inline-block;
 	display: inline;
 }
 
@@ -28,17 +27,17 @@ div.logo img{
 	color: #747474;
 	line-height: 18px;
 	font-family: helvetica, arial, sans-serif;
-	font-size: 13px;
 	text-align: left;
 	display: block;
 }
 
 .header .nav .button {
+	margin: 2px 0px;
 	border: 0px solid #006699;
 	background: #006699;
 	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
 	color: white;
-	font-size: 14px;
+	font-size: 16px;
 	font-family: Georgia, serif;
 	vertical-align: middle;
 }
@@ -53,7 +52,6 @@ div.logo img{
 }
 
 .header .nav .divider {
-	display: inline-block;
 	display: inline;
 	vertical-align: middle;
 	border-left: 1px solid #308b26;

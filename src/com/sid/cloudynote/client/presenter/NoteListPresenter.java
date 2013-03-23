@@ -44,12 +44,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	public void onNoteItemSelected(InfoNote clickedItem) {
 		eventBus.fireEvent(new NoteSelectionChangedEvent(clickedItem));
 	}
-
-	@Override
-	public void onNoteItemRightClicked(InfoNote clickedItem) {
-		// TODO show context menu to be able to delete note
-	}
-
+	
 	@Override
 	public void loadNoteList(final Notebook notebook) {
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
@@ -138,7 +133,11 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 			@Override
 			public void onSuccess(Set<Group> result) {
-				view.setGroupSet(result);
+				Map<Key, Group> allGroups = new HashMap<Key, Group>();
+				for(Group group : result){
+					allGroups.put(group.getKey(),group);
+				}
+				DataManager.setAllGroups(allGroups);
 			}
 		});
 	}
@@ -155,7 +154,11 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 			@Override
 			public void onSuccess(List<User> result) {
-				view.setFriendsList(result);
+				Map<String, User> allFriends = new HashMap<String, User>();
+				for(User user : result){
+					allFriends.put(user.getEmail(),user);
+				}
+				DataManager.setAllFriends(allFriends);
 			}
 		});
 	}

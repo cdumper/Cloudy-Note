@@ -8,11 +8,12 @@ import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
+import com.sid.cloudynote.shared.User;
 
 public class DataManager {
 	static Map<Key, Group> myGroups;
-
 	static Map<Key, Group> allGroups;
+	static Map<String, User> allFriends;
 	static Map<Key, Notebook> notebooks;
 	static Map<Key, InfoNote> notes;
 	static Key currentNoteKey;
@@ -121,5 +122,13 @@ public class DataManager {
 	
 	public static void setAllGroups(Map<Key, Group> allGroups) {
 		DataManager.allGroups = allGroups;
+	}
+
+	public static Map<String, User> getAllFriends() {
+		return allFriends;
+	}
+
+	public static void setAllFriends(Map<String, User> allFriends) {
+		DataManager.allFriends = allFriends;
 	}
 }

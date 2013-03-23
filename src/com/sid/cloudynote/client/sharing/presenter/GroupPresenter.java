@@ -1,12 +1,16 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.AppController;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
@@ -50,6 +54,12 @@ public class GroupPresenter implements Presenter, IGroupView.Presenter{
 			@Override
 			public void onSuccess(Set<Group> result) {
 				view.setGroupList(result);
+				
+				Map<Key, Group> allGroups = new HashMap<Key, Group>();
+				for(Group group : result) {
+					allGroups.put(group.getKey(), group);
+				}
+				DataManager.setAllGroups(allGroups);
 			}
 		});
 	}

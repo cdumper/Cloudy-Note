@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
@@ -79,8 +78,6 @@ public class NoteListView extends ResizeComposite implements
 		return container;
 	}
 
-	private Set<Group> groupsSet;
-	private List<User> friendsList;
 	private CellList<InfoNote> cellList;
 	private NoteCell noteCell;
 	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
@@ -233,9 +230,10 @@ public class NoteListView extends ResizeComposite implements
 			HTMLPanel scrollContent = new HTMLPanel("");
 
 			Label name = new Label("Share with individuals or groups");
-			if (groupsSet != null && groupsSet.size() != 0) {
+			List<Group> groupsList = new ArrayList<Group>(DataManager.getAllGroups().values());
+			if (groupsList != null && groupsList.size() != 0) {
 				scrollContent.add(new Label("Groups:"));
-				for (Group g : groupsSet) {
+				for (Group g : groupsList) {
 					GrantAccessItem item;
 					boolean exist = false;
 					int permission = 1;
@@ -255,7 +253,8 @@ public class NoteListView extends ResizeComposite implements
 					scrollContent.add(item.asWidget());
 				}
 			}
-
+			
+			List<User> friendsList = new ArrayList<User>(DataManager.getAllFriends().values());
 			if (friendsList != null && friendsList.size() != 0) {
 				scrollContent.add(new Label("Friends:"));
 				for (User user : friendsList) {
@@ -456,8 +455,7 @@ public class NoteListView extends ResizeComposite implements
 		noteCell.setPresenter(presenter);
 
 		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
-		presenter
-				.loadFriendsList(AppController.get().getLoginInfo().getEmail());
+		presenter.loadFriendsList(AppController.get().getLoginInfo().getEmail());
 	}
 
 	@Override
@@ -476,14 +474,6 @@ public class NoteListView extends ResizeComposite implements
 	@Override
 	public Widget asWidget() {
 		return this.pagerPanel;
-	}
-
-	public void setFriendsList(List<User> result) {
-		this.friendsList = result;
-	}
-
-	public void setGroupSet(Set<Group> result) {
-		this.groupsSet = result;
 	}
 
 	@Override
