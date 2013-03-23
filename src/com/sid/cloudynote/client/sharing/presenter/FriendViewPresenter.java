@@ -1,5 +1,6 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,14 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	}
 
 	@Override
-	public void findFriends() {
-		// TODO Auto-generated method stub
-
+	public void findFriend(String string) {
+		List<User> result = new ArrayList<User>();
+		for(User user : view.getAllFriends()){
+			if(user.getEmail().contains(string) || user.getNickname().contains(string)){
+				result.add(user);
+			}
+		}
+		view.presentFriends(result, false);
 	}
 
 	@Override
@@ -136,7 +142,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			@Override
 			public void onSuccess(List<User> friends) {
 				view.presentFriends(friends, false);
-				view.setAllFriendsList(friends);
+				view.setAllFriends(friends);
 			}
 		});
 	}
@@ -194,4 +200,5 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 					}
 				});
 	}
+
 }

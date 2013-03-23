@@ -4,15 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.User;
 
 public class UserServiceImpl extends RemoteServiceServlet implements
@@ -91,5 +101,55 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 			}
 		}
 		return friends;
+	}
+
+	@Override
+	public String addFriend(String email) throws NotLoggedInException {
+		checkLoggedIn();
+		User user = this.getUser(email);
+		if(user==null) {
+			this.inviteUser(email);
+			return "Fail";
+		} 
+		
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		User currentUser = (User)pm.getObjectById(User.class,getUser().getEmail());
+		currentUser.getFriends().add(user.getEmail());
+		
+		return "Success";
+	}
+	
+	private void checkLoggedIn() throws NotLoggedInException {
+		if (getUser() == null) {
+			throw new NotLoggedInException("Not logged in.");
+		}
+	}
+
+	private com.google.appengine.api.users.User getUser() {
+		com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
+		return userService.getCurrentUser();
+	}
+
+	@Override
+	public void inviteUser(String email) throws NotLoggedInException {
+		Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props, null);
+
+        String msgBody = getUser().getEmail()+" just invited you to use Cloudy Note.\n"+
+        		"Please click on the following link:\n"+
+        		"<a href='http://cloudy-note.appspot.com/'>http://cloudy-note.appspot.com/</a>";
+
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(getUser().getEmail()));
+            msg.addRecipient(Message.RecipientType.TO,
+                             new InternetAddress(email));
+            msg.setSubject("You're invited to use Cloudy Note");
+            msg.setText(msgBody);
+            Transport.send(msg);
+
+        } catch (AddressException e) {
+        } catch (MessagingException e) {
+        } 
 	}
 }

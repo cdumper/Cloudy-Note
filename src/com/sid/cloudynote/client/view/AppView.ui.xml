@@ -45,7 +45,6 @@
 					<s:FriendView ui:field='friendsView' />
 				</g:DeckPanel>
 			</g:center>
-			<!-- <g:south size='5'> <cn:BottomView ui:field='bottomView' /> </g:south> -->
 		</g:DockLayoutPanel>
 	</cn:Container>
 </ui:UiBinder> 

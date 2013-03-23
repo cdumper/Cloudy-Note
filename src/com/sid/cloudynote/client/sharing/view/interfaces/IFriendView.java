@@ -8,8 +8,12 @@ import com.sid.cloudynote.shared.Group;
 
 public interface IFriendView {
 	public interface Presenter {
-		//TODO
-		void findFriends();
+		/**
+		 * The method to search friend with typed search text
+		 * It will try to match the text with email AND nickname 
+		 * @param string
+		 */
+		void findFriend(String string);
 
 		/**
 		 * Retrieve the group list of user with given email

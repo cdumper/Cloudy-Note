@@ -27,6 +27,15 @@
 	background: #F0F0F0;
 }
 
+.groupList .secondBlock{
+	position: relative;
+	width: 100%;
+	height: 100%;
+	float: left;
+	background: #F0F0F0;
+	margin-top: 30px;
+}
+
 .groupList .label {
 	font-size: 16px;
 	width: 100%;
@@ -41,11 +50,12 @@
 
 .groupList .gwt-TextBox {
 	display: block;
-	width: 100%;
-	padding-left: 20%;
+	width: 50%;
+	height: 12px;
+	margin-left: 20%;
 	position: relative;
-	display: block;
 	text-align: left;
+	font-size: 14px;
 }
 
 .groupList .button {

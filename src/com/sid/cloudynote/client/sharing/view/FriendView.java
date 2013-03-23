@@ -9,23 +9,35 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.sharing.view.interfaces.IFriendView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.Group;
@@ -33,6 +45,7 @@ import com.sid.cloudynote.shared.User;
 
 public class FriendView extends ResizeComposite implements IFriendView,
 		IGroupsChangedHandler {
+	private final String SEARCHBOX_TEXT = "Search Friends...";
 	private Presenter presenter;
 	private List<User> allFriends = new ArrayList<User>();
 	private Set<FriendListItem> friendsItemSet;
@@ -62,7 +75,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiField
 	Button findFriendsButton;
 	@UiField
-	SuggestBox searchBox;
+	TextBox searchBox;
 	@UiField
 	HTMLPanel groupsPanel;
 	@UiField
@@ -89,6 +102,30 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 	public FriendView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		this.searchBox.setText(SEARCHBOX_TEXT);
+		
+		this.searchBox.addFocusHandler(new FocusHandler(){
+			@Override
+			public void onFocus(FocusEvent event) {
+				if(SEARCHBOX_TEXT.equals(searchBox.getText()))	searchBox.setText("");
+			}
+		});
+		
+		this.searchBox.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				if (searchBox.getText().trim().equals(""))	searchBox.setText(SEARCHBOX_TEXT);
+			}
+
+		});
+
+		this.searchBox.addKeyUpHandler(new KeyUpHandler(){
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				System.out.println("Value changed");
+				presenter.findFriend(searchBox.getText());
+			}
+		});
 	}
 
 	public List<User> getAllFriends() {
@@ -167,6 +204,65 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		this.presentFriends(allFriends,false);
 	}
 
+	@UiHandler("findFriendsButton")
+	void onFindFriends(ClickEvent e) {
+		this.currentGroup = null;
+		this.showFindFriendsDialog();
+	}
+	
+	private void showFindFriendsDialog() {
+		final DialogBox dialog = new DialogBox();
+		VerticalPanel content = new VerticalPanel();
+		dialog.setWidget(content);
+		
+		Label label = new Label("Find a friend by e-mail:");
+		final TextBox email = new TextBox();
+		
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		Button submit = new Button("Submit",new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				System.out.println("Click submit");
+				UserServiceAsync service = GWT.create(UserService.class);
+				service.addFriend(email.getText(), new AsyncCallback<String>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						if("Fail".equals(result)){
+							System.out.println("User does not exist! Invitation has been sent");
+						} else if ("Success".equals(result)){
+							System.out.println("Successfully added friend");
+						}
+						dialog.hide();
+					}
+				});
+			}
+		});
+		
+		Button cancel = new Button("Cancel",new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				dialog.hide();
+			}
+			
+		});
+		buttonPanel.add(cancel);
+		buttonPanel.add(submit);
+		
+		content.add(label);
+		content.add(email);
+		content.add(buttonPanel);
+		
+		dialog.center();
+	}
+
 	//switch between editing mode & non-editing mode
 	public void changeEditingMode() {
 		String style;
@@ -228,9 +324,5 @@ public class FriendView extends ResizeComposite implements IFriendView,
 				this.friendsListPanel.add(item);
 			}
 		}
-	}
-	
-	public void setAllFriendsList (List<User> friends) {
-		this.allFriends = friends;
 	}
 }

@@ -4,11 +4,15 @@ import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
+import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
 
 public class DataManager {
+	static Map<Key, Group> myGroups;
+
+	static Map<Key, Group> allGroups;
 	static Map<Key, Notebook> notebooks;
 	static Map<Key, InfoNote> notes;
 	static Key currentNoteKey;
@@ -101,5 +105,21 @@ public class DataManager {
 			}
 		}
 		return DataManager.currentNotebook;
+	}
+	
+	public static Map<Key, Group> getMyGroups() {
+		return myGroups;
+	}
+	
+	public static void setMyGroups(Map<Key, Group> myGroups) {
+		DataManager.myGroups = myGroups;
+	}
+	
+	public static Map<Key, Group> getAllGroups() {
+		return allGroups;
+	}
+	
+	public static void setAllGroups(Map<Key, Group> allGroups) {
+		DataManager.allGroups = allGroups;
 	}
 }
