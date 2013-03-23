@@ -11,112 +11,50 @@
 		<servlet-name>TagService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.TagServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>TagService</servlet-name>
-		<url-pattern>/cloudy_note/tagService</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>UserService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.UserServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>UserService</servlet-name>
-		<url-pattern>/cloudy_note/userService</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>GroupService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.GroupServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>GroupService</servlet-name>
-		<url-pattern>/cloudy_note/groupService</url-pattern>
-	</servlet-mapping>
-	
 	<servlet>
 		<servlet-name>ShareService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.ShareServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>ShareService</servlet-name>
-		<url-pattern>/cloudy_note/shareService</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>InfoNoteService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.InfoNoteServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>InfoNoteService</servlet-name>
-		<url-pattern>/cloudy_note/noteService</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>NotebookService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.NotebookServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>NotebookService</servlet-name>
-		<url-pattern>/cloudy_note/notebookService</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>loginService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.LoginServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>loginService</servlet-name>
-		<url-pattern>/cloudy_note/login</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>uploadService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.UploadServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>uploadService</servlet-name>
-		<url-pattern>/cloudy_note/uploadService</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>blobService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.BlobServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>blobService</servlet-name>
-		<url-pattern>/cloudy_note/blobService</url-pattern>
-	</servlet-mapping>
-
+	<servlet>
+		<servlet-name>noteSearchService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.InfoNoteSearchServiceImpl</servlet-class>
+	</servlet>
 	<servlet>
 		<servlet-name>uploadServlet</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.UploadServlet</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>uploadServlet</servlet-name>
-		<url-pattern>/cloudy_note/upload</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>serveServlet</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.ServeServlet</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>serveServlet</servlet-name>
-		<url-pattern>/cloudy_note/serve</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>SystemServiceServlet</servlet-name>
 		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
@@ -126,6 +64,54 @@
 		</init-param>
 	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>TagService</servlet-name>
+		<url-pattern>/cloudy_note/tagService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UserService</servlet-name>
+		<url-pattern>/cloudy_note/userService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>GroupService</servlet-name>
+		<url-pattern>/cloudy_note/groupService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ShareService</servlet-name>
+		<url-pattern>/cloudy_note/shareService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>InfoNoteService</servlet-name>
+		<url-pattern>/cloudy_note/noteService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>NotebookService</servlet-name>
+		<url-pattern>/cloudy_note/notebookService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>loginService</servlet-name>
+		<url-pattern>/cloudy_note/login</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>uploadService</servlet-name>
+		<url-pattern>/cloudy_note/uploadService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>blobService</servlet-name>
+		<url-pattern>/cloudy_note/blobService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>noteSearchService</servlet-name>
+		<url-pattern>/cloudy_note/noteSearchService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>uploadServlet</servlet-name>
+		<url-pattern>/cloudy_note/upload</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>serveServlet</servlet-name>
+		<url-pattern>/cloudy_note/serve</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>SystemServiceServlet</servlet-name>
 		<url-pattern>/_ah/spi/*</url-pattern>

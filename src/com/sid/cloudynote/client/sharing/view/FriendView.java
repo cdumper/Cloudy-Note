@@ -103,23 +103,25 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	public FriendView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.searchBox.setText(SEARCHBOX_TEXT);
-		
-		this.searchBox.addFocusHandler(new FocusHandler(){
+
+		this.searchBox.addFocusHandler(new FocusHandler() {
 			@Override
 			public void onFocus(FocusEvent event) {
-				if(SEARCHBOX_TEXT.equals(searchBox.getText()))	searchBox.setText("");
+				if (SEARCHBOX_TEXT.equals(searchBox.getText()))
+					searchBox.setText("");
 			}
 		});
-		
+
 		this.searchBox.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				if (searchBox.getText().trim().equals(""))	searchBox.setText(SEARCHBOX_TEXT);
+				if (searchBox.getText().trim().equals(""))
+					searchBox.setText(SEARCHBOX_TEXT);
 			}
 
 		});
 
-		this.searchBox.addKeyUpHandler(new KeyUpHandler(){
+		this.searchBox.addKeyUpHandler(new KeyUpHandler() {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
 				presenter.findFriend(searchBox.getText());
@@ -154,12 +156,12 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		if (!isEditing) {
 			currentGroup = null;
 			this.groupNameBox.setText("New Group");
-			this.presentFriends(new ArrayList<User>(DataManager.getAllFriends().values()),false);
+			this.presentFriends(new ArrayList<User>(DataManager.getAllFriends()
+					.values()), false);
 		} else {
 			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
-			String userEmail = AppController.get().getLoginInfo()
-					.getEmail();
+			String userEmail = AppController.get().getLoginInfo().getEmail();
 			Set<String> members = new HashSet<String>();
 			for (FriendListItem item : friendsItemSet) {
 				if (item.getSelected()) {
@@ -172,7 +174,8 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			if (currentGroup == null) {
 				presenter.createGroup(groupName, userEmail, members);
 			} else {
-				presenter.modifyGroup(currentGroup.getKey(), groupName, members);
+				presenter
+						.modifyGroup(currentGroup.getKey(), groupName, members);
 			}
 		}
 		changeEditingMode();
@@ -183,7 +186,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		this.groupNameBox.setText(this.currentGroup.getName());
 		presenter.editGroup(this.currentGroup);
 	}
-	
+
 	@UiHandler("deleteGroupButton")
 	void onDeleteGroup(ClickEvent e) {
 		presenter.deleteGroup(this.currentGroup);
@@ -192,7 +195,8 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiHandler("allFriendsButton")
 	void onAllFriends(ClickEvent e) {
 		this.currentGroup = null;
-		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends().values()),false);
+		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends()
+				.values()), false);
 	}
 
 	@UiHandler("findFriendsButton")
@@ -200,23 +204,23 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		this.currentGroup = null;
 		this.showFindFriendsDialog();
 	}
-	
+
 	private void showFindFriendsDialog() {
 		final DialogBox dialog = new DialogBox();
 		VerticalPanel content = new VerticalPanel();
 		dialog.setWidget(content);
-		
+
 		Label label = new Label("Find a friend by e-mail:");
 		final TextBox email = new TextBox();
-		
+
 		HorizontalPanel buttonPanel = new HorizontalPanel();
-		Button submit = new Button("Submit",new ClickHandler(){
+		Button submit = new Button("Submit", new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				System.out.println("Click submit");
 				UserServiceAsync service = GWT.create(UserService.class);
-				service.addFriend(email.getText(), new AsyncCallback<String>(){
+				service.addFriend(email.getText(), new AsyncCallback<String>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -225,9 +229,10 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 					@Override
 					public void onSuccess(String result) {
-						if("Fail".equals(result)){
-							System.out.println("User does not exist! Invitation has been sent");
-						} else if ("Success".equals(result)){
+						if ("Fail".equals(result)) {
+							System.out
+									.println("User does not exist! Invitation has been sent");
+						} else if ("Success".equals(result)) {
 							System.out.println("Successfully added friend");
 						}
 						dialog.hide();
@@ -235,26 +240,26 @@ public class FriendView extends ResizeComposite implements IFriendView,
 				});
 			}
 		});
-		
-		Button cancel = new Button("Cancel",new ClickHandler(){
+
+		Button cancel = new Button("Cancel", new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				dialog.hide();
 			}
-			
+
 		});
 		buttonPanel.add(cancel);
 		buttonPanel.add(submit);
-		
+
 		content.add(label);
 		content.add(email);
 		content.add(buttonPanel);
-		
+
 		dialog.center();
 	}
 
-	//switch between editing mode & non-editing mode
+	// switch between editing mode & non-editing mode
 	public void changeEditingMode() {
 		String style;
 		if (this.isEditing) {
@@ -274,8 +279,10 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
-		presenter.loadMyGroupList(AppController.get().getLoginInfo().getEmail());
-		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends().values()),false);
+		presenter
+				.loadMyGroupList(AppController.get().getLoginInfo().getEmail());
+		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends()
+				.values()), false);
 	}
 
 	public void setGroupList(Set<Group> result) {
@@ -292,25 +299,26 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			this.groupsPanel.add(button);
 		}
 	}
-	
+
 	public void presentFriends(List<User> users, Boolean checked) {
-		Map<User,Boolean> map = new HashMap<User, Boolean>();
-		for(User u : users){
+		Map<User, Boolean> map = new HashMap<User, Boolean>();
+		for (User u : users) {
 			map.put(u, checked);
 		}
 		this.presentFriends(map);
 	}
 
-	public void presentFriends(Map<User,Boolean> users) {
+	public void presentFriends(Map<User, Boolean> users) {
 		if (friendsItemSet == null) {
 			friendsItemSet = new HashSet<FriendListItem>();
 		}
 		if (users != null) {
 			friendsItemSet.clear();
 			this.friendsListPanel.clear();
-			
-			for (Entry<User,Boolean> user : users.entrySet()) {
-				FriendListItem item = new FriendListItem(user.getKey(),user.getValue());
+
+			for (Entry<User, Boolean> user : users.entrySet()) {
+				FriendListItem item = new FriendListItem(user.getKey(),
+						user.getValue());
 				friendsItemSet.add(item);
 				this.friendsListPanel.add(item);
 			}

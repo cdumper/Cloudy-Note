@@ -11,12 +11,17 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.StatusCode;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.InfoNoteService;
+import com.sid.cloudynote.server.DocumentManager;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
@@ -33,7 +38,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	private static final long serialVersionUID = -1560433333437871362L;
 
 	/**
-	 * 添加实体
+	 * Create a note
 	 * 
 	 * @throws NotLoggedInException
 	 */
@@ -48,6 +53,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			note.setUser(getUser());
 			pm.makePersistent(note);
 			pm.currentTransaction().commit();
+
+			createDocumentForNote(note);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -59,7 +66,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	}
 
 	/**
-	 * 删除实体
+	 * Delete a note
 	 * 
 	 * @throws NotLoggedInException
 	 */
@@ -73,6 +80,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
 				pm.deletePersistent(entity);
+				deleteDocumentForNote(entity);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,7 +90,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	}
 
 	/**
-	 * 更新实体
+	 * Update a note
 	 * 
 	 * @throws NotLoggedInException
 	 */
@@ -99,6 +107,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.makePersistent(note);
 			}
 			pm.currentTransaction().commit();
+			createDocumentForNote(note);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -108,6 +117,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	/**
+	 * Move a note to another notebook
+	 */
 	@Override
 	public void moveNoteTo(InfoNote note, Notebook notebook)
 			throws NotLoggedInException {
@@ -139,6 +151,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	/**
+	 * Get notes in a notebook
+	 */
 	@SuppressWarnings("unchecked")
 	public List<InfoNote> getNotes(Notebook notebook)
 			throws NotLoggedInException {
@@ -165,17 +180,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 
-	private void checkLoggedIn() throws NotLoggedInException {
-		if (getUser() == null) {
-			throw new NotLoggedInException("Not logged in.");
-		}
-	}
-
-	private User getUser() {
-		UserService userService = UserServiceFactory.getUserService();
-		return userService.getCurrentUser();
-	}
-
+	/**
+	 * Get all the public notes
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<InfoNote> getPublicNotes() throws NotLoggedInException {
@@ -200,6 +207,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 
+	/**
+	 * Get all the notes shared with current logged in user
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<InfoNote> getSharedNotes(String email)
@@ -234,6 +244,11 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 
+	/**
+	 * Get notes with a set of keys
+	 * @param keys
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public List<InfoNote> getNotes(Set<Key> keys) {
 		List<InfoNote> result = new ArrayList<InfoNote>();
@@ -261,6 +276,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 
+	/**
+	 * Change the visibility of a list of notes to make them public
+	 */
 	@Override
 	public void makeNotesPublic(List<InfoNote> notes)
 			throws NotLoggedInException {
@@ -281,33 +299,40 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	}
 
 	// TODO
+	/**
+	 * Verify the current logged in user whether or not has the edit access to a note 
+	 */
 	@Override
-	public boolean verifyEditAccess(InfoNote infoNote) throws NotLoggedInException {
+	public boolean verifyEditAccess(InfoNote infoNote)
+			throws NotLoggedInException {
 		this.checkLoggedIn();
 		// com.sid.cloudynote.shared.User user = AppController.get()
 		// .getLoginInfo();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		boolean flag = false;
-		
-		//verify the user access
+
+		// verify the user access
 		String userEmail = this.getUser().getEmail();
-		InfoNote note = pm.detachCopy(pm.getObjectById(InfoNote.class,infoNote.getKey()));
+		InfoNote note = pm.detachCopy(pm.getObjectById(InfoNote.class,
+				infoNote.getKey()));
 		if (note.getUserAccess().containsKey(userEmail)) {
-			if (note.getUserAccess().get(userEmail) == 1){
-				//read-only access
+			if (note.getUserAccess().get(userEmail) == 1) {
+				// read-only access
 				flag = false;
 			} else if (note.getUserAccess().get(userEmail) == 2) {
-				//write access
+				// write access
 				flag = true;
 				return flag;
 			}
 		}
-		
-		//verify the group access
-		for(Entry<Key,Integer> entry : note.getGroupAccess().entrySet()) {
+
+		// verify the group access
+		for (Entry<Key, Integer> entry : note.getGroupAccess().entrySet()) {
 			if (entry.getValue() == 2) {
-				Group group = pm.detachCopy(pm.getObjectById(Group.class,entry.getKey()));
-				if(group.getOwner().equals(userEmail) || group.getMembers().contains(userEmail)){
+				Group group = pm.detachCopy(pm.getObjectById(Group.class,
+						entry.getKey()));
+				if (group.getOwner().equals(userEmail)
+						|| group.getMembers().contains(userEmail)) {
 					flag = true;
 					return flag;
 				}
@@ -316,18 +341,17 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		return flag;
 	}
 
+	/**
+	 * Grant access to the current logged in user to a list of notes
+	 */
 	@Override
-	public void addUserAccessEntry(List<InfoNote> notes, Map<String,Integer> access) throws NotLoggedInException {
+	public void addUserAccessEntry(List<InfoNote> notes,
+			Map<String, Integer> access) throws NotLoggedInException {
 		this.checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 
-		// if (!getUser().getEmail().equals(note.getUser().getEmail())) {
-		// GWT.log("Permission denied to add user access entry. Not owner of note:"
-		// + note.getKey() + " Request from " + getUser().getEmail());
-		// return;
-		// }
 		for (InfoNote note : notes) {
-			for(Entry<String, Integer> entry : access.entrySet()) {
+			for (Entry<String, Integer> entry : access.entrySet()) {
 				note.getUserAccess().put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -346,7 +370,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void addGroupAccessEntry(List<InfoNote> notes, Map<Key,Integer> access) throws NotLoggedInException {
+	public void addGroupAccessEntry(List<InfoNote> notes,
+			Map<Key, Integer> access) throws NotLoggedInException {
 		this.checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 
@@ -356,7 +381,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		// return;
 		// }
 		for (InfoNote note : notes) {
-			for(Entry<Key, Integer> entry : access.entrySet()) {
+			for (Entry<Key, Integer> entry : access.entrySet()) {
 				note.getGroupAccess().put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -373,7 +398,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.close();
 		}
 	}
-	
 
 	@Override
 	public List<InfoNote> getNotesInGroup(Key groupKey)
@@ -381,10 +405,10 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		this.checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		List<InfoNote> notes = new ArrayList<InfoNote>();
-		Group group = pm.detachCopy(pm.getObjectById(Group.class,groupKey));
-		if(group.getAccess()!=null) {
-			for(Key key: group.getAccess().keySet()) {
-				notes.add(pm.detachCopy(pm.getObjectById(InfoNote.class,key)));
+		Group group = pm.detachCopy(pm.getObjectById(Group.class, groupKey));
+		if (group.getAccess() != null) {
+			for (Key key : group.getAccess().keySet()) {
+				notes.add(pm.detachCopy(pm.getObjectById(InfoNote.class, key)));
 			}
 		}
 		return notes;
@@ -397,13 +421,56 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		List<InfoNote> notes = new ArrayList<InfoNote>();
 		Query q = pm.newQuery(InfoNote.class);
 		q.setFilter("tags.contains(tagParam)");
-		q.declareParameters(Key.class.getName()+" tagParam");
+		q.declareParameters(Key.class.getName() + " tagParam");
 		Object o = q.execute(tag.getKey());
-		if(o!=null) {
+		if (o != null) {
 			notes = (List<InfoNote>) o;
 			notes = new ArrayList<InfoNote>(pm.detachCopyAll(notes));
 			notes.size();
 		}
 		return notes;
+	}
+	
+	/**
+	 * Method to create a searchable document for note
+	 * @param note
+	 */
+	private void createDocumentForNote(InfoNote note) {
+		Document document = Document
+				.newBuilder()
+				.setId(note.getKey().toString())
+				.addField(
+						Field.newBuilder().setName("title")
+								.setText(note.getTitle()))
+				.addField(
+						Field.newBuilder().setName("content")
+								.setHTML(note.getContent())).build();
+		try {
+			DocumentManager.getIndex().put(document);
+		} catch (PutException e) {
+			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
+					.getCode())) {
+				DocumentManager.getIndex().put(document);
+			}
+		}
+	}
+
+	private void deleteDocumentForNote(InfoNote entity) {
+		try {
+			DocumentManager.getIndex().delete(entity.getKey().toString());
+		} catch (RuntimeException e) {
+		    GWT.log("Failed to delete document");
+		}
+	}
+	
+	private void checkLoggedIn() throws NotLoggedInException {
+		if (getUser() == null) {
+			throw new NotLoggedInException("Not logged in.");
+		}
+	}
+
+	private User getUser() {
+		UserService userService = UserServiceFactory.getUserService();
+		return userService.getCurrentUser();
 	}
 }
