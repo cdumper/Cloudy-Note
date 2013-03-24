@@ -24,6 +24,7 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.service.BlobService;
 import com.sid.cloudynote.client.service.BlobServiceAsync;
@@ -99,6 +100,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 					public void onSuccess(Void result) {
 						eventBus.fireEvent(new NoteChangedEvent(DataManager
 								.getCurrentNotebook()));
+						eventBus.fireEvent(new NotebookChangedEvent());
 						eventBus.fireEvent(new EditNoteDoneEvent());
 						GWT.log("New InfoNote added successfully!");
 					}

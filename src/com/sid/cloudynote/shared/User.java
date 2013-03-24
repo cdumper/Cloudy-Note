@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -28,6 +29,8 @@ public class User implements Serializable {
 	@Persistent
 	private String nickname;
 	@Persistent
+	private int totalNotes = 0;
+	@Persistent
 	private boolean loggedIn = false;
 	@Persistent
 	private Set<Key> groups;
@@ -35,7 +38,9 @@ public class User implements Serializable {
 	private Set<String> friends;
 	@Persistent(serialized = "true", defaultFetchGroup = "true")
 	private Map<Key, Integer> access = new HashMap<Key, Integer>();
+	@NotPersistent
 	private String loginUrl;
+	@NotPersistent
 	private String logoutUrl;
 
 	public User(){
@@ -113,6 +118,14 @@ public class User implements Serializable {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public int getTotalNotes() {
+		return totalNotes;
+	}
+
+	public void setTotalNotes(int totalNotes) {
+		this.totalNotes = totalNotes;
 	}
 
 }

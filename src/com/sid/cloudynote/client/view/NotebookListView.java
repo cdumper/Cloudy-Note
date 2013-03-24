@@ -52,6 +52,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
@@ -338,7 +339,7 @@ public class NotebookListView extends ResizeComposite implements
 
 			sb.appendHtmlConstant("<div style=\"background-color:#EAEDEF;color:#555E64;display:inline-block;\">");
 			sb.appendHtmlConstant(imageHtml);
-			sb.appendEscaped(notebook.getName());
+			sb.appendEscaped(notebook.getName()+" ("+notebook.getTotalNotes()+")");
 			sb.appendHtmlConstant("</div>");
 		}
 	}
@@ -639,6 +640,7 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	private void initialNotebooksList() {
+		this.allNotes.setTotalNotes(AppController.get().getLoginInfo().getTotalNotes());
 		notebookCell = new NotebookCell(images.drafts(), presenter);
 		// TODO style notebooks cell lsit
 		notebooksCellList = new CellList<Notebook>(notebookCell,GWT.<MyCellListResources> create(MyCellListResources.class),

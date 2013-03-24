@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.BlobService;
 import com.sid.cloudynote.client.service.BlobServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
@@ -70,6 +71,7 @@ public class NonEditableNotePresenter implements Presenter, INonEditableNoteView
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Successully deleted note:" + note.getTitle());
+				eventBus.fireEvent(new NotebookChangedEvent());
 				eventBus.fireEvent(new NoteChangedEvent(DataManager
 						.getCurrentNotebook()));
 			}

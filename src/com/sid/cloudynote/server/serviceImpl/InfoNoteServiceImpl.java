@@ -52,9 +52,19 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			note.setCreatedTime(new Date());
 			note.setLastModifiedTime(new Date());
 			note.setUser(getUser());
+			
+			//Add one to totalNotes of user & notebook
+			com.sid.cloudynote.shared.User user = pm.getObjectById(com.sid.cloudynote.shared.User.class, getUser().getEmail());
+			user.setTotalNotes(user.getTotalNotes()+1);
+			Notebook notebook = pm.getObjectById(Notebook.class, note.getNotebook().getKey());
+			notebook.setTotalNotes(notebook.getTotalNotes()+1);
+			
 			pm.makePersistent(note);
+			pm.makePersistent(notebook);
+			pm.makePersistent(user);
 			pm.currentTransaction().commit();
-
+			
+			//create a searchable document for the newly added note
 			createDocumentForNote(note);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,16 +82,24 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @throws NotLoggedInException
 	 */
 	@Override
-	public void delete(InfoNote entity) throws NotLoggedInException {
+	public void delete(InfoNote note) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			// check the owner of the note is the current user
-			if (!entity.getUser().equals(getUser())) {
+			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
-				pm.deletePersistent(entity);
-				deleteDocumentForNote(entity);
+				//Delete one to totalNotes of user & notebook
+				com.sid.cloudynote.shared.User user = pm.getObjectById(com.sid.cloudynote.shared.User.class, getUser().getEmail());
+				user.setTotalNotes(user.getTotalNotes()-1);
+				Notebook notebook = pm.getObjectById(Notebook.class, note.getNotebook().getKey());
+				notebook.setTotalNotes(notebook.getTotalNotes()-1);
+				
+				pm.deletePersistent(note);
+				pm.makePersistent(notebook);
+				pm.makePersistent(user);
+				deleteDocumentForNote(note);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

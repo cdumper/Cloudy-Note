@@ -29,6 +29,8 @@ public class Notebook implements Serializable{
 	private User user;
 	@Persistent
 	private String name;
+	@Persistent
+	private int totalNotes = 0;
 	@Persistent(mappedBy="notebook")
     @Element(dependent = "true")
 	private List<InfoNote> notes;
@@ -72,6 +74,14 @@ public class Notebook implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getTotalNotes() {
+		return totalNotes;
+	}
+
+	public void setTotalNotes(int totalNotes) {
+		this.totalNotes = totalNotes;
 	}
 
 	public List<InfoNote> getNotes() {

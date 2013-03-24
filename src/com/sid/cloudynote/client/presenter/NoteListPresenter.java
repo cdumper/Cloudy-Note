@@ -15,6 +15,7 @@ import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.client.service.GroupServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteSearchService;
@@ -125,6 +126,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 			@Override
 			public void onSuccess(Void result) {
+				eventBus.fireEvent(new NotebookChangedEvent());
 				loadNoteList(DataManager.getCurrentNotebook());
 			}
 		});
