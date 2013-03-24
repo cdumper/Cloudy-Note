@@ -25,7 +25,7 @@ div.logo img{
 
 .header .nav {
 	color: #747474;
-	line-height: 18px;
+	line-height: 16px;
 	font-family: helvetica, arial, sans-serif;
 	text-align: left;
 	display: block;
@@ -36,15 +36,15 @@ div.logo img{
 	border: 0px solid #006699;
 	background: #006699;
 	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
-	color: white;
-	font-size: 16px;
+	color: #D8DFEA;
+	font-size: 14px;
 	font-family: Georgia, serif;
 	vertical-align: middle;
 }
 
 .header .nav .button:hover {
 	background: #327099;
-	color: #ffffff;
+	color: #D8DFEA;
 }
 
 .header .nav .button:active {

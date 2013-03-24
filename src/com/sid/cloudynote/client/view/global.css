@@ -11,7 +11,8 @@ body {
 }
 
 a:link,a:visited,a:hover,a:active {
-	color: #000;
+	color: #D8DFEA;
+	font-size: small;
 }
 
 .gwt-DialogBox {

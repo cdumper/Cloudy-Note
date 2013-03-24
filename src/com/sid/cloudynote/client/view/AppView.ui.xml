@@ -32,8 +32,7 @@
 							<div class="{style.divider}"></div>
 							<g:Anchor ui:field="user">Welcome back, foo@example.com</g:Anchor>
 							<div class="{style.divider}"></div>
-							<g:Anchor ui:field='signOutLink'>Sign Out
-							</g:Anchor>
+							<g:Anchor ui:field='signOutLink'>Sign Out</g:Anchor>
 						</div>
 					</div>
 				</g:HTMLPanel>
