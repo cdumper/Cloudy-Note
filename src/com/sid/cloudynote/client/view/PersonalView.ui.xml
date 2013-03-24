@@ -5,14 +5,11 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
 
 	<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
-		<!-- <g:north size="6">
-			<cn:SearchView ui:field='searchView' />
-		</g:north> -->
 		<g:west size='15'>
 			<cn:NotebookListView ui:field='notebookListView' />
 		</g:west>
 		<g:center>
-			<g:SplitLayoutPanel>
+			<g:DockLayoutPanel>
 				<g:west size='300'>
 					<cn:NoteListView ui:field='noteListView' />
 				</g:west>
@@ -20,7 +17,7 @@
 				<g:center>
 					<cn:NoteView ui:field='noteView' height="100%" width="100%" />
 				</g:center>
-			</g:SplitLayoutPanel>
+			</g:DockLayoutPanel>
 		</g:center>
 	</g:DockLayoutPanel>
 </ui:UiBinder>

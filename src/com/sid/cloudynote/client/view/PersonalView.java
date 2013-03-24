@@ -59,19 +59,15 @@ public class PersonalView extends Composite implements Presenter {
 				this.notebookListView, eventBus);
 		NoteListPresenter noteListPresenter = new NoteListPresenter(
 				this.noteListView, eventBus);
-//		SearchPresenter searchPresenter = new SearchPresenter(this.searchView,
-//				eventBus);
 		NotePresenter notePresenter = new NotePresenter(
 				this.noteView, eventBus);
 
 		this.noteListView.setPresenter(noteListPresenter);
 		this.notebookListView.setPresenter(notebookListPresenter);
-//		this.searchView.setPresenter(searchPresenter);
 		this.noteView.setPresenter(notePresenter);
 
 		notebookListPresenter.go(notebookListView.getContainer());
 		noteListPresenter.go(noteListView.getContainer());
-//		searchPresenter.go(searchView.getContainer());
 		notePresenter.go(noteView.getContainer());
 	}
 	

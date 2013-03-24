@@ -36,8 +36,8 @@ import com.google.gwt.user.client.ui.DisclosureEvent;
 import com.google.gwt.user.client.ui.DisclosureHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DisclosurePanelImages;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -98,13 +98,15 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	@UiField
-	ScrollPanel content;
+	DockLayoutPanel content;
 	@UiField
-	HTMLPanel buttonPanel;
+	HorizontalPanel buttonPanel;
 	@UiField
 	Button newNotebookButton;
 	@UiField
 	Button newNoteButton;
+	@UiField
+	ScrollPanel scrollPanel;
 	@UiField
 	DisclosurePanel notebookPanel;
 //	@UiField

@@ -5,18 +5,30 @@
 		.container {
 			border: 1px solid #999;
 		}
+		
+		.labelContainer {
+			color: #404040;
+			height: 24px;
+			padding-top: 8px;
+			padding-left: 20px;
+		}
+		
 	</ui:style>
-	<cn:Container ui:field="container" addStyleNames="{style.container}">
-		<g:DockLayoutPanel unit='PCT'>
-			<g:north size='10'>
-				<g:VerticalPanel width="100%" height="100%">
+	<cn:Container ui:field="container">
+		<g:DockLayoutPanel unit='PCT' ui:field="content"
+			width="100%" height="100%">
+			<g:north size='7'>
+				<g:VerticalPanel width="100%" height="100%" >
 					<g:TextBox ui:field="searchBox">Search notes</g:TextBox>
-					<g:Label ui:field="label"></g:Label>
 				</g:VerticalPanel>
 			</g:north>
 			<g:center>
-				<cn:ShowMorePagerPanel ui:field='pagerPanel'
-					width="100%" />
+				<g:HTMLPanel height="100%" width="100%" addStyleNames="{style.container}">
+					<div class="{style.labelContainer}">
+						<g:Label ui:field="label"/>
+					</div>
+					<cn:ShowMorePagerPanel ui:field='pagerPanel' width="100%" />
+				</g:HTMLPanel>
 			</g:center>
 		</g:DockLayoutPanel>
 	</cn:Container>

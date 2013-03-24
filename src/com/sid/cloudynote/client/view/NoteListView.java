@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -36,6 +37,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -71,6 +73,10 @@ public class NoteListView extends ResizeComposite implements
 	ShowMorePagerPanel pagerPanel;
 	@UiField
 	Container container;
+	@UiField
+	DockLayoutPanel content;
+	@UiField
+	TextBox searchBox;
 	@UiField
 	Label label;
 
@@ -473,7 +479,7 @@ public class NoteListView extends ResizeComposite implements
 
 	@Override
 	public Widget asWidget() {
-		return this.pagerPanel;
+		return this.content;
 	}
 
 	@Override
