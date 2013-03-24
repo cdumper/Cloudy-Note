@@ -31,6 +31,8 @@ public interface INoteListView {
 		void shareNoteToUsersAndGroups(InfoNote note,
 				Map<String, Integer> userAccess, Map<Key, Integer> groupAccess);
 
+		void searchNotes(String value);
+
 	}
 
 	void setPresenter(Presenter presenter);

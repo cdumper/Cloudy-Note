@@ -16,6 +16,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -78,7 +80,7 @@ public class NoteListView extends ResizeComposite implements
 	@UiField
 	TextBox searchBox;
 	@UiField
-	Label label;
+	Label notebookLabel;
 
 	public Container getContainer() {
 		return container;
@@ -425,6 +427,8 @@ public class NoteListView extends ResizeComposite implements
 		initWidget(uiBinder.createAndBindUi(this));
 		Images images = GWT.create(Images.class);
 
+		bindSearchHandler();
+		
 		noteCell = new NoteCell(images.home());
 
 		cellList = new CellList<InfoNote>(noteCell, KEY_PROVIDER);
@@ -448,6 +452,15 @@ public class NoteListView extends ResizeComposite implements
 		dataProvider.addDataDisplay(cellList);
 		pagerPanel.setDisplay(cellList);
 		// rangeLabelPager.setDisplay(cellList);
+	}
+
+	private void bindSearchHandler() {
+		this.searchBox.addValueChangeHandler(new ValueChangeHandler<String>(){
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				presenter.searchNotes(event.getValue());
+			}
+		});
 	}
 
 	@Override
@@ -474,7 +487,7 @@ public class NoteListView extends ResizeComposite implements
 	}
 
 	public void setLabel(String text) {
-		this.label.setText(text);
+		this.notebookLabel.setText(text);
 	}
 
 	@Override

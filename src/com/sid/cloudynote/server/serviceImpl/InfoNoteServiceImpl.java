@@ -11,6 +11,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.PutException;
@@ -246,6 +247,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	/**
 	 * Get notes with a set of keys
+	 * 
 	 * @param keys
 	 * @return
 	 */
@@ -300,7 +302,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	// TODO
 	/**
-	 * Verify the current logged in user whether or not has the edit access to a note 
+	 * Verify the current logged in user whether or not has the edit access to a
+	 * note
 	 */
 	@Override
 	public boolean verifyEditAccess(InfoNote infoNote)
@@ -430,21 +433,25 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 		return notes;
 	}
-	
+
 	/**
 	 * Method to create a searchable document for note
+	 * 
 	 * @param note
 	 */
 	private void createDocumentForNote(InfoNote note) {
 		Document document = Document
 				.newBuilder()
-				.setId(note.getKey().toString())
+				.setId(KeyFactory.keyToString(note.getKey()))
 				.addField(
 						Field.newBuilder().setName("title")
 								.setText(note.getTitle()))
 				.addField(
 						Field.newBuilder().setName("content")
-								.setHTML(note.getContent())).build();
+								.setHTML(note.getContent()))
+				.addField(
+						Field.newBuilder().setName("owner")
+								.setText(note.getUser().getEmail())).build();
 		try {
 			DocumentManager.getIndex().put(document);
 		} catch (PutException e) {
@@ -459,10 +466,10 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		try {
 			DocumentManager.getIndex().delete(entity.getKey().toString());
 		} catch (RuntimeException e) {
-		    GWT.log("Failed to delete document");
+			GWT.log("Failed to delete document");
 		}
 	}
-	
+
 	private void checkLoggedIn() throws NotLoggedInException {
 		if (getUser() == null) {
 			throw new NotLoggedInException("Not logged in.");

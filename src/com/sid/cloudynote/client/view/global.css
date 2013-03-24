@@ -15,6 +15,18 @@ a:link,a:visited,a:hover,a:active {
 	font-size: small;
 }
 
+.gwt-Button {
+	height: 28px;
+	font-size: 13px;
+	font-weight: normal;
+	font-family: Caecilia-bold,Helvetica,sans-serif;
+	background: #65727C;
+}
+
+.gwt-Button:hover {
+	background: #8DA1B0;
+}
+
 .gwt-DialogBox {
 	background: #F0F0F0;
 	border: 1px solid #666;
@@ -109,17 +121,18 @@ a:link,a:visited,a:hover,a:active {
 }
 
 .gwt-DisclosurePanel {
+	font-family: Helvetica,Arial,sans-serif;
 	color: #555E64;	
 	background-color: #EAEDEF;
 }
 
 .gwt-DisclosurePanel .header {
-	background-color: #C9D1D7;
+	border-bottom: 1px solid #CED8DF;
+	background-color: #E3E7E9;
 	padding-top: 8px;
 	padding-left: 10px;
 	height: 24px;
 	vertical-align: middle;
-	border-bottom: #CED8DF;
 }
 
 .gwt-DisclosurePanel .content {
