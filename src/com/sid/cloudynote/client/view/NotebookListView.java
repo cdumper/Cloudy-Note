@@ -25,6 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.CellList.Style;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Event;
@@ -74,6 +75,16 @@ public class NotebookListView extends ResizeComposite implements
 	private static NotebookListPanelUiBinder uiBinder = GWT
 			.create(NotebookListPanelUiBinder.class);
 
+	//TODO style celllist
+	interface MyCellListResources extends CellList.Resources {
+		@Source({"CellList.css"})
+		@Override
+		public CellListStyle cellListStyle();
+		
+		interface CellListStyle extends CellList.Style{
+		}
+	}
+
 	public interface Images extends ClientBundle, Tree.Resources {
 		ImageResource drafts();
 
@@ -89,7 +100,7 @@ public class NotebookListView extends ResizeComposite implements
 		// @Source("noimage.png")
 		// ImageResource treeLeaf();
 	}
-	
+
 	@UiField
 	Container container;
 
@@ -109,12 +120,12 @@ public class NotebookListView extends ResizeComposite implements
 	ScrollPanel scrollPanel;
 	@UiField
 	DisclosurePanel notebookPanel;
-//	@UiField
-//	DisclosurePanelHeader notebookHeader;
+	// @UiField
+	// DisclosurePanelHeader notebookHeader;
 	@UiField
 	DisclosurePanel tagPanel;
-//	@UiField
-//	Header tagHeader;
+	// @UiField
+	// Header tagHeader;
 	@UiField
 	ShowMorePagerPanel pagerPanel;
 
@@ -141,7 +152,7 @@ public class NotebookListView extends ResizeComposite implements
 			return tag == null ? null : tag.getKey();
 		}
 	};
-	
+
 	@UiHandler("newNoteButton")
 	void onClickNewNote(ClickEvent e) {
 		presenter.onNewNoteButtonClicked();
@@ -154,6 +165,7 @@ public class NotebookListView extends ResizeComposite implements
 
 	static class NotebookCell extends AbstractCell<Notebook> {
 		private Presenter presenter;
+
 		public void setPresenter(Presenter presenter) {
 			this.presenter = presenter;
 		}
@@ -174,8 +186,9 @@ public class NotebookListView extends ResizeComposite implements
 
 			public void renameNotebook(String name) {
 				selectedNotebook.setName(name);
-				NotebookServiceAsync service = GWT.create(NotebookService.class);
-				service.modify(selectedNotebook, new AsyncCallback<Void>(){
+				NotebookServiceAsync service = GWT
+						.create(NotebookService.class);
+				service.modify(selectedNotebook, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -190,10 +203,11 @@ public class NotebookListView extends ResizeComposite implements
 			}
 
 			public void deleteNotebook() {
-				//TODO need to take into account the CASSCADE DELETE (deleting all the notes in the notebook)
-//				Notebook notebook = DataManager.getCurrentNotebook();
-				NotebookServiceAsync service = GWT.create(NotebookService.class);
-				service.delete(selectedNotebook, new AsyncCallback<Void>(){
+				// TODO need to take into account the CASSCADE DELETE (deleting
+				// all the notes in the notebook)
+				NotebookServiceAsync service = GWT
+						.create(NotebookService.class);
+				service.delete(selectedNotebook, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						GWT.log("Delete notebook failed!");
@@ -317,15 +331,20 @@ public class NotebookListView extends ResizeComposite implements
 		@Override
 		public void render(Context context, Notebook notebook,
 				SafeHtmlBuilder sb) {
-			if (notebook != null) {
-				sb.appendHtmlConstant(imageHtml);
-				sb.appendEscaped(notebook.getName());
+			if (notebook == null) {
+				return;
 			}
+
+			sb.appendHtmlConstant("<div style=\"background-color:#EAEDEF;color:#555E64;display:inline-block;\">");
+			sb.appendHtmlConstant(imageHtml);
+			sb.appendEscaped(notebook.getName());
+			sb.appendHtmlConstant("</div>");
 		}
 	}
 
 	static class TagCell extends AbstractCell<Tag> {
 		private Presenter presenter;
+
 		public void setPresenter(Presenter presenter) {
 			this.presenter = presenter;
 		}
@@ -419,7 +438,8 @@ public class NotebookListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					presenter.renameTag(tagContextMenu.selectedTag,name.getText());
+					presenter.renameTag(tagContextMenu.selectedTag,
+							name.getText());
 					dialog.hide();
 				}
 			}));
@@ -445,7 +465,8 @@ public class NotebookListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					System.out.println("delete tag : "+tagContextMenu.selectedTag.getName());
+					System.out.println("delete tag : "
+							+ tagContextMenu.selectedTag.getName());
 					presenter.deleteTag(tagContextMenu.selectedTag);
 					dialog.hide();
 				}
@@ -466,74 +487,77 @@ public class NotebookListView extends ResizeComposite implements
 		initialNotebooksList();
 		initialTagsList();
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	private class DisclosurePanelHeader extends HorizontalPanel
-	{
+	private class DisclosurePanelHeader extends HorizontalPanel {
 		private Image image;
+
 		public void setOpen(boolean isOpen) {
 			this.image = (isOpen ? images.disclosurePanelOpen().createImage()
-		              : images.disclosurePanelClosed().createImage());
+					: images.disclosurePanelClosed().createImage());
 			this.clear();
 			present();
 		}
 
 		private void present() {
 			add(this.image);
-	        add(this.html);
-	        add(this.button);
+			add(this.html);
+			add(this.button);
 		}
 
 		private HTML html;
 		Button button = new Button("$");
-		final DisclosurePanelImages images = (DisclosurePanelImages)
-				GWT.create(DisclosurePanelImages.class);
-	    public DisclosurePanelHeader(boolean isOpen, String html)
-	    {
-	    	// it has to add this piece of code otherwise the onBrowserEvent won't work
-	    	this.addDomHandler(new ContextMenuHandler(){
+		final DisclosurePanelImages images = (DisclosurePanelImages) GWT
+				.create(DisclosurePanelImages.class);
+
+		public DisclosurePanelHeader(boolean isOpen, String html) {
+			// it has to add this piece of code otherwise the onBrowserEvent
+			// won't work
+			this.addDomHandler(new ContextMenuHandler() {
 				@Override
 				public void onContextMenu(ContextMenuEvent event) {
 					System.out.println("context menu event");
 				}
-	    	}, ContextMenuEvent.getType());
-//	    	this.addDomHandler(new MouseUpHandler(){
-//				@Override
-//				public void onMouseUp(MouseUpEvent event) {
-//					if (event.getNativeButton()==NativeEvent.BUTTON_RIGHT){
-//						System.out.println("right button event");
-//					}
-//				}
-//	    	}, MouseUpEvent.getType());
-	    	
-	    	this.image = (isOpen ? images.disclosurePanelOpen().createImage()
-		              : images.disclosurePanelClosed().createImage());
-	    	this.html = new HTML(html);
-	    	button.setSize("5px", "5px");
-	        present();
-	    }
-	    
+			}, ContextMenuEvent.getType());
+			// this.addDomHandler(new MouseUpHandler(){
+			// @Override
+			// public void onMouseUp(MouseUpEvent event) {
+			// if (event.getNativeButton()==NativeEvent.BUTTON_RIGHT){
+			// System.out.println("right button event");
+			// }
+			// }
+			// }, MouseUpEvent.getType());
+
+			this.image = (isOpen ? images.disclosurePanelOpen().createImage()
+					: images.disclosurePanelClosed().createImage());
+			this.html = new HTML(html);
+			button.setSize("5px", "5px");
+			present();
+		}
+
 		@Override
 		public void onBrowserEvent(Event event) {
 			event.preventDefault();
 			event.stopPropagation();
-			if ("contextmenu".endsWith(event.getType())){
+			if ("contextmenu".endsWith(event.getType())) {
 				final PopupPanel popup = new PopupPanel(true);
 				VerticalPanel panel = new VerticalPanel();
 				popup.setPopupPosition(event.getClientX(), event.getClientY());
-				if ("Notebooks".equals(this.html.getText())){
-					panel.add(new Button("Add Notebook",new ClickHandler(){
+				if ("Notebooks".equals(this.html.getText())) {
+					panel.add(new Button("Add Notebook", new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							createNewDialog(true,false,"Create New Notebook").center();
+							createNewDialog(true, false, "Create New Notebook")
+									.center();
 							popup.hide();
 						}
 					}));
-				} else if ("Tags".equals(this.html.getText())){
-					panel.add(new Button("Add Tag",new ClickHandler(){
+				} else if ("Tags".equals(this.html.getText())) {
+					panel.add(new Button("Add Tag", new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							createNewDialog(false,true,"Create New Tag").center();
+							createNewDialog(false, true, "Create New Tag")
+									.center();
 							popup.hide();
 						}
 					}));
@@ -542,10 +566,11 @@ public class NotebookListView extends ResizeComposite implements
 				popup.show();
 			}
 		}
-	    
+
 	}
-	
-	private DialogBox createNewDialog(final boolean isNotebook,final boolean isTag,String title) {
+
+	private DialogBox createNewDialog(final boolean isNotebook,
+			final boolean isTag, String title) {
 		final DialogBox dialog = new DialogBox();
 		final TextBox name = new TextBox();
 		Button confirm = new Button("Confirm");
@@ -561,10 +586,10 @@ public class NotebookListView extends ResizeComposite implements
 		confirm.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (isNotebook){
+				if (isNotebook) {
 					presenter.createNewNotebook(name.getText());
 					dialog.hide();
-				} else if(isTag){
+				} else if (isTag) {
 					presenter.createNewTag(name.getText());
 					dialog.hide();
 				}
@@ -582,44 +607,40 @@ public class NotebookListView extends ResizeComposite implements
 
 	@SuppressWarnings("deprecation")
 	private void initialNotebookHeader() {
-		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,"Notebooks");
+		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,
+				"Notebooks");
 		notebookPanel.setHeader(header);
-		notebookPanel.addEventHandler(new DisclosureHandler()
-	    {
-	        public void onClose(DisclosureEvent event)
-	        {
-	        	header.setOpen(false);
-	        }
+		notebookPanel.addEventHandler(new DisclosureHandler() {
+			public void onClose(DisclosureEvent event) {
+				header.setOpen(false);
+			}
 
-	        public void onOpen(DisclosureEvent event)
-	        {
-	        	header.setOpen(true);
-	        }
-	    });
+			public void onOpen(DisclosureEvent event) {
+				header.setOpen(true);
+			}
+		});
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private void initialTagHeader() {
-		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,"Tags");
+		final DisclosurePanelHeader header = new DisclosurePanelHeader(true,
+				"Tags");
 		tagPanel.setHeader(header);
-		tagPanel.addEventHandler(new DisclosureHandler()
-	    {
-	        public void onClose(DisclosureEvent event)
-	        {
-	        	header.setOpen(false);
-	        }
+		tagPanel.addEventHandler(new DisclosureHandler() {
+			public void onClose(DisclosureEvent event) {
+				header.setOpen(false);
+			}
 
-	        public void onOpen(DisclosureEvent event)
-	        {
-	        	header.setOpen(true);
-	        }
-	    });
+			public void onOpen(DisclosureEvent event) {
+				header.setOpen(true);
+			}
+		});
 	}
 
 	private void initialNotebooksList() {
-		notebookCell = new NotebookCell(images.drafts(),presenter);
-
-		notebooksCellList = new CellList<Notebook>(notebookCell,
+		notebookCell = new NotebookCell(images.drafts(), presenter);
+		// TODO style notebooks cell lsit
+		notebooksCellList = new CellList<Notebook>(notebookCell,GWT.<MyCellListResources> create(MyCellListResources.class),
 				NOTEBOOK_KEY_PROVIDER);
 		notebooksCellList.setPageSize(30);
 		notebooksCellList
@@ -645,9 +666,11 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	private void initialTagsList() {
-		tagCell = new TagCell(images.templates(),presenter);
-
-		tagsCellList = new CellList<Tag>(tagCell, TAG_KEY_PROVIDER);
+		tagCell = new TagCell(images.templates(), presenter);
+		//TODO style tags cell list
+		CellList.Resources cellListRes = GWT.create(MyCellListResources.class);
+		tagsCellList = new CellList<Tag>(tagCell,cellListRes, TAG_KEY_PROVIDER);
+		
 		tagsCellList.setPageSize(30);
 		tagsCellList
 				.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
@@ -690,11 +713,11 @@ public class NotebookListView extends ResizeComposite implements
 		notebooks.clear();
 		notebooks.addAll(result);
 	}
-	
+
 	@Override
 	public void setTagList(List<Tag> result) {
-		Map<Key,Tag> tags = new HashMap<Key, Tag>();
-		for(Tag tag: result) {
+		Map<Key, Tag> tags = new HashMap<Key, Tag>();
+		for (Tag tag : result) {
 			tags.put(tag.getKey(), tag);
 		}
 		DataManager.setAllTags(tags);
