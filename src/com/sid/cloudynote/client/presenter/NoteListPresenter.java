@@ -26,6 +26,7 @@ import com.sid.cloudynote.client.service.ShareServiceAsync;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.NoteListView;
+import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.interfaces.INoteListView;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
@@ -49,6 +50,12 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void loadNoteList(final Notebook notebook) {
+		if (NotebookListView.ALL_NOTES.equals(notebook.getName()) && notebook.getKey() == null) {
+			System.out.println("all notes");
+			this.searchNotes("");
+			return;
+		}
+		
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
 		AsyncCallback<List<InfoNote>> callback = new AsyncCallback<List<InfoNote>>() {

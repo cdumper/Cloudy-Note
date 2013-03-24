@@ -25,7 +25,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.CellList.Style;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Event;
@@ -129,8 +128,10 @@ public class NotebookListView extends ResizeComposite implements
 	@UiField
 	ShowMorePagerPanel pagerPanel;
 
+	public static final String ALL_NOTES = "All Notes";
 	private Images images;
 	private Presenter presenter;
+	private final Notebook allNotes = new Notebook(ALL_NOTES);
 	private NotebookCell notebookCell;
 	private TagCell tagCell;
 	private CellList<Tag> tagsCellList;
@@ -142,7 +143,7 @@ public class NotebookListView extends ResizeComposite implements
 	public static final ProvidesKey<Notebook> NOTEBOOK_KEY_PROVIDER = new ProvidesKey<Notebook>() {
 		@Override
 		public Object getKey(Notebook notebook) {
-			return notebook == null ? null : notebook.getKey();
+			return notebook == null ? null : notebook.getName();
 		}
 	};
 
@@ -657,6 +658,7 @@ public class NotebookListView extends ResizeComposite implements
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Notebook notebook = notebookSelectionModel
 								.getSelectedObject();
+						
 						presenter.onNotebookItemSelected(notebook);
 					}
 				});
@@ -711,6 +713,7 @@ public class NotebookListView extends ResizeComposite implements
 	public void setNotebookList(List<Notebook> result) {
 		List<Notebook> notebooks = notebookDataProvider.getList();
 		notebooks.clear();
+		notebooks.add(allNotes);
 		notebooks.addAll(result);
 	}
 

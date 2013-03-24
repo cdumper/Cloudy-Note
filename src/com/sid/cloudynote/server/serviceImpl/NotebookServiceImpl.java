@@ -23,7 +23,7 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	private static final long serialVersionUID = -3191322844970681081L;
 
 	/**
-	 * 添加实体
+	 * Create a new notebook
 	 * 
 	 * @throws NotLoggedInException
 	 */
