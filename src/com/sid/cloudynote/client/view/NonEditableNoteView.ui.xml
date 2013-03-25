@@ -1,27 +1,10 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
-	<ui:style>
-		.container {
-			border: 1px solid #999;
-		}
-		
-		.buttonPanel {
-			background-color: #EAEDEF;
-			padding-top: 5px;
-			padding-left: 5px;
-			margin: auto;
-			font-size: 12px;
-			height: 100%;
-			width: 100%;
-		}
-		
-		.buttonPanel div.buttonDiv {
-			display: inline;
-			position: relative;
-			margin-right: 10px;
-		}
-	</ui:style>
+	<ui:style type="com.sid.cloudynote.client.view.NonEditableNoteView.Style"
+		src="nonEditable.css">
+			
+		</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
 		<g:DockLayoutPanel ui:field="content" height="100%"
 			width="100%" unit='PCT'>
@@ -40,10 +23,16 @@
 			</g:north>
 			<g:center>
 				<g:HTMLPanel height="100%" width="100%" addStyleNames='{style.container}'>
-					<g:Label ui:field="title" text='title' />
-					<g:Label ui:field="notebook" text='notebook' />
-					<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
-					<g:TextArea ui:field="noteContent" text='content' />
+					<div class="{style.titlePanel}">
+						<g:Label ui:field="title" text='title' />
+					</div>
+					<div class="{style.titlePanel}">
+						<g:Label ui:field="notebook" text='notebook' />
+					</div>
+					<div class="{style.propertyPanel}">
+						<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
+					</div>
+					<g:HTML ui:field="noteContent" text="content"/>
 				</g:HTMLPanel>
 			</g:center>
 		</g:DockLayoutPanel>

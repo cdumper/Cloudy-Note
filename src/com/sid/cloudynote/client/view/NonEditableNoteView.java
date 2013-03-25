@@ -2,14 +2,15 @@ package com.sid.cloudynote.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.view.interfaces.INonEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
@@ -27,13 +28,15 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 	@UiField
 	Label datetime;
 	@UiField
-	TextArea noteContent;
+	HTML noteContent;
 	@UiField
 	Button editButton;
 	@UiField
 	Button shareButton;
 	@UiField
 	Button deleteButton;
+	@UiField
+	Style style;
 	
 	@UiHandler("editButton")
 	void onClickEdit(ClickEvent e){
@@ -49,7 +52,9 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 	void onClickDelete(ClickEvent e){
 		presenter.deleteNote(this.note);
 	}
-	
+
+	public interface Style extends CssResource {
+	}
 	
 	private Presenter presenter;
 	private InfoNote note;
@@ -80,7 +85,7 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 		this.title.setText(note.getTitle());
 		this.datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 		this.notebook.setText(note.getNotebook().getName());
-		this.noteContent.setText(note.getContent());
+		this.noteContent.setHTML(note.getContent());
 	}
 
 	public NonEditableNoteView(String firstName) {
@@ -92,7 +97,7 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 			title.setText(note.getTitle());
 			datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 			notebook.setText(note.getNotebook().getName());
-			noteContent.setText(note.getContent().replaceAll("\\<.*?>",""));
+			noteContent.setHTML(note.getContent());
 			noteContent.setWidth("90%");
 			noteContent.setHeight("100px");
 		}

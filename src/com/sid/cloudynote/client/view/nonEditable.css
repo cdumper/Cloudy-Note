@@ -1,0 +1,38 @@
+.container {
+	border: 1px solid #999;
+}
+
+.buttonPanel {
+	background-color: #EAEDEF;
+	padding-top: 5px;
+	padding-left: 10px;
+	margin: auto;
+	font-size: 12px;
+	height: 100%;
+	width: 100%;
+}
+
+.buttonPanel div.buttonDiv {
+	display: inline;
+	position: relative;
+	margin-right: 10px;
+}
+
+.titlePanel{
+	color: #404040;
+	height: 24px;
+	padding-top: 8px;
+	padding-left: 10px;
+	font-size: 14px;
+	border-bottom: 1px solid #CED8DF;
+}
+
+.propertyPanel{
+	background-color: #EAEDEF;
+	color: #404040;
+	height: 24px;
+	padding-top: 8px;
+	padding-left: 10px;
+	font-size: 11px;
+	border-bottom: 1px solid #CED8DF;
+}

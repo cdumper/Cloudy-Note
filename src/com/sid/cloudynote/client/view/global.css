@@ -23,8 +23,9 @@ a:link,a:visited,a:hover,a:active {
 	font-size: 13px;
 	font-weight: normal;
 	font-family: Caecilia-bold,Helvetica,sans-serif;
-	background-color: #EAEAEA;
-    border: 1px solid #DDDDDD;
+	background: #D1D1D1;
+    border: 1px solid #C4C4C4;
+    border-radius: 3px;
     color: #333333;
 }
 

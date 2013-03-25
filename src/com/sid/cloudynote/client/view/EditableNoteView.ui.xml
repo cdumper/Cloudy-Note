@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view"
 	xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
 	<ui:style type="com.sid.cloudynote.client.view.EditableNoteView.Style"
-		src="tags.css">
+		src="editable.css">
 			
 		</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
@@ -11,33 +11,36 @@
 			height="100%" width="100%">
 			<g:north size="7">
 				<g:HTMLPanel addStyleNames='{style.buttonPanel}'>
-					<g:Button ui:field="doneButton">Done</g:Button>
+					<g:Button ui:field="doneButton" text="Done" />
 				</g:HTMLPanel>
 			</g:north>
 			<g:center>
-				<g:DockLayoutPanel unit="PCT" ui:field="centerContent">
+				<g:DockLayoutPanel unit="PCT" ui:field="centerContent"
+					addStyleNames='{style.container}'>
 					<g:north size="25">
-						<g:HTMLPanel ui:field="topPanel" addStyleNames='{style.container}'>
+						<g:HTMLPanel ui:field="topPanel" addStyleNames='{style.propertyPanel}'>
 							<div class="{style.tagsEditContainer}">
-								<g:TextBox ui:field="title"></g:TextBox>
+								<g:TextBox ui:field="title" />
 							</div>
 							<div class="{style.tagsEditContainer}">
-								<g:ListBox ui:field="notebook"></g:ListBox>
+								<g:ListBox ui:field="notebook" />
 							</div>
 							<div class="{style.tagsEditContainer}">
 								<g:HTMLPanel ui:field="tagsEditPanel" addStyleNames='{style.tagsEditPanel}'>
 									<div ui:field="tagsEditLozengePanel">
-										<g:SuggestBox ui:field="tagInput">Add tags</g:SuggestBox>
+										<g:SuggestBox ui:field="tagInput" text="Add tags" />
 									</div>
 								</g:HTMLPanel>
 							</div>
 							<div class="{style.tagsEditContainer}">
-								<g:Anchor ui:field="attach">Attach files</g:Anchor>
+								<g:Anchor ui:field="attach" text="Attach files" />
 							</div>
 						</g:HTMLPanel>
 					</g:north>
 					<g:center>
-						<ck:CKEditor ui:field='ckeditor' />
+						<g:HTMLPanel addStyleNames="{style.tagsEditContainer}">
+							<ck:CKEditor ui:field='ckeditor' />
+						</g:HTMLPanel>
 					</g:center>
 				</g:DockLayoutPanel>
 			</g:center>

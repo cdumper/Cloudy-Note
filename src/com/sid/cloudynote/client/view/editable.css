@@ -1,7 +1,7 @@
 .buttonPanel {
 	background-color: #EAEDEF;
 	padding-top: 5px;
-	padding-left: 5px;
+	padding-left: 7px;
 	margin: auto;
 	font-size: 12px;
 	border-bottom: 1px solid #CED8DF;
@@ -11,17 +11,29 @@
 
 .container {
 	border: 1px solid #999;
-	height: 100%;
-	width: 100%;
 }
 
 .propertyPanel {
-	padding-left: 8px;
+	background-color: #EAEDEF;
+	padding-left: 5px;
+	border-bottom: 1px solid #CED8DF;
 }
+
+.propertyPanel input[type="text"] {
+	border: 1px solid #B3B3B3;
+	outline: medium none;
+	padding-bottom: 5px;
+	padding-left: 3px;
+	padding-right: 5px;
+	display: inline;
+	font-size: 14px;
+	width: 100%;
+}
+
 
 .tagsEditContainer {
 	padding-top: 5px;
-	padding-left: 5px;
+	padding-left: 2px;
 	padding-right: 5px;
 }
 
@@ -38,12 +50,7 @@
 
 .tagsEditPanel input[type="text"] {
 	border: 0 none;
-	margin: 0;
-	outline: medium none;
-	padding-bottom: 5px;
-	padding-left: 3px;
-	display: inline;
-	font-weight: small;
+	font-weight: small !important;
 	font-size: 12px;
 	width: 250px;
 }
