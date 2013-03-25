@@ -2,10 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style>
-		.container {
-			border: 1px solid #999;
-		}
 	</ui:style>
-	<cn:Container ui:field="container" addStyleNames="{style.container}">
+	<cn:Container ui:field="container">
 	</cn:Container>
 </ui:UiBinder> 

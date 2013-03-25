@@ -2,23 +2,42 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style>
+		.container {
+			border: 1px solid #999;
+		}
+		
 		.buttonPanel {
-			border: 1px solid #ccc;
-			padding: 5px;
+			background-color: #EAEDEF;
+			padding-top: 5px;
+			padding-left: 5px;
+			margin: auto;
+			font-size: 12px;
+			height: 100%;
 			width: 100%;
+		}
+		
+		.buttonPanel .gwt-Button {
+			margin-left: 10px;
 		}
 	</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
-		<g:VerticalPanel ui:field="content" height="100%" width="100%">
-			<g:HTMLPanel addStyleNames='{style.buttonPanel}'>
-				<g:Button ui:field="editButton">Edit</g:Button>
-				<g:Button ui:field="shareButton">Share</g:Button>
-				<g:Button ui:field="deleteButton">Delete</g:Button>
-			</g:HTMLPanel>
-			<g:Label ui:field="title" text='title' />
-			<g:Label ui:field="notebook" text='notebook' />
-			<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
-			<g:TextArea ui:field="noteContent" text='content' />
-		</g:VerticalPanel>
+		<g:DockLayoutPanel ui:field="content" height="100%"
+			width="100%" unit='PCT'>
+			<g:north size="7">
+				<g:FlowPanel addStyleNames='{style.buttonPanel}'>
+					<g:Button ui:field="editButton">Edit</g:Button>
+					<g:Button ui:field="shareButton">Share</g:Button>
+					<g:Button ui:field="deleteButton">Delete</g:Button>
+				</g:FlowPanel>
+			</g:north>
+			<g:center>
+				<g:HTMLPanel height="100%" width="100%" addStyleNames='{style.container}'>
+					<g:Label ui:field="title" text='title' />
+					<g:Label ui:field="notebook" text='notebook' />
+					<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
+					<g:TextArea ui:field="noteContent" text='content' />
+				</g:HTMLPanel>
+			</g:center>
+		</g:DockLayoutPanel>
 	</cn:Container>
 </ui:UiBinder> 

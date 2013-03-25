@@ -1,31 +1,28 @@
 .buttonPanel {
-	border: 1px solid #ccc;
-	padding: 5px;
-	width: 100%;
-}
-
-.container {
-	border: 1px solid #ccc;
+	background-color: #EAEDEF;
+	padding-top: 5px;
+	padding-left: 5px;
+	margin: auto;
+	font-size: 12px;
+	border-bottom: 1px solid #CED8DF;
 	height: 100%;
 	width: 100%;
 }
 
-.tagsEditLozenge {
-	background: none repeat scroll 0 0 #EDF6F7;
-	border: 1px solid #CAE0EE;
-	border-radius: 3px 3px 3px 3px;
-	color: #3A8FBA;
-	cursor: text;
-	display: inline-block;
-	font-size: 11px;
-	height: 13px;
-	margin-left: 3px;
-	margin-top: 2px;
-	padding: 2px 2px 0;
+.container {
+	border: 1px solid #999;
+	height: 100%;
+	width: 100%;
+}
+
+.propertyPanel {
+	padding-left: 8px;
 }
 
 .tagsEditContainer {
-	padding: 5px 10px 10px 7px;
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 .tagsEditPanel {
@@ -46,7 +43,9 @@
 	padding-bottom: 5px;
 	padding-left: 3px;
 	display: inline;
-	width: 200px;
+	font-weight: small;
+	font-size: 12px;
+	width: 250px;
 }
 
 .tagsEditPanel input[type="text"]:focus {

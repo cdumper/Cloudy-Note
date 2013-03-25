@@ -5,6 +5,8 @@
 		.container {
 			border: 1px solid #999;
 			background-color: #EAEDEF;
+			height: 100%;
+			width: 100%;
 		}
 		
 		.buttonPanel {
@@ -13,18 +15,22 @@
 			margin: auto;
 			font-size: 12px;
 			background-color: #EAEDEF;
+			height: 100%;
+			width: 100%;
 		}
 	</ui:style>
 	<cn:Container ui:field="container">
-		<g:DockLayoutPanel unit='PCT' ui:field="content" width="100%" height="100%">
+		<g:DockLayoutPanel unit='PCT' ui:field="content"
+			width="100%" height="100%">
 			<g:north size='7'>
-				<g:HorizontalPanel ui:field="buttonPanel" width="100%" height="100%" addStyleNames="{style.buttonPanel}">
+				<g:HorizontalPanel ui:field="buttonPanel"
+					addStyleNames="{style.buttonPanel}">
 					<g:Button ui:field="newNotebookButton" text="New Notebook" />
 					<g:Button ui:field="newNoteButton" text="New Note" />
 				</g:HorizontalPanel>
 			</g:north>
 			<g:center>
-				<g:ScrollPanel width='100%' height='100%' ui:field="scrollPanel" addStyleNames="{style.container}">
+				<g:ScrollPanel ui:field="scrollPanel" addStyleNames="{style.container}">
 					<g:VerticalPanel width='100%' height='100%'>
 						<g:DisclosurePanel height="100%" width="100%"
 							ui:field="notebookPanel">

@@ -480,9 +480,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-	private void deleteDocumentForNote(InfoNote entity) {
+	private void deleteDocumentForNote(InfoNote note) {
 		try {
-			DocumentManager.getIndex().delete(entity.getKey().toString());
+			DocumentManager.getIndex().delete(KeyFactory.keyToString(note.getKey()));
 		} catch (RuntimeException e) {
 			GWT.log("Failed to delete document");
 		}

@@ -59,14 +59,14 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 	}
 
 	@Override
-	public void createNewNote(final InfoNote note,final Map<Key, Tag> tags) {
+	public void createNewNote(final InfoNote note,final Map<Tag,Key> tags) {
 		final List<Tag> tagsToCreate = new ArrayList<Tag>();
 		final List<Tag> tagsCreated = new ArrayList<Tag>();
-		for(Entry<Key,Tag> entry : tags.entrySet()) {
-			if(entry.getKey()==null){
-				tagsToCreate.add(entry.getValue());
+		for(Entry<Tag,Key> entry : tags.entrySet()) {
+			if(entry.getValue()==null){
+				tagsToCreate.add(entry.getKey());
 			} else {
-				tagsCreated.add(entry.getValue());
+				tagsCreated.add(entry.getKey());
 			}
 		}
 		TagServiceAsync tagService = GWT.create(TagService.class);
@@ -106,19 +106,18 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 					}
 				});
 			}
-			
 		});
 	}
 
 	@Override
-	public void moveNote(final InfoNote note, final Notebook notebook,final Map<Key, Tag> tags) {
+	public void moveNote(final InfoNote note, final Notebook notebook,final Map<Tag,Key> tags) {
 		final List<Tag> tagsToCreate = new ArrayList<Tag>();
 		final List<Tag> tagsCreated = new ArrayList<Tag>();
-		for(Entry<Key,Tag> entry : tags.entrySet()) {
-			if(entry.getKey()==null){
-				tagsToCreate.add(entry.getValue());
+		for(Entry<Tag,Key> entry : tags.entrySet()) {
+			if(entry.getValue()==null){
+				tagsToCreate.add(entry.getKey());
 			} else {
-				tagsCreated.add(entry.getValue());
+				tagsCreated.add(entry.getKey());
 			}
 		}
 		TagServiceAsync tagService = GWT.create(TagService.class);
@@ -160,14 +159,14 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 	}
 
 	@Override
-	public void updateNote(final InfoNote note,final Map<Key, Tag> tags) {
+	public void updateNote(final InfoNote note,final Map<Tag,Key> tags) {
 		final List<Tag> tagsToCreate = new ArrayList<Tag>();
 		final List<Tag> tagsCreated = new ArrayList<Tag>();
-		for(Entry<Key,Tag> entry : tags.entrySet()) {
-			if(entry.getKey()==null){
-				tagsToCreate.add(entry.getValue());
+		for(Entry<Tag,Key> entry : tags.entrySet()) {
+			if(entry.getValue()==null){
+				tagsToCreate.add(entry.getKey());
 			} else {
-				tagsCreated.add(entry.getValue());
+				tagsCreated.add(entry.getKey());
 			}
 		}
 		TagServiceAsync tagService = GWT.create(TagService.class);

@@ -20,11 +20,11 @@ public interface IEditableNoteView {
 		
 		void presentAttachmentLinks(final List<String> keys);
 
-		void createNewNote(InfoNote note, Map<Key, Tag> tags);
+		void createNewNote(InfoNote note, Map<Tag,Key> tags);
 
-		void moveNote(InfoNote note, Notebook notebook, Map<Key, Tag> tags);
+		void moveNote(InfoNote note, Notebook notebook, Map<Tag,Key> tags);
 
-		void updateNote(InfoNote note, Map<Key, Tag> tags);
+		void updateNote(InfoNote note, Map<Tag,Key> tags);
 
 		void loadAllTags();
 	}

@@ -38,7 +38,6 @@ import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
@@ -60,11 +59,9 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiField
 	DockLayoutPanel content;
 	@UiField
-	VerticalPanel topPanel;
+	HTMLPanel topPanel;
 	@UiField
 	Button doneButton;
-	@UiField
-	HTMLPanel tagsEditPanel;
 	@UiField
 	SuggestBox tagInput;
 	@UiField
@@ -101,7 +98,7 @@ public class EditableNoteView extends ResizeComposite implements
 
 	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
-	private Map<Key,Tag> tags = new HashMap<Key,Tag>();
+	private Map<Tag,Key> tags = new HashMap<Tag,Key>();
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
 	interface EditPanelUiBinder extends UiBinder<Widget, EditableNoteView> {
@@ -203,7 +200,7 @@ public class EditableNoteView extends ResizeComposite implements
 			}
 			if(note.getTags()!=null && note.getTags().size()!=0){
 				for(Key key : note.getTags()) {
-					this.tags.put(key, DataManager.getAllTags().get(key));
+					this.tags.put(DataManager.getAllTags().get(key),key);
 				}
 			}
 			this.presentTags();
@@ -217,7 +214,7 @@ public class EditableNoteView extends ResizeComposite implements
 		return note;
 	}
 	
-	public Map<Key,Tag> getTags() {
+	public Map<Tag,Key> getTags() {
 		return this.tags;
 	}
 
@@ -309,7 +306,7 @@ public class EditableNoteView extends ResizeComposite implements
 		tag.setCreatedTime(new Date());
 		tag.setUser(AppController.get().getLoginInfo().getEmail());
 
-		for (Tag t : this.tags.values()) {
+		for (Tag t : this.tags.keySet()) {
 			if (tagName.equals(t.getName())) {
 				exist = true;
 			}
@@ -322,11 +319,11 @@ public class EditableNoteView extends ResizeComposite implements
 		}
 
 		if (this.tags == null) {
-			this.tags = new HashMap<Key,Tag>();
+			this.tags = new HashMap<Tag,Key>();
 		}
 
 		if (!exist) {
-			this.tags.put(null,tag);
+			this.tags.put(tag,null);
 		}
 		this.tagInput.setText("");
 		this.presentTags();
@@ -335,7 +332,7 @@ public class EditableNoteView extends ResizeComposite implements
 	public void presentTags() {
 		if (this.tags != null && this.tags.size() != 0) {
 			this.tagsEditLozengePanel.setInnerText("");
-			for (final Tag tag : this.tags.values()) {
+			for (final Tag tag : this.tags.keySet()) {
 				final Element div = DOM.createDiv();
 				div.addClassName(style.tagsEditLozenge());
 				Element span = DOM.createSpan();

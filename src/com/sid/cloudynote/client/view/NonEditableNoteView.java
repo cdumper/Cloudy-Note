@@ -6,10 +6,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.view.interfaces.INonEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
@@ -19,7 +19,7 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 	@UiField
 	Container container;
 	@UiField
-	VerticalPanel content;
+	DockLayoutPanel content;
 	@UiField
 	Label title;
 	@UiField

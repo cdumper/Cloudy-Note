@@ -66,9 +66,9 @@ public class PersonalView extends Composite implements Presenter {
 		this.notebookListView.setPresenter(notebookListPresenter);
 		this.noteView.setPresenter(notePresenter);
 
+		notePresenter.go(noteView.getContainer());
 		notebookListPresenter.go(notebookListView.getContainer());
 		noteListPresenter.go(noteListView.getContainer());
-		notePresenter.go(noteView.getContainer());
 	}
 	
 	public Widget asWidget(){
