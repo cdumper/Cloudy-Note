@@ -18,17 +18,49 @@
 			background-color: #EAEDEF;
 		}
 		
-		.searchBox {
+		div.searchPanel {
+			cursor: text;
 			margin-top: 5px;
-			width: 95%;
+			border: 1px solid #B3B3B3;
+			border-radius: 5px 5px 5px 5px;
+			position: relative;
+			background-color: white;
+			height: 25px;
+		}
+		
+		.searchBox {
+			border-radius: 5px 5px 5px 5px;
+			border: 0;
+			float: left;
+			color: #A2A2A2;
+		}
+		
+		.searchButton {
+			border: 0 none;
+			height: 25px;
+			float: right;
+			color: #4C4C4C;
+			cursor: pointer;
+			font-size: 11px;
+			font-weight: bold;
+			margin: 0;
+			padding: 0 5px;
+			border-radius: 0px 5px 5px 0px;
+			border-left: 1px solid #B3B3B3;
 		}
 	</ui:style>
 	<cn:Container ui:field="container">
 		<g:DockLayoutPanel unit='PCT' ui:field="content"
 			width="100%" height="100%">
 			<g:north size='7'>
-				<g:VerticalPanel width="100%" height="100%" addStyleNames="{style.searchContainer}">
-					<g:TextBox ui:field="searchBox" addStyleNames="{style.searchBox}">Search notes</g:TextBox>
+				<g:VerticalPanel width="100%" height="100%"
+					addStyleNames="{style.searchContainer}">
+					<g:HTMLPanel addStyleNames="{style.searchPanel}" ui:field="searchField">
+						<g:TextBox ui:field="searchBox" addStyleNames="{style.searchBox}"
+							text="Search notes" />
+						<g:Button ui:field="searchButton" addStyleNames="{style.searchButton}"
+							text="Search" />
+					</g:HTMLPanel>
 				</g:VerticalPanel>
 			</g:north>
 			<g:center>

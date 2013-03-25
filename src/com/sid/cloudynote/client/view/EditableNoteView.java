@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -63,6 +64,8 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiField
 	Button doneButton;
 	@UiField
+	HTMLPanel tagsEditPanel;
+	@UiField
 	SuggestBox tagInput;
 	@UiField
 	DivElement tagsEditLozengePanel;
@@ -106,6 +109,20 @@ public class EditableNoteView extends ResizeComposite implements
 
 	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		bindTagsEditingHandler();
+	}
+
+	private void bindTagsEditingHandler() {
+		this.tagsEditPanel.sinkEvents(Event.ONCLICK);
+		this.tagsEditPanel.addHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				tagInput.setFocus(true);
+			}
+			
+		}, ClickEvent.getType());
 		this.tagInput.setText(TAGINPUT_DEFAULT);
 
 		this.tagInput.addSelectionHandler(new SelectionHandler<Suggestion>() {

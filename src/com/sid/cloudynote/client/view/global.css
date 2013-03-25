@@ -10,9 +10,12 @@ body {
 	line-height: 1;
 }
 
-a:link,a:visited,a:hover,a:active {
-	color: #D8DFEA;
+a {
 	font-size: small;
+	cursor: pointer;
+}
+a:link,a:visited,a:hover,a:active {
+	text-decoration: none;
 }
 
 .gwt-Button {
@@ -20,11 +23,18 @@ a:link,a:visited,a:hover,a:active {
 	font-size: 13px;
 	font-weight: normal;
 	font-family: Caecilia-bold,Helvetica,sans-serif;
-	background: #65727C;
+	background-color: #EAEAEA;
+    border: 1px solid #DDDDDD;
+    color: #333333;
 }
 
 .gwt-Button:hover {
-	background: #8DA1B0;
+	background: #4183c4;
+    color: #FFFFFF;
+}
+
+.gwt-Button:active {
+	border: 1px solid #DDDDDD;
 }
 
 .gwt-DialogBox {

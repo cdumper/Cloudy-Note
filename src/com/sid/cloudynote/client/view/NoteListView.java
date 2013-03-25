@@ -14,8 +14,12 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
@@ -27,6 +31,7 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -78,6 +83,10 @@ public class NoteListView extends ResizeComposite implements
 	@UiField
 	DockLayoutPanel content;
 	@UiField
+	HTMLPanel searchField;
+	@UiField
+	Button searchButton;
+	@UiField
 	TextBox searchBox;
 	@UiField
 	Label notebookLabel;
@@ -86,6 +95,7 @@ public class NoteListView extends ResizeComposite implements
 		return container;
 	}
 
+	private static final String DEFAULT_SEARCH_LABEL = "Search Notes";
 	private CellList<InfoNote> cellList;
 	private NoteCell noteCell;
 	private ListDataProvider<InfoNote> dataProvider = new ListDataProvider<InfoNote>();
@@ -455,10 +465,45 @@ public class NoteListView extends ResizeComposite implements
 	}
 
 	private void bindSearchHandler() {
+		this.searchBox.setText(NoteListView.DEFAULT_SEARCH_LABEL);
+		this.searchBox.addFocusHandler(new FocusHandler(){
+
+			@Override
+			public void onFocus(FocusEvent event) {
+				TextBox widget = (TextBox)event.getSource();
+				if(DEFAULT_SEARCH_LABEL.equals(widget.getText())){
+					widget.setText("");
+				}
+			}
+			
+		});
+		this.searchBox.addBlurHandler(new BlurHandler(){
+			@Override
+			public void onBlur(BlurEvent event) {
+				TextBox widget = (TextBox)event.getSource();
+				if("".equals(widget.getText())){
+					widget.setText(DEFAULT_SEARCH_LABEL);
+				}
+			}
+		});
 		this.searchBox.addValueChangeHandler(new ValueChangeHandler<String>(){
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				presenter.searchNotes(event.getValue());
+			}
+		});
+		this.searchField.sinkEvents(Event.ONCLICK);
+		this.searchField.addHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				searchBox.setFocus(true);
+			}
+		}, ClickEvent.getType());
+		
+		this.searchButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				presenter.searchNotes(searchBox.getText());
 			}
 		});
 	}
