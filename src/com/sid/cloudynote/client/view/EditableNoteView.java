@@ -6,7 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.axeiya.gwtckeditor.client.CKConfig;
+import com.axeiya.gwtckeditor.client.CKConfig.PRESET_TOOLBAR;
+import com.axeiya.gwtckeditor.client.CKConfig.TOOLBAR_OPTIONS;
 import com.axeiya.gwtckeditor.client.CKEditor;
+import com.axeiya.gwtckeditor.client.Toolbar;
+import com.axeiya.gwtckeditor.client.ToolbarLine;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -70,8 +75,6 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiField
 	DivElement tagsEditLozengePanel;
 	@UiField
-	CKEditor ckeditor;
-	@UiField
 	TextBox title;
 	@UiField
 	ListBox notebook;
@@ -79,6 +82,9 @@ public class EditableNoteView extends ResizeComposite implements
 	Anchor attach;
 	@UiField
 	public Style style;
+	@UiField
+	HTMLPanel editorContainer;
+	CKEditor ckeditor;
 
 	public interface Style extends CssResource {
 		String tagsEditLozenge();
@@ -90,6 +96,7 @@ public class EditableNoteView extends ResizeComposite implements
 	private boolean isNew;
 	private Presenter presenter;
 	private InfoNote note;
+
 	public InfoNote getNote() {
 		return note;
 	}
@@ -101,7 +108,7 @@ public class EditableNoteView extends ResizeComposite implements
 
 	private Map<Key, Notebook> notebookMap;
 	private List<Key> notebookList = new ArrayList<Key>();
-	private Map<Tag,Key> tags = new HashMap<Tag,Key>();
+	private Map<Tag, Key> tags = new HashMap<Tag, Key>();
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
 	interface EditPanelUiBinder extends UiBinder<Widget, EditableNoteView> {
@@ -109,19 +116,61 @@ public class EditableNoteView extends ResizeComposite implements
 
 	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		bindTagsEditingHandler();
+		initalizeCKEditor();
+	}
+
+	private void initalizeCKEditor() {
+		// Creates a new config, with FULL preset toolbar as default
+		CKConfig ckf = new CKConfig(PRESET_TOOLBAR.FULL);
+		// ckf.setSkin("kama");
+		ckf.setSkin("office2003");
+		// ckf.setSkin("v2");
+//		ckf.setUiColor("#EAEDEF");
+//		ckf.setWidth("100%");
+		ckf.setHeight("600px");
+		ckf.setResizeEnabled(false);
+
+		// Creating personalized toolbar
+		ToolbarLine line = new ToolbarLine();
+		// Define the line
+		TOOLBAR_OPTIONS[] t = { TOOLBAR_OPTIONS.NewPage,
+				TOOLBAR_OPTIONS.Preview, TOOLBAR_OPTIONS.Templates,
+				TOOLBAR_OPTIONS._, TOOLBAR_OPTIONS.Bold,
+				TOOLBAR_OPTIONS.Italic, TOOLBAR_OPTIONS.Underline,
+				TOOLBAR_OPTIONS.Strike, TOOLBAR_OPTIONS.Font,
+				TOOLBAR_OPTIONS.FontSize, TOOLBAR_OPTIONS.TextColor,
+				TOOLBAR_OPTIONS.BGColor, TOOLBAR_OPTIONS.Subscript,
+				TOOLBAR_OPTIONS.Superscript, TOOLBAR_OPTIONS.Outdent,
+				TOOLBAR_OPTIONS.Indent, TOOLBAR_OPTIONS.HorizontalRule,
+				TOOLBAR_OPTIONS.NumberedList, TOOLBAR_OPTIONS.BulletedList,
+				TOOLBAR_OPTIONS.JustifyLeft, TOOLBAR_OPTIONS.JustifyCenter,
+				TOOLBAR_OPTIONS.JustifyRight, TOOLBAR_OPTIONS._,
+				TOOLBAR_OPTIONS.Image, TOOLBAR_OPTIONS.Table,
+				TOOLBAR_OPTIONS.SpecialChar };
+		line.addAll(t);
+
+		// Creates the toolbar
+		Toolbar toolBar = new Toolbar();
+		toolBar.add(line);
+
+		// Set the toolbar to the config (replace the FULL preset toolbar)
+		ckf.setToolbar(toolBar);
+
+		this.ckeditor = new CKEditor(true, ckf);
+		this.editorContainer.add(this.ckeditor);
 	}
 
 	private void bindTagsEditingHandler() {
 		this.tagsEditPanel.sinkEvents(Event.ONCLICK);
-		this.tagsEditPanel.addHandler(new ClickHandler(){
+		this.tagsEditPanel.addHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				tagInput.setFocus(true);
 			}
-			
+
 		}, ClickEvent.getType());
 		this.tagInput.setText(TAGINPUT_DEFAULT);
 
@@ -182,17 +231,18 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiHandler("doneButton")
 	void onClickDone(ClickEvent e) {
 		if (this.isNew) {
-			presenter.createNewNote(this.getInfoNote(),this.getTags());
+			presenter.createNewNote(this.getInfoNote(), this.getTags());
 		} else {
-//			InfoNote note = DataManager.getCurrentNote();
-//			note.setTitle(this.getInfoNote().getTitle());
-//			note.setContent(this.getInfoNote().getContent());
-//			note.setTags(this.getInfoNote().getTags());
+			// InfoNote note = DataManager.getCurrentNote();
+			// note.setTitle(this.getInfoNote().getTitle());
+			// note.setContent(this.getInfoNote().getContent());
+			// note.setTags(this.getInfoNote().getTags());
 			if (!note.getNotebook().getKey()
 					.equals(this.getInfoNote().getNotebook().getKey())) {
-				presenter.moveNote(note, this.getInfoNote().getNotebook(),this.getTags());
+				presenter.moveNote(note, this.getInfoNote().getNotebook(),
+						this.getTags());
 			} else {
-				presenter.updateNote(note,this.getTags());
+				presenter.updateNote(note, this.getTags());
 			}
 		}
 		this.tags.clear();
@@ -203,7 +253,7 @@ public class EditableNoteView extends ResizeComposite implements
 		note = new InfoNote();
 		title.setText("Untitled");
 		setSelectedNotebook(DataManager.getCurrentNotebookKey());
-		ckeditor.setData("Content...");
+		ckeditor.setHTML("Content...");
 	}
 
 	@Override
@@ -211,27 +261,27 @@ public class EditableNoteView extends ResizeComposite implements
 		if (note != null) {
 			title.setText(note.getTitle());
 			setSelectedNotebook(DataManager.getCurrentNotebookKey());
-			ckeditor.setData(note.getContent());
+			ckeditor.setHTML(note.getContent());
 			if (note.getAttachments() != null) {
 				presentAttachmentLinks(note.getAttachments());
 			}
-			if(note.getTags()!=null && note.getTags().size()!=0){
-				for(Key key : note.getTags()) {
-					this.tags.put(DataManager.getAllTags().get(key),key);
+			if (note.getTags() != null && note.getTags().size() != 0) {
+				for (Key key : note.getTags()) {
+					this.tags.put(DataManager.getAllTags().get(key), key);
 				}
 			}
 			this.presentTags();
-		} 
+		}
 	}
 
 	public InfoNote getInfoNote() {
 		note.setTitle(title.getText());
 		note.setNotebook(getSelectedNotebook());
-		note.setContent(ckeditor.getData());
+		note.setContent(ckeditor.getHTML());
 		return note;
 	}
-	
-	public Map<Tag,Key> getTags() {
+
+	public Map<Tag, Key> getTags() {
 		return this.tags;
 	}
 
@@ -257,7 +307,7 @@ public class EditableNoteView extends ResizeComposite implements
 	}
 
 	@Override
-	public void setAllTagsList(Map<Key,Tag> tags) {
+	public void setAllTagsList(Map<Key, Tag> tags) {
 		DataManager.setAllTags(tags);
 		if (tags != null && tags.size() != 0) {
 			for (Tag tag : tags.values()) {
@@ -336,11 +386,11 @@ public class EditableNoteView extends ResizeComposite implements
 		}
 
 		if (this.tags == null) {
-			this.tags = new HashMap<Tag,Key>();
+			this.tags = new HashMap<Tag, Key>();
 		}
 
 		if (!exist) {
-			this.tags.put(tag,null);
+			this.tags.put(tag, null);
 		}
 		this.tagInput.setText("");
 		this.presentTags();

@@ -38,8 +38,7 @@
 						</g:HTMLPanel>
 					</g:north>
 					<g:center>
-						<g:HTMLPanel addStyleNames="{style.tagsEditContainer}">
-							<ck:CKEditor ui:field='ckeditor' />
+						<g:HTMLPanel addStyleNames="{style.editorContainer}" ui:field="editorContainer">
 						</g:HTMLPanel>
 					</g:center>
 				</g:DockLayoutPanel>

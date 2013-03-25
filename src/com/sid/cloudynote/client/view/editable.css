@@ -94,3 +94,8 @@
 .tagsEditLozenge:hover .tagsEditIcon {
 	visibility: visible;
 }
+
+.editorContainer {
+	height: 100%;
+	width: 100%;
+}
