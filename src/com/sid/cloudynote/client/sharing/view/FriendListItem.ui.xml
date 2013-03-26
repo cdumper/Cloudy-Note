@@ -2,20 +2,26 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style>
-		table {
-			border: 5px;
-			width: 100%;
-			height: 40px;
+		.friendListItem {
+			background-color: #EAEDEF;
+			padding-left: 5px;
 			border: 0px solid grey;
-			border-bottom: 1px solid grey;
+			border-bottom: 1px solid #CED8DF;
+		}
+		
+		.friendListItem table {
+			width: 100%;
+			height: 50px;
+			border: 0px solid grey;
 			padding: 10px;
 		}
+		
 		.hidden {
 			display: none;
 		}
 	</ui:style>
 	<cn:Container ui:field="container">
-		<g:HTMLPanel ui:field="content">
+		<g:HTMLPanel ui:field="content" addStyleNames="{style.friendListItem}">
 			<table>
 				<tr>
 					<td rowspan="2" width="10px">
@@ -34,7 +40,7 @@
 				</tr>
 				<tr>
 					<td>
-						<g:Label ui:field="groupLabel"/>
+						<g:Label ui:field="groupLabel" />
 					</td>
 				</tr>
 			</table>
