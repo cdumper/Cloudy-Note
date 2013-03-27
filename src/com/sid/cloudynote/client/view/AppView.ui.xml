@@ -10,7 +10,7 @@
 				<g:HTMLPanel height="100%" width="100%" addStyleNames="{style.header}">
 					<div class="{style.nav}">
 						<div class="{style.logo}">
-							<img src="images/logo.png" />
+							<img src="images/logo-landscape-trans.png" />
 						</div>
 						<div class="{style.left}">
 							<g:Button ui:field="myNotesButton" addStyleNames="{style.button}">My
