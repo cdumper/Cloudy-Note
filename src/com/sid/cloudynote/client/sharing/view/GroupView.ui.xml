@@ -56,12 +56,33 @@
 			font-family: Georgia, serif;
 		}
 		
-		.groupItem:hover,.button:hover {
+		.label {
+			background: #F0F0F0;
+			border-radius: 0px 0px 0px 0px;
+			position: relative;
+			width: 100%;
+			padding-left: 20%;
+			display: block;
+			text-align: left;
+			border: 0px solid #D8D8D8;
+			color: #606060;
+			font-size: 14px;
+			font-family: Georgia, serif;
+			cursor: text;
+		}
+		
+		.label:hover, .label:active {
+			background: #F0F0F0;
+			color: #606060;
+			border: 0px solid #999;
+		}
+		
+		.groupItem:hover,.button:hover{
 			background: #D8D8D8;
 			color: #606060;
 		}
 		
-		.groupItem:active,.button:active {
+		.groupItem:active,.button:active{
 			border: 0 solid #ccc !important;
 			background: #c0c0c0;
 		}
@@ -71,15 +92,13 @@
 			<div class="{style.groupList}">
 				<ul>
 					<li>
-						<g:Button ui:field="publicButton" addStyleNames="{style.button}">Public</g:Button>
+						<g:Button ui:field="publicButton" addStyleNames="{style.button}" text="Public" />
 					</li>
 					<li>
-						<g:Button ui:field="sharedButton" addStyleNames="{style.button}">Shared
-							with
-							me</g:Button>
+						<g:Button ui:field="sharedButton" addStyleNames="{style.button}" text="Shared With Me"/>
 					</li>
 					<li>
-						<g:Button ui:field="groupButton" addStyleNames="{style.button}">Groups</g:Button>
+						<g:Button addStyleNames="{style.label}" text="Groups"/>
 					</li>
 				</ul>
 				<ul ui:field="groupList">
