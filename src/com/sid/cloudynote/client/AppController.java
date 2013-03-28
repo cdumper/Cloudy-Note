@@ -36,6 +36,10 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	public static AppController get() {
 		return singleton;
 	}
+	
+	public HandlerManager getEventBus(){
+		return this.eventBus;
+	}
 
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {

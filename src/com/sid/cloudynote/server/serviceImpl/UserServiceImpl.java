@@ -1,6 +1,7 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,6 +23,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.NotLoggedInException;
 import com.sid.cloudynote.shared.User;
 
@@ -62,7 +64,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void addAccessEntry(final List<String> emails,final Map<Key,Integer> access) {
+	public void addAccessEntry(final List<String> emails,
+			final Map<Key, Integer> access) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		List<User> users = new ArrayList<User>();
 		for (String email : emails) {
@@ -70,7 +73,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		}
 		if (users != null && users.size() != 0) {
 			for (User user : users) {
-				for (Entry<Key,Integer> entry : access.entrySet()) {
+				for (Entry<Key, Integer> entry : access.entrySet()) {
 					user.getAccess().put(entry.getKey(), entry.getValue());
 				}
 			}
@@ -106,19 +109,24 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public String addFriend(String email) throws NotLoggedInException {
 		checkLoggedIn();
+		/**
+		 * Retrieve the user with specific email. If not exist send a invite
+		 * email
+		 */
 		User user = this.getUser(email);
-		if(user==null) {
+		if (user == null) {
 			this.inviteUser(email);
 			return "Fail";
-		} 
-		
+		}
+
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		User currentUser = (User)pm.getObjectById(User.class,getUser().getEmail());
+		User currentUser = (User) pm.getObjectById(User.class, getUser()
+				.getEmail());
 		currentUser.getFriends().add(user.getEmail());
-		
+
 		return "Success";
 	}
-	
+
 	private void checkLoggedIn() throws NotLoggedInException {
 		if (getUser() == null) {
 			throw new NotLoggedInException("Not logged in.");
@@ -126,30 +134,70 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	}
 
 	private com.google.appengine.api.users.User getUser() {
-		com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
+		com.google.appengine.api.users.UserService userService = UserServiceFactory
+				.getUserService();
 		return userService.getCurrentUser();
 	}
 
+	/**
+	 * The method to send a invitation email to the given email address. Sender
+	 * is set as the current logged in user
+	 */
 	@Override
 	public void inviteUser(String email) throws NotLoggedInException {
 		Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, null);
+		Session session = Session.getDefaultInstance(props, null);
 
-        String msgBody = getUser().getEmail()+" just invited you to use Cloudy Note.\n"+
-        		"Please click on the following link:\n"+
-        		"<a href='http://cloudy-note.appspot.com/'>http://cloudy-note.appspot.com/</a>";
+		String msgBody = getUser().getEmail()
+				+ " just invited you to use Cloudy Note.\n"
+				+ "Please click on the following link:\n"
+				+ "<a href='http://cloudy-note.appspot.com/'>http://cloudy-note.appspot.com/</a>";
 
-        try {
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(getUser().getEmail()));
-            msg.addRecipient(Message.RecipientType.TO,
-                             new InternetAddress(email));
-            msg.setSubject("You're invited to use Cloudy Note");
-            msg.setText(msgBody);
-            Transport.send(msg);
+		try {
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress(getUser().getEmail()));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
+					email));
+			msg.setSubject("You're invited to use Cloudy Note");
+			msg.setText(msgBody);
+			Transport.send(msg);
 
-        } catch (AddressException e) {
-        } catch (MessagingException e) {
-        } 
+		} catch (AddressException e) {
+		} catch (MessagingException e) {
+		}
+	}
+
+	@Override
+	public void addUserToGroups(String email, Set<Key> groups)
+			throws NotLoggedInException {
+		checkLoggedIn();
+		User user = getUser(email);
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+
+		Set<Key> unchangedGroups = user.getGroups();
+		Set<Key> tempGroups = new HashSet<Key>();
+		tempGroups.addAll(unchangedGroups);
+
+		// get the removed groups
+		tempGroups.removeAll(groups);
+		for (Key key : tempGroups) {
+			Group temp = pm.getObjectById(Group.class, key);
+			temp.getMembers().remove(email);
+			pm.makePersistent(temp);
+		}
+
+		// get the newly added groups
+		tempGroups.clear();
+		tempGroups.addAll(groups);
+		tempGroups.removeAll(unchangedGroups);
+		for (Key key : tempGroups) {
+			Group temp = pm.getObjectById(Group.class, key);
+			temp.getMembers().add(email);
+			pm.makePersistent(temp);
+		}
+		
+		user.getGroups().clear();
+		user.getGroups().addAll(groups);
+		pm.makePersistent(user);
 	}
 }

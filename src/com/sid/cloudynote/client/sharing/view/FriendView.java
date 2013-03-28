@@ -218,7 +218,6 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 			@Override
 			public void onClick(ClickEvent event) {
-				System.out.println("Click submit");
 				UserServiceAsync service = GWT.create(UserService.class);
 				service.addFriend(email.getText(), new AsyncCallback<String>() {
 
@@ -281,6 +280,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		presenter
 				.loadMyGroupList(AppController.get().getLoginInfo().getEmail());
+		presenter.loadAllFriendsList(AppController.get().getLoginInfo().getEmail());
 		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends()
 				.values()), false);
 	}
@@ -288,7 +288,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	public void setGroupList(Set<Group> result) {
 		this.groupsPanel.clear();
 		for (final Group group : result) {
-			Button button = new Button(group.getName(), new ClickHandler() {
+			Button button = new Button(group.getName()+" ("+group.getMembers().size()+")", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					currentGroup = group;
@@ -318,7 +318,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 			for (Entry<User, Boolean> user : users.entrySet()) {
 				FriendListItem item = new FriendListItem(user.getKey(),
-						user.getValue());
+						user.getValue(),AppController.get().getEventBus());
 				friendsItemSet.add(item);
 				this.friendsListPanel.add(item);
 			}

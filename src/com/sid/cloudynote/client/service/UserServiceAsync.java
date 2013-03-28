@@ -2,6 +2,7 @@ package com.sid.cloudynote.client.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,5 +19,8 @@ public interface UserServiceAsync {
 	void addFriend(String email, AsyncCallback<String> callback);
 
 	void inviteUser(String email, AsyncCallback<Void> callback);
+
+	void addUserToGroups(String email, Set<Key> groups,
+			AsyncCallback<Void> callback);
 
 }

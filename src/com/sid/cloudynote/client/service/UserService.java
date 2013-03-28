@@ -2,6 +2,7 @@ package com.sid.cloudynote.client.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -16,4 +17,5 @@ public interface UserService extends RemoteService{
 	void addAccessEntry(List<String> emails, Map<Key,Integer> access);
 	String addFriend(String email) throws NotLoggedInException;
 	void inviteUser(String email) throws NotLoggedInException;
+	void addUserToGroups(String email, Set<Key> groups) throws NotLoggedInException;
 }

@@ -168,6 +168,30 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 			if (!group.getOwner().equals(getUser().getEmail())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the group");
 			} else {
+				Group unchangedGroup = pm.getObjectById(Group.class,group.getKey());
+				Set<String> originMembers = unchangedGroup.getMembers();
+				Set<String> newMembers = group.getMembers();
+				Set<String> temp = new HashSet<String>();
+				temp.addAll(originMembers);
+				
+				//get the users have been removed
+				temp.removeAll(newMembers);
+				for(String userEmail : temp) {
+					User user = getUser(userEmail);
+					user.getGroups().remove(group.getKey());
+					pm.makePersistent(user);
+				}
+				
+				//get the newly added user
+				temp.clear();
+				temp.addAll(newMembers);
+				temp.removeAll(originMembers);
+				for(String userEmail : temp) {
+					User user = getUser(userEmail);
+					user.getGroups().add(group.getKey());
+					pm.makePersistent(user);
+				}
+				
 				pm.makePersistent(group);
 			}
 			pm.currentTransaction().commit();
@@ -235,6 +259,11 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 		}
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
+			for(String email : group.getMembers()){
+				User user = getUser(email);
+				user.getGroups().remove(group.getKey());
+				pm.makePersistent(user);
+			}
 			pm.deletePersistent(group);
 		} catch (Exception e) {
 			e.printStackTrace();

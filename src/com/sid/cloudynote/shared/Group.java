@@ -28,23 +28,23 @@ public class Group implements Serializable {
 	@Persistent
 	private String owner;
 	@Persistent
-	private int visibility = Visibility.PRIVATE; 
+	private int visibility = Visibility.PRIVATE;
 	@Persistent
 	private Set<String> members = new HashSet<String>();
 
-	@Persistent(serialized = "true", defaultFetchGroup = "true") 
+	@Persistent(serialized = "true", defaultFetchGroup = "true")
 	private Map<Key, Integer> access = new HashMap<Key, Integer>();
-	
+
 	public Group() {
 	}
 
-	public Group(String name,String owner, Set<String> members) {
+	public Group(String name, String owner, Set<String> members) {
 		super();
 		this.name = name;
 		this.owner = owner;
 		this.members = members;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -91,5 +91,16 @@ public class Group implements Serializable {
 
 	public void setAccess(Map<Key, Integer> access) {
 		this.access = access;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Group) {
+			Group group = (Group) obj;
+			if (this.key.equals(group.getKey())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

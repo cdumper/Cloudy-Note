@@ -128,4 +128,14 @@ public class User implements Serializable {
 		this.totalNotes = totalNotes;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof User){
+			User user = (User) obj;
+			if(this.email.equals(user.getEmail())){
+				return true;
+			}
+		}
+		return false;
+	}
 }
