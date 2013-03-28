@@ -52,6 +52,13 @@
 	padding: 5px 10px;
 }
 
+.buttonPanel .button{
+	padding: 0px;
+	font-size: 11px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
 .groupList {
 	position: relative;
 	width: 100%;

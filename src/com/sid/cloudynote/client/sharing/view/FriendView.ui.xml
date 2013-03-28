@@ -18,9 +18,9 @@
 					<g:center>
 						<g:HTMLPanel ui:field="groupsButtonPanel"
 							addStyleNames="{style.buttonPanel}">
-							<g:Button ui:field="createGroupButton">Create Group</g:Button>
-							<g:Button ui:field="editGroupButton">Edit Group</g:Button>
-							<g:Button ui:field="deleteGroupButton">Delete Group</g:Button>
+							<g:Button ui:field="createGroupButton" addStyleNames="{style.button}">Create Group</g:Button>
+							<g:Button ui:field="editGroupButton" addStyleNames="{style.button}">Edit Group</g:Button>
+							<g:Button ui:field="deleteGroupButton" addStyleNames="{style.button}">Delete Group</g:Button>
 						</g:HTMLPanel>
 					</g:center>
 				</g:DockLayoutPanel>
