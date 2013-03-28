@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style type="com.sid.cloudynote.client.sharing.view.FriendListItem.Style">
 		.friendListItem {
-			background-color: #EAEDEF;
+			background-color: #FFFFFF;
 			padding-left: 5px;
 			border: 0px solid grey;
 			border-bottom: 1px solid #CED8DF;

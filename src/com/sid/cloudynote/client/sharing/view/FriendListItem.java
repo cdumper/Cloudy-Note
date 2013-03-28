@@ -39,7 +39,7 @@ import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.User;
 
-public class FriendListItem extends ResizeComposite {
+public class FriendListItem extends ResizeComposite implements Comparable<FriendListItem> {
 	private HandlerManager eventBus;
 	private User user;
 	private List<Group> groupList = new ArrayList<Group>();
@@ -224,5 +224,10 @@ public class FriendListItem extends ResizeComposite {
 
 	public boolean getSelected() {
 		return this.checkBox.getValue();
+	}
+
+	@Override
+	public int compareTo(FriendListItem item) {
+		return this.getUser().getEmail().compareToIgnoreCase(item.getUser().getEmail());
 	}
 }

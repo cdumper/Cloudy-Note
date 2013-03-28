@@ -1,6 +1,6 @@
 package com.sid.cloudynote.client.sharing.view;
 
-import java.util.Set;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -85,7 +85,7 @@ public class GroupView extends Composite implements IGroupView,
 	}
 
 	@Override
-	public void setGroupList(Set<Group> groups) {
+	public void setGroupList(List<Group> groups) {
 		if (groups != null && groups.size() != 0) {
 			while (groupList.hasChildNodes()) {
 				groupList.removeChild(groupList.getFirstChild());

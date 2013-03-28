@@ -1,8 +1,8 @@
 package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
-public class User implements Serializable {
+public class User implements Serializable, Comparable<User> {
 	/**
 	 * 
 	 */
@@ -37,7 +37,7 @@ public class User implements Serializable {
 	@Persistent
 	private Set<String> friends;
 	@Persistent(serialized = "true", defaultFetchGroup = "true")
-	private Map<Key, Integer> access = new HashMap<Key, Integer>();
+	private Map<Key, Integer> access = new LinkedHashMap<Key, Integer>();
 	@NotPersistent
 	private String loginUrl;
 	@NotPersistent
@@ -52,16 +52,18 @@ public class User implements Serializable {
 	}
 
 	public void setAccess(Map<Key, Integer> access) {
-		this.access = access;
+		this.access.clear();
+		this.access.putAll(access);
 	}
 
 	public Set<Key> getGroups() {
-		if(groups==null) groups = new HashSet<Key>();
+		if(groups==null) groups = new LinkedHashSet<Key>();
 		return groups;
 	}
 
 	public void setGroups(Set<Key> groups) {
-		this.groups = groups;
+		this.groups.clear();
+		this.groups.addAll(groups);
 	}
 	
 	public Set<String> getFriends() {
@@ -137,5 +139,10 @@ public class User implements Serializable {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(User user) {
+		return this.getEmail().compareToIgnoreCase(user.getEmail());
 	}
 }

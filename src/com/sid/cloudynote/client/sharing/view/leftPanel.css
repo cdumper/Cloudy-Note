@@ -10,13 +10,46 @@
 	display: block;
 }
 
+.namePanel{
+	padding: 10px 20px;
+	border-bottom: 1px solid #CED8DF;
+}
+
+.namePanel .label{
+	margin-bottom: 10px;
+}
+
+.namePanel .textbox{
+	margin-bottom: 5px;
+}
+
+.leftPanel {
+	width: 100%;
+	height: 100%;
+	border: 0px solid grey;
+	border-top: 1px solid #999;
+}
+
+.centerPanel {
+	width: 100%;
+	height: 100%;
+	border: 0px solid grey;
+	border-left: 1px solid #999;
+	border-top: 1px solid #999;
+}
+
+.searchContainer {
+	width: 100%;
+	border: 0px solid #EAEDEF;
+	border-bottom: 1px solid #999;
+	background-color: #EAEDEF;
+	position: relative;
+}
+
 .buttonPanel {
 	width: 100%;
-	height: 10%;
-	border: 1px solid grey;
-	background: #F0F0F0;
-	position: relative;
-	vertical-align: middle;
+	border: 0px solid grey;
+	padding: 5px 10px;
 }
 
 .groupList {
@@ -24,7 +57,15 @@
 	width: 100%;
 	height: 100%;
 	float: left;
-	background: #F0F0F0;
+	border: 0px solid grey;
+	background-color: #EAEDEF;
+}
+
+.groupList .firstBlock{
+	position: relative;
+	width: 100%;
+	float: left;
+	border-right: 1px solid #999;
 }
 
 .groupList .secondBlock{
@@ -32,8 +73,9 @@
 	width: 100%;
 	height: 100%;
 	float: left;
-	background: #F0F0F0;
-	margin-top: 30px;
+	margin-top: 15px;
+	padding-top: 15px;
+	border-right: 1px solid #999;
 }
 
 .groupList .label {
@@ -45,17 +87,20 @@
 	position: relative;
 	display: block;
 	text-align: left;
-	background: #F0F0F0;
+	background-color: #EAEDEF;
 }
 
 .groupList .textBox {
 	display: block;
-	width: 50%;
-	height: 12px;
-	margin-left: 20%;
 	position: relative;
 	text-align: left;
-	font-size: 14px;
+	font-size: 12px;
+	font-weight: small;
+	color: #A2A2A2;
+	width: 120px;
+	height: 15px;
+	margin: 5px 40px;
+	border-radius: 5px;
 }
 
 .groupList .button {
@@ -65,7 +110,7 @@
 	position: relative;
 	display: block;
 	text-align: left;
-	background: #F0F0F0;
+	background-color: #EAEDEF;
 	border: 0px solid #D8D8D8;
 	color: #606060;
 	font-size: 14px;

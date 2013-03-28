@@ -1,8 +1,8 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.shared.GWT;
@@ -45,14 +45,14 @@ public class GroupPresenter implements Presenter, IGroupView.Presenter{
 	public void loadGroupList() {
 		final String email = AppController.get().getLoginInfo().getEmail();
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
-		groupService.getGroups(email, new AsyncCallback<Set<Group>>(){
+		groupService.getGroups(email, new AsyncCallback<List<Group>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log("Failed to load group list of user : " + email);
 			}
 
 			@Override
-			public void onSuccess(Set<Group> result) {
+			public void onSuccess(List<Group> result) {
 				view.setGroupList(result);
 				
 				Map<Key, Group> allGroups = new HashMap<Key, Group>();

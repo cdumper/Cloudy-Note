@@ -12,7 +12,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
-public class Tag implements Serializable{
+public class Tag implements Serializable, Comparable<Tag>{
 	/**
 	 * 
 	 */
@@ -67,5 +67,9 @@ public class Tag implements Serializable{
 	}
 	public void setNoteCount(int noteCount) {
 		this.noteCount = noteCount;
+	}
+	@Override
+	public int compareTo(Tag tag) {
+		return this.getCreatedTime().compareTo(tag.getCreatedTime());
 	}
 }

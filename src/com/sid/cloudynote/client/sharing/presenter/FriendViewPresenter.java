@@ -1,11 +1,12 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
@@ -49,21 +50,20 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	@Override
 	public void loadMyGroupList(final String email) {
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
-		groupService.getMyGroups(email, new AsyncCallback<Set<Group>>() {
+		groupService.getMyGroups(email, new AsyncCallback<List<Group>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log("Failed to load group list of user : " + email);
 			}
 
 			@Override
-			public void onSuccess(Set<Group> result) {
+			public void onSuccess(List<Group> result) {
 				view.setGroupList(result);
-				
-				Map<Key, Group> myGroups = new HashMap<Key, Group>();
+				Map<Key, Group> groups = new LinkedHashMap<Key, Group>();
 				for(Group group : result) {
-					myGroups.put(group.getKey(), group);
+					groups.put(group.getKey(), group);
 				}
-				DataManager.setMyGroups(myGroups);
+				DataManager.setMyGroups(groups);
 			}
 		});
 	}
@@ -150,7 +150,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			public void onSuccess(List<User> friends) {
 				view.presentFriends(friends, false);
 				
-				Map<String, User> allFriends = new HashMap<String, User>();
+				Map<String, User> allFriends = new TreeMap<String, User>();
 				for(User user : friends) {
 					allFriends.put(user.getEmail(), user);
 				}
@@ -192,7 +192,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 
 					@Override
 					public void onSuccess(List<User> result) {
-						Map<User, Boolean> map = new HashMap<User, Boolean>();
+						Map<User, Boolean> map = new TreeMap<User, Boolean>();
 						for (User u : result) {
 							map.put(u, true);
 						}

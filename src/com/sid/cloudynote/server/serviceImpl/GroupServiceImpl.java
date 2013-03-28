@@ -82,29 +82,26 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Set<Group> getGroups(String userEmail) throws NotLoggedInException {
+	public List<Group> getGroups(String userEmail) throws NotLoggedInException {
 		checkLoggedIn();
 		User user = getUser(userEmail);
-		Set<Group> groups = new HashSet<Group>();
+		List<Group> groups = new ArrayList<Group>();
 		Set<Key> groupKeys;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query groupQuery = pm.newQuery(Group.class);
 		groupQuery.setFilter("key == keyParam");
 		groupQuery.declareParameters(Key.class.getName() + " keyParam");
+		groupQuery.setOrdering("name asc");
 		try {
 			if (user != null && user.getGroups() != null) {
-				List<Group> groupList;
 				groupKeys = user.getGroups();
 				for (Key key : groupKeys) {
 					Object o = groupQuery.execute(key);
 					if (o != null) {
-						groupList = (List<Group>) o;
-						groupList = new ArrayList<Group>(
-								pm.detachCopyAll(groupList));
-						groupList.size();
-						if (!groupList.isEmpty()) {
-							groups.add(groupList.get(0));
-						}
+						groups = (List<Group>) o;
+						groups = new ArrayList<Group>(
+								pm.detachCopyAll(groups));
+						groups.size();
 					}
 				}
 			}
@@ -129,26 +126,20 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Set<Group> getMyGroups(String userEmail) throws NotLoggedInException {
+	public List<Group> getMyGroups(String userEmail) throws NotLoggedInException {
 		checkLoggedIn();
-		Set<Group> groups = new HashSet<Group>();
+		List<Group> groups = new ArrayList<Group>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query groupQuery = pm.newQuery(Group.class);
 		groupQuery.setFilter("owner == ownerParam");
 		groupQuery.declareParameters("String ownerParam");
-		groupQuery.setOrdering("name desc");
+		groupQuery.setOrdering("name asc");
 		try {
-			List<Group> groupList;
 			Object o = groupQuery.execute(userEmail);
 			if (o != null) {
-				groupList = (List<Group>) o;
-				groupList = new ArrayList<Group>(pm.detachCopyAll(groupList));
-				groupList.size();
-				if (!groupList.isEmpty()) {
-					for (Group g : groupList) {
-						groups.add(g);
-					}
-				}
+				groups = (List<Group>) o;
+				groups = new ArrayList<Group>(pm.detachCopyAll(groups));
+				groups.size();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -5,7 +5,7 @@
 	
 	</ui:style>
 	<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
-		<g:north size='6'>
+		<g:north size='7'>
 			<s:SharingSearchView ui:field='searchView' />
 		</g:north>
 		<g:west size='15'>

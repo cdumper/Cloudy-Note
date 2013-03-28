@@ -1,12 +1,12 @@
 package com.sid.cloudynote.client.sharing.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -25,7 +25,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -67,9 +66,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiField
 	DockLayoutPanel content;
 	@UiField
-	FlowPanel leftPanel;
-	@UiField
-	HTMLPanel friendsButtonListPanel;
+	HTMLPanel leftPanel;
 	@UiField
 	Button allFriendsButton;
 	@UiField
@@ -162,7 +159,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
 			String userEmail = AppController.get().getLoginInfo().getEmail();
-			Set<String> members = new HashSet<String>();
+			Set<String> members = new TreeSet<String>();
 			for (FriendListItem item : friendsItemSet) {
 				if (item.getSelected()) {
 					members.add(item.getUser().getEmail());
@@ -285,7 +282,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 				.values()), false);
 	}
 
-	public void setGroupList(Set<Group> result) {
+	public void setGroupList(List<Group> result) {
 		this.groupsPanel.clear();
 		for (final Group group : result) {
 			Button button = new Button(group.getName()+" ("+group.getMembers().size()+")", new ClickHandler() {
@@ -301,7 +298,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	}
 
 	public void presentFriends(List<User> users, Boolean checked) {
-		Map<User, Boolean> map = new HashMap<User, Boolean>();
+		Map<User, Boolean> map = new TreeMap<User, Boolean>();
 		for (User u : users) {
 			map.put(u, checked);
 		}
@@ -310,7 +307,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 	public void presentFriends(Map<User, Boolean> users) {
 		if (friendsItemSet == null) {
-			friendsItemSet = new HashSet<FriendListItem>();
+			friendsItemSet = new TreeSet<FriendListItem>();
 		}
 		if (users != null) {
 			friendsItemSet.clear();

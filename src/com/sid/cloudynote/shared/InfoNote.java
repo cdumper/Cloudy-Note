@@ -3,7 +3,7 @@ package com.sid.cloudynote.shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
-public class InfoNote implements Serializable {
+public class InfoNote implements Serializable, Comparable<InfoNote> {
 	/**
 	 * 
 	 */
@@ -49,7 +49,7 @@ public class InfoNote implements Serializable {
 	 * int permission
 	 */
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
-	private Map<String, Integer> userAccess = new HashMap<String, Integer>();
+	private Map<String, Integer> userAccess = new LinkedHashMap<String, Integer>();
 	
 	/**
 	 * group access contains the group access information of the note
@@ -57,7 +57,7 @@ public class InfoNote implements Serializable {
 	 * int permission
 	 */
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
-	private Map<Key, Integer> groupAccess = new HashMap<Key, Integer>();
+	private Map<Key, Integer> groupAccess = new LinkedHashMap<Key, Integer>();
 
 	public Map<String, Integer> getUserAccess() {
 		return userAccess;
@@ -88,7 +88,8 @@ public class InfoNote implements Serializable {
 	}
 
 	public void setUserAccess(Map<String, Integer> access) {
-		this.userAccess = access;
+		this.userAccess.clear();
+		this.userAccess.putAll(access);
 	}
 
 	public InfoNote() {
@@ -176,6 +177,12 @@ public class InfoNote implements Serializable {
 	}
 
 	public void setGroupAccess(Map<Key, Integer> groupAccess) {
-		this.groupAccess = groupAccess;
+		this.groupAccess.clear();
+		this.groupAccess.putAll(groupAccess);
+	}
+
+	@Override
+	public int compareTo(InfoNote note) {
+		return this.getTitle().compareToIgnoreCase(note.getTitle());
 	}
 }

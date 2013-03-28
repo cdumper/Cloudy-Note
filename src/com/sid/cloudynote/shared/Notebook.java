@@ -2,13 +2,15 @@ package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.jdo.annotations.Element;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Order;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -17,7 +19,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION,detachable="true")
-public class Notebook implements Serializable{
+public class Notebook implements Serializable, Comparable<Notebook>{
 	/**
 	 * 
 	 */
@@ -33,6 +35,7 @@ public class Notebook implements Serializable{
 	private int totalNotes = 0;
 	@Persistent(mappedBy="notebook")
     @Element(dependent = "true")
+	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="title desc"))
 	private List<InfoNote> notes;
 	/**
 	 * access contains the access information of the note
@@ -40,7 +43,7 @@ public class Notebook implements Serializable{
 	 * int permission
 	 */
 	@Persistent(serialized = "true", defaultFetchGroup = "true") 
-	private Map<String, Integer> access = new HashMap<String, Integer>();
+	private Map<String, Integer> access = new LinkedHashMap<String, Integer>();
 
 	public Notebook() {
 		super();
@@ -97,6 +100,12 @@ public class Notebook implements Serializable{
 	}
 
 	public void setAccess(Map<String, Integer> access) {
-		this.access = access;
+		this.access.clear();
+		this.access.putAll(access);
+	}
+
+	@Override
+	public int compareTo(Notebook notebook) {
+		return this.getName().compareToIgnoreCase(notebook.getName());
 	}
 }

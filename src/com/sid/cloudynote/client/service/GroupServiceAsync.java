@@ -14,11 +14,11 @@ public interface GroupServiceAsync {
 	void createGroup(String name, String owner, Set<String> users,
 			AsyncCallback<Void> callback);
 
-	void getGroups(String userEmail, AsyncCallback<Set<Group>> callback);
+	void getGroups(String userEmail, AsyncCallback<List<Group>> callback);
 
 	void modifyGroup(Group group, AsyncCallback<Void> callback);
 
-	void getMyGroups(String userEmail, AsyncCallback<Set<Group>> callback);
+	void getMyGroups(String userEmail, AsyncCallback<List<Group>> callback);
 
 	void getUsersInGroup(Key key, AsyncCallback<List<User>> callback);
 

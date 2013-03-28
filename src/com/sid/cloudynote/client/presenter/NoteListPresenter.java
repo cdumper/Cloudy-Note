@@ -135,7 +135,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	@Override
 	public void loadGroupList(final String email) {
 		GroupServiceAsync service = GWT.create(GroupService.class);
-		service.getGroups(email, new AsyncCallback<Set<Group>>() {
+		service.getGroups(email, new AsyncCallback<List<Group>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -143,7 +143,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 			}
 
 			@Override
-			public void onSuccess(Set<Group> result) {
+			public void onSuccess(List<Group> result) {
 				Map<Key, Group> allGroups = new HashMap<Key, Group>();
 				for (Group group : result) {
 					allGroups.put(group.getKey(), group);

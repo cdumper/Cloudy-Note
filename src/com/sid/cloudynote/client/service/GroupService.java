@@ -26,7 +26,7 @@ public interface GroupService extends RemoteService {
 	 * @return
 	 * @throws NotLoggedInException
 	 */
-	Set<Group> getGroups(String userEmail) throws NotLoggedInException;
+	List<Group> getGroups(String userEmail) throws NotLoggedInException;
 	
 	/**
 	 * The service to get ONLY groups the user owns, NOT including the ones user is in
@@ -34,7 +34,7 @@ public interface GroupService extends RemoteService {
 	 * @return
 	 * @throws NotLoggedInException
 	 */
-	Set<Group> getMyGroups(String userEmail) throws NotLoggedInException;
+	List<Group> getMyGroups(String userEmail) throws NotLoggedInException;
 	
 	/**
 	 * The service to get the user list in the given group

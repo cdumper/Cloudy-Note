@@ -1,8 +1,8 @@
 package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
-public class Group implements Serializable {
+public class Group implements Serializable,Comparable<Group> {
 	/**
 	 * 
 	 */
@@ -30,10 +30,10 @@ public class Group implements Serializable {
 	@Persistent
 	private int visibility = Visibility.PRIVATE;
 	@Persistent
-	private Set<String> members = new HashSet<String>();
+	private Set<String> members = new LinkedHashSet<String>();
 
 	@Persistent(serialized = "true", defaultFetchGroup = "true")
-	private Map<Key, Integer> access = new HashMap<Key, Integer>();
+	private Map<Key, Integer> access = new LinkedHashMap<Key, Integer>();
 
 	public Group() {
 	}
@@ -42,7 +42,8 @@ public class Group implements Serializable {
 		super();
 		this.name = name;
 		this.owner = owner;
-		this.members = members;
+		this.members.clear();
+		this.members.addAll(members);
 	}
 
 	public String getName() {
@@ -54,7 +55,8 @@ public class Group implements Serializable {
 	}
 
 	public void setMembers(Set<String> members) {
-		this.members = members;
+		this.members.clear();
+		this.members.addAll(members);
 	}
 
 	public Key getKey() {
@@ -90,7 +92,8 @@ public class Group implements Serializable {
 	}
 
 	public void setAccess(Map<Key, Integer> access) {
-		this.access = access;
+		this.access.clear();
+		this.access.putAll(access);
 	}
 
 	@Override
@@ -102,5 +105,10 @@ public class Group implements Serializable {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(Group group) {
+		return this.getKey().compareTo(group.getKey());
 	}
 }

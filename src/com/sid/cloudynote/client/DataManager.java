@@ -1,5 +1,6 @@
 package com.sid.cloudynote.client;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
@@ -11,23 +12,24 @@ import com.sid.cloudynote.shared.Tag;
 import com.sid.cloudynote.shared.User;
 
 public class DataManager {
-	static Map<Key, Group> myGroups;
-	static Map<Key, Group> allGroups;
-	static Map<String, User> allFriends;
-	static Map<Key, Notebook> notebooks;
-	static Map<Key, InfoNote> notes;
+	static Map<Key, Group> myGroups = new LinkedHashMap<Key,Group>();
+	static Map<Key, Group> allGroups = new LinkedHashMap<Key,Group>();
+	static Map<String, User> allFriends = new LinkedHashMap<String,User>();
+	static Map<Key, Notebook> notebooks = new LinkedHashMap<Key,Notebook>();
+	static Map<Key, InfoNote> notes = new LinkedHashMap<Key,InfoNote>();
+	static Map<Key, Tag> allTags = new LinkedHashMap<Key,Tag>();
 	static Key currentNoteKey;
 	static Key currentNotebookKey;
 	static Notebook currentNotebook;
 	static InfoNote currentNote;
-	static Map<Key, Tag> allTags;
 
 	public static Map<Key, Tag> getAllTags() {
 		return allTags;
 	}
 
 	public static void setAllTags(Map<Key, Tag> allTags) {
-		DataManager.allTags = allTags;
+		DataManager.allTags.clear();
+		DataManager.allTags.putAll(allTags);
 	}
 
 	public static Map<Key, Notebook> getNotebooks() {
@@ -35,7 +37,8 @@ public class DataManager {
 	}
 
 	public static void setNotebooks(Map<Key, Notebook> notebooks) {
-		DataManager.notebooks = notebooks;
+		DataManager.notebooks.clear();
+		DataManager.notebooks.putAll(notebooks);
 	}
 
 	public static Map<Key, InfoNote> getNotes() {
@@ -43,9 +46,39 @@ public class DataManager {
 	}
 
 	public static void setNotes(Map<Key, InfoNote> notes) {
-		DataManager.notes = notes;
+		DataManager.notes.clear();
+		DataManager.notes.putAll(notes);
+	}
+	
+	
+	public static Map<Key, Group> getMyGroups() {
+		return myGroups;
+	}
+	
+	public static void setMyGroups(Map<Key, Group> myGroups) {
+		DataManager.myGroups.clear();
+		DataManager.myGroups.putAll(myGroups);
+	}
+	
+	public static Map<Key, Group> getAllGroups() {
+		return allGroups;
+	}
+	
+	public static void setAllGroups(Map<Key, Group> allGroups) {
+		DataManager.allGroups.clear();
+		DataManager.allGroups.putAll(allGroups);
 	}
 
+	public static Map<String, User> getAllFriends() {
+		return allFriends;
+	}
+
+	public static void setAllFriends(Map<String, User> allFriends) {
+		DataManager.allFriends.clear();
+		DataManager.allFriends.putAll(allFriends);
+	}
+	
+	// getter and setter for current note and notebook
 	public static Key getCurrentNoteKey() {
 		return DataManager.currentNoteKey;
 	}
@@ -106,29 +139,5 @@ public class DataManager {
 			}
 		}
 		return DataManager.currentNotebook;
-	}
-	
-	public static Map<Key, Group> getMyGroups() {
-		return myGroups;
-	}
-	
-	public static void setMyGroups(Map<Key, Group> myGroups) {
-		DataManager.myGroups = myGroups;
-	}
-	
-	public static Map<Key, Group> getAllGroups() {
-		return allGroups;
-	}
-	
-	public static void setAllGroups(Map<Key, Group> allGroups) {
-		DataManager.allGroups = allGroups;
-	}
-
-	public static Map<String, User> getAllFriends() {
-		return allFriends;
-	}
-
-	public static void setAllFriends(Map<String, User> allFriends) {
-		DataManager.allFriends = allFriends;
 	}
 }
