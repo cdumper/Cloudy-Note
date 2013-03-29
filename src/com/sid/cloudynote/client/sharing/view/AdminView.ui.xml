@@ -24,23 +24,43 @@
 			<g:center>
 				<g:DockLayoutPanel width="100%" height="100%">
 					<g:west size="300">
-						<g:HTMLPanel addStyleNames="{style.subListPanel}"
-							ui:field="subListPanel">
+						<g:HTMLPanel addStyleNames="{style.subListPanel}">
 							<g:HTMLPanel addStyleNames="{style.labelPanel}">
-								<g:Label ui:field="label"/>
+								<g:Label ui:field="subListLabel" />
 							</g:HTMLPanel>
-							<g:DeckPanel ui:field="deck">
+							<g:DeckPanel ui:field="subListDeck">
 								<p1:CellList ui:field="userList" />
 								<p1:CellList ui:field="noteList" />
 							</g:DeckPanel>
 						</g:HTMLPanel>
 					</g:west>
 					<g:center>
-						<g:HTMLPanel addStyleNames="{style.contentPanel}"
-							ui:field="contentPanel">
-							<p1:CellTable ui:field="contentTable" width="100%"
-								height="100%" />
-						</g:HTMLPanel>
+						<g:DeckPanel ui:field="contentDeck" addStyleNames="{style.contentPanel}">
+							<g:HTMLPanel>
+								<g:HTMLPanel ui:field="groupAccessContentPanel">
+									<g:Label ui:field="groupLabel" text="Group Access" />
+									<g:HTMLPanel ui:field="groupAccessContent">
+									</g:HTMLPanel>
+								</g:HTMLPanel>
+								<g:HTMLPanel ui:field="userAccessContentPanel">
+									<g:Label ui:field="userLabel" text="User Access" />
+									<g:HTMLPanel ui:field="userAccessContent">
+									</g:HTMLPanel>
+								</g:HTMLPanel>
+							</g:HTMLPanel>
+							<g:HTMLPanel>
+								<g:HTMLPanel ui:field="notebookPermissionContentPanel">
+									<g:Label ui:field="notebookLabel" text="Notebook Permission" />
+									<g:HTMLPanel ui:field="notebookPermissionContent">
+									</g:HTMLPanel>
+								</g:HTMLPanel>
+								<g:HTMLPanel ui:field="notePermissionContentPanel">
+									<g:Label ui:field="noteLabel" text="Note Permission" />
+									<g:HTMLPanel ui:field="notePermissionContent">
+									</g:HTMLPanel>
+								</g:HTMLPanel>
+							</g:HTMLPanel>
+						</g:DeckPanel>
 					</g:center>
 				</g:DockLayoutPanel>
 			</g:center>

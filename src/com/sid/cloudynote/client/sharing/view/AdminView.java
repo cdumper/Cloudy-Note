@@ -1,7 +1,9 @@
 package com.sid.cloudynote.client.sharing.view;
 
 import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.CssResource;
@@ -9,7 +11,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -54,7 +55,7 @@ public class AdminView extends Composite implements IAdminView {
 			return notebook == null ? null : notebook.getName();
 		}
 	};
-	
+
 	public static final ProvidesKey<InfoNote> NOTE_KEY_PROVIDER = new ProvidesKey<InfoNote>() {
 		@Override
 		public Object getKey(InfoNote note) {
@@ -68,7 +69,7 @@ public class AdminView extends Composite implements IAdminView {
 			return group == null ? null : group.getName();
 		}
 	};
-	
+
 	public static final ProvidesKey<User> USER_KEY_PROVIDER = new ProvidesKey<User>() {
 		@Override
 		public Object getKey(User user) {
@@ -83,7 +84,17 @@ public class AdminView extends Composite implements IAdminView {
 		initialNotePermissionList();
 		initialUserList();
 		initialNoteList();
-		deck.showWidget(0);
+		subListDeck.showWidget(0);
+	}
+	
+	private void presentGroupAccess(Group group) {
+		this.contentDeck.showWidget(0);
+		this.groupAccessContentPanel.setVisible(true);
+		this.userAccessContentPanel.setVisible(false);
+		this.groupLabel.setText(group.getName());
+		for(Map.Entry<Key, Integer> entry : group.getAccess().entrySet()){
+			this.groupAccessContent.add(new Label(entry.getKey()+":"+entry.getValue()));
+		}
 	}
 
 	private void initialNoteList() {
@@ -94,33 +105,30 @@ public class AdminView extends Composite implements IAdminView {
 		noteSelectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						InfoNote note = noteSelectionModel
-								.getSelectedObject();
-						if (note!=null && note.getKey() != null) {
+						InfoNote note = noteSelectionModel.getSelectedObject();
+						if (note != null && note.getKey() != null) {
 							presenter.onNoteItemSelected(note);
-						} 
+						}
 					}
 				});
-		
+
 		this.noteDataProvider.addDataDisplay(this.noteList);
 	}
 
 	private void initialUserList() {
-		userSelectionModel = new SingleSelectionModel<User>(
-				USER_KEY_PROVIDER);
+		userSelectionModel = new SingleSelectionModel<User>(USER_KEY_PROVIDER);
 		userList.setSelectionModel(userSelectionModel);
 
 		userSelectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						User user = userSelectionModel
-								.getSelectedObject();
-						if (user!=null && user.getEmail() != null) {
+						User user = userSelectionModel.getSelectedObject();
+						if (user != null && user.getEmail() != null) {
 							presenter.onUserItemSelected(user);
-						} 
+						}
 					}
 				});
-		
+
 		this.userDataProvider.addDataDisplay(this.userList);
 	}
 
@@ -134,15 +142,20 @@ public class AdminView extends Composite implements IAdminView {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Group group = userAccessSelectionModel
 								.getSelectedObject();
-						if (group==null) return;
+						if (group == null)
+							return;
 						presenter.onUserAccessItemSelected(group);
+						//TODO
+						presentGroupAccess(group);
 						
-						if(notePermissionSelectionModel.getSelectedObject()!=null){
-							notePermissionSelectionModel.setSelected(notePermissionSelectionModel.getSelectedObject(), false);
+						if (notePermissionSelectionModel.getSelectedObject() != null) {
+							notePermissionSelectionModel.setSelected(
+									notePermissionSelectionModel
+											.getSelectedObject(), false);
 						}
 					}
 				});
-		
+
 		this.groupDataProvider.getList().add(new Group("All Users"));
 		this.groupDataProvider.getList().add(new Group("UnGrouped"));
 		this.groupDataProvider.addDataDisplay(this.userAccessList);
@@ -159,15 +172,18 @@ public class AdminView extends Composite implements IAdminView {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Notebook notebook = notePermissionSelectionModel
 								.getSelectedObject();
-						if (notebook==null)	return;
+						if (notebook == null)
+							return;
 						presenter.onNotePermissionItemSelected(notebook);
-						
-						if(userAccessSelectionModel.getSelectedObject()!=null){
-							userAccessSelectionModel.setSelected(userAccessSelectionModel.getSelectedObject(), false);
+
+						if (userAccessSelectionModel.getSelectedObject() != null) {
+							userAccessSelectionModel.setSelected(
+									userAccessSelectionModel
+											.getSelectedObject(), false);
 						}
 					}
 				});
-		
+
 		this.notebookDataProvider.getList().add(new Notebook("All Notes"));
 		this.notebookDataProvider.addDataDisplay(this.notePermissionList);
 		this.notePermissionPanel.setOpen(true);
@@ -184,31 +200,28 @@ public class AdminView extends Composite implements IAdminView {
 	@UiField
 	DisclosurePanel notePermissionPanel;
 	@UiField
-	HTMLPanel subListPanel;
-	@UiField
-	Label label;
+	Label subListLabel;
+
 	@Override
-	public void setLabel(String text) {
-		this.label.setText(text);
+	public void setSubListLabel(String text) {
+		this.subListLabel.setText(text);
 	}
 
 	@UiField
-	DeckPanel deck;
+	DeckPanel subListDeck;
 	@UiField(provided = true)
-	CellList<User> userList = new CellList<User>(
-			new AbstractCell<User>() {
-				@Override
-				public void render(Context context, User user,
-						SafeHtmlBuilder sb) {
-					if (user == null) {
-						return;
-					}
+	CellList<User> userList = new CellList<User>(new AbstractCell<User>() {
+		@Override
+		public void render(Context context, User user, SafeHtmlBuilder sb) {
+			if (user == null) {
+				return;
+			}
 
-					sb.appendHtmlConstant("<div style=\"padding:5px 20px;\">");
-					sb.appendEscaped(user.getEmail());
-					sb.appendHtmlConstant("</div>");
-				}
-			});
+			sb.appendHtmlConstant("<div style=\"padding:5px 20px;\">");
+			sb.appendEscaped(user.getEmail());
+			sb.appendHtmlConstant("</div>");
+		}
+	});
 	@UiField(provided = true)
 	CellList<InfoNote> noteList = new CellList<InfoNote>(
 			new AbstractCell<InfoNote>() {
@@ -224,8 +237,6 @@ public class AdminView extends Composite implements IAdminView {
 					sb.appendHtmlConstant("</div>");
 				}
 			});
-	@UiField
-	HTMLPanel contentPanel;
 
 	@UiField(provided = true)
 	CellList<Group> userAccessList = new CellList<Group>(
@@ -257,8 +268,32 @@ public class AdminView extends Composite implements IAdminView {
 					sb.appendHtmlConstant("</div>");
 				}
 			});
-	@UiField(provided = true)
-	CellTable<Object> contentTable = new CellTable<Object>();
+	@UiField
+	DeckPanel contentDeck;
+	@UiField
+	HTMLPanel groupAccessContentPanel;
+	@UiField
+	Label groupLabel;
+	@UiField
+	HTMLPanel groupAccessContent;
+	@UiField
+	HTMLPanel userAccessContentPanel;
+	@UiField
+	Label userLabel;
+	@UiField
+	HTMLPanel userAccessContent;
+	@UiField
+	HTMLPanel notebookPermissionContentPanel;
+	@UiField
+	Label notebookLabel;
+	@UiField
+	HTMLPanel notebookPermissionContent;
+	@UiField
+	HTMLPanel notePermissionContentPanel;
+	@UiField
+	Label noteLabel;
+	@UiField
+	HTMLPanel notePermissionContent;
 
 	@Override
 	public void setPresenter(Presenter presenter) {
@@ -293,13 +328,13 @@ public class AdminView extends Composite implements IAdminView {
 	public void setUserList(List<User> users) {
 		this.userDataProvider.getList().clear();
 		this.userDataProvider.getList().addAll(users);
-		this.deck.showWidget(0);
+		this.subListDeck.showWidget(0);
 	}
 
 	@Override
 	public void setNoteList(List<InfoNote> notes) {
 		this.noteDataProvider.getList().clear();
 		this.noteDataProvider.getList().addAll(notes);
-		this.deck.showWidget(1);
+		this.subListDeck.showWidget(1);
 	}
 }
