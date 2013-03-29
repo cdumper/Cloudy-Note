@@ -616,7 +616,7 @@ public class AdminView extends Composite implements IAdminView {
 					if (notebook == null) {
 						return;
 					}
-
+					
 					sb.appendHtmlConstant("<div style=\"padding:5px 19px;\">");
 					sb.appendEscaped(notebook.getName());
 					sb.appendHtmlConstant("</div>");

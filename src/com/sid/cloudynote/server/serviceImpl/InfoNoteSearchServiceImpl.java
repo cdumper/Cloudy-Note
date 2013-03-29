@@ -51,7 +51,6 @@ public class InfoNoteSearchServiceImpl extends RemoteServiceServlet implements
 						KeyFactory.stringToKey(document.getId())));
 				result.add(note);
 				for (Field field : document.getFields()) {
-					System.out.print(field.getName() + ":");
 					switch (field.getType()) {
 					case TEXT:
 						System.out.println(field.getText());

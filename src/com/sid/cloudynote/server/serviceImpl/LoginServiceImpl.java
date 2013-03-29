@@ -70,7 +70,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 					user = new User();
 					user.setEmail(email);
 					// user.setId(loginInfo.getUserId());
-					user.setNickname(loginInfo.getNickname());
+					user.setNickname(loginInfo.getNickname().split("@")[0]);
 					Set<String> friends = getFakeFriendsData();
 					user.setFriends(friends);
 					pm.currentTransaction().begin();

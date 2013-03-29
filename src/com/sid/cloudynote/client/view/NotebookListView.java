@@ -337,7 +337,7 @@ public class NotebookListView extends ResizeComposite implements
 				return;
 			}
 
-			sb.appendHtmlConstant("<div style=\"background-color:#EAEDEF;color:#555E64;display:inline-block;padding:3px;\">");
+			sb.appendHtmlConstant("<div style=\"padding:5px;\">");
 			sb.appendHtmlConstant(imageHtml);
 			sb.appendEscaped(notebook.getName()+" ("+notebook.getTotalNotes()+")");
 			sb.appendHtmlConstant("</div>");
