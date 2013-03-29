@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jdo.annotations.Element;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Order;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -35,7 +33,7 @@ public class Notebook implements Serializable, Comparable<Notebook>{
 	private int totalNotes = 0;
 	@Persistent(mappedBy="notebook")
     @Element(dependent = "true")
-	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="title desc"))
+//	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="title desc"))
 	private List<InfoNote> notes;
 	/**
 	 * access contains the access information of the note
