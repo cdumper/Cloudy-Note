@@ -94,12 +94,23 @@ public class NonEditableNoteView extends ResizeComposite implements INonEditable
 
 	public void presentNote() {
 		if (note != null) {
+			this.editButton.setVisible(true);
+			this.shareButton.setVisible(true);
+			this.deleteButton.setVisible(true);
 			title.setText(note.getTitle());
 			datetime.setText("Created Time: "+note.getCreatedTime()+"	Last Modified Time: "+note.getLastModifiedTime());
 			notebook.setText(note.getNotebook().getName());
 			noteContent.setHTML(note.getContent());
 			noteContent.setWidth("90%");
-			noteContent.setHeight("100px");
+		} else {
+			this.editButton.setVisible(false);
+			this.shareButton.setVisible(false);
+			this.deleteButton.setVisible(false);
+			title.setText("");
+			datetime.setText("");
+			notebook.setText("");
+			noteContent.setHTML("");
+			noteContent.setWidth("90%");
 		}
 	}
 

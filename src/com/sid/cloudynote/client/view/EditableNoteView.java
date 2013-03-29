@@ -129,6 +129,7 @@ public class EditableNoteView extends ResizeComposite implements
 		// ckf.setSkin("v2");
 //		ckf.setUiColor("#EAEDEF");
 //		ckf.setWidth("100%");
+		//TODO ckeditor height
 		ckf.setHeight("600px");
 		ckf.setResizeEnabled(false);
 
@@ -284,10 +285,6 @@ public class EditableNoteView extends ResizeComposite implements
 	public Map<Tag, Key> getTags() {
 		return this.tags;
 	}
-
-	// private String removeHTMLTags(String data) {
-	// return data.replaceAll("\\<.*?>", "");
-	// }
 
 	public void setSelectedNotebook(Key key) {
 		for (int i = 0; i < notebookList.size(); i++) {

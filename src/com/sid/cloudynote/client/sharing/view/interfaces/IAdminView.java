@@ -21,6 +21,7 @@ public interface IAdminView {
 		void onNoteItemSelected(InfoNote note);
 	}
 
+	void setLabel(String label);
 	void setGroupList(List<Group> groups);
 	void setNotebookList(List<Notebook> notebooks);
 	void setUserList(List<User> users);

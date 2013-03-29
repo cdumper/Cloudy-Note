@@ -73,7 +73,7 @@ public class NoteView extends ResizeComposite implements INoteView,
 
 	@Override
 	public void onNotesExistEvent(NoNotesExistEvent event) {
-		this.container.clear();
+		presenter.presentNote(null);
 	}
 
 	@Override

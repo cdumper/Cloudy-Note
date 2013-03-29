@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -185,6 +186,13 @@ public class AdminView extends Composite implements IAdminView {
 	@UiField
 	HTMLPanel subListPanel;
 	@UiField
+	Label label;
+	@Override
+	public void setLabel(String text) {
+		this.label.setText(text);
+	}
+
+	@UiField
 	DeckPanel deck;
 	@UiField(provided = true)
 	CellList<User> userList = new CellList<User>(
@@ -196,7 +204,7 @@ public class AdminView extends Composite implements IAdminView {
 						return;
 					}
 
-					sb.appendHtmlConstant("<div style=\"padding:5px;\">");
+					sb.appendHtmlConstant("<div style=\"padding:5px 20px;\">");
 					sb.appendEscaped(user.getEmail());
 					sb.appendHtmlConstant("</div>");
 				}
@@ -211,7 +219,7 @@ public class AdminView extends Composite implements IAdminView {
 						return;
 					}
 
-					sb.appendHtmlConstant("<div style=\"padding:5px;\">");
+					sb.appendHtmlConstant("<div style=\"padding:5px 20px;\">");
 					sb.appendEscaped(note.getTitle());
 					sb.appendHtmlConstant("</div>");
 				}
@@ -229,7 +237,7 @@ public class AdminView extends Composite implements IAdminView {
 						return;
 					}
 
-					sb.appendHtmlConstant("<div style=\"padding:5px;\">");
+					sb.appendHtmlConstant("<div style=\"padding:5px 19px;\">");
 					sb.appendEscaped(group.getName());
 					sb.appendHtmlConstant("</div>");
 				}
@@ -244,7 +252,7 @@ public class AdminView extends Composite implements IAdminView {
 						return;
 					}
 
-					sb.appendHtmlConstant("<div style=\"padding:5px;\">");
+					sb.appendHtmlConstant("<div style=\"padding:5px 19px;\">");
 					sb.appendEscaped(notebook.getName());
 					sb.appendHtmlConstant("</div>");
 				}

@@ -26,6 +26,9 @@
 					<g:west size="300">
 						<g:HTMLPanel addStyleNames="{style.subListPanel}"
 							ui:field="subListPanel">
+							<g:HTMLPanel addStyleNames="{style.labelPanel}">
+								<g:Label ui:field="label"/>
+							</g:HTMLPanel>
 							<g:DeckPanel ui:field="deck">
 								<p1:CellList ui:field="userList" />
 								<p1:CellList ui:field="noteList" />
