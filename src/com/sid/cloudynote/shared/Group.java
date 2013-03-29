@@ -37,6 +37,10 @@ public class Group implements Serializable,Comparable<Group> {
 
 	public Group() {
 	}
+	
+	public Group(String name) {
+		this.name = name;
+	}
 
 	public Group(String name, String owner, Set<String> members) {
 		super();
@@ -100,6 +104,13 @@ public class Group implements Serializable,Comparable<Group> {
 	public boolean equals(Object obj) {
 		if (obj instanceof Group) {
 			Group group = (Group) obj;
+			if (this.key == null && group.getKey() == null) {
+				if (this.name.equals(group.getName())){
+					return true;
+				} else {
+					return false;
+				}
+			}
 			if (this.key.equals(group.getKey())) {
 				return true;
 			}

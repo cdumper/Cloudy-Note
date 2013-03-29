@@ -42,6 +42,7 @@
 					<cn:PersonalView ui:field='personalView' />
 					<s:SharingView ui:field='sharingView' />
 					<s:FriendView ui:field='friendsView' />
+					<s:AdminView ui:field='adminView' />
 				</g:DeckPanel>
 			</g:center>
 		</g:DockLayoutPanel>

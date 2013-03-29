@@ -2,11 +2,9 @@ package com.sid.cloudynote.server.serviceImpl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
-import com.sid.cloudynote.shared.Notebook;
 
 public class NotebookServiceTest extends GWTTestCase {
 	NotebookServiceAsync service;

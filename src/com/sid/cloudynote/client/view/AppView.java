@@ -34,7 +34,9 @@ import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.sharing.presenter.AdminPresenter;
 import com.sid.cloudynote.client.sharing.presenter.FriendViewPresenter;
+import com.sid.cloudynote.client.sharing.view.AdminView;
 import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.shared.User;
@@ -68,10 +70,13 @@ public class AppView extends Composite implements Presenter {
 	Button adminButton;
 	@UiField
 	FriendView friendsView;
+	@UiField
+	AdminView adminView;
 
 	private HandlerManager eventBus;
 	private User loginInfo = null;
 	private FriendViewPresenter friendsPresenter;
+	private AdminPresenter adminPresenter;
 	private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
 
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
@@ -138,10 +143,22 @@ public class AppView extends Composite implements Presenter {
 	//TODO show admin page
 	public void showAdmin(HasWidgets container){
 		container.clear();
-		deck.showWidget(0);
+		if (adminView == null) {
+			adminView = new AdminView();
+		}
+		adminPresenter = new AdminPresenter(adminView, eventBus);
+		adminView.setPresenter(adminPresenter);
+		adminPresenter.go(adminView.getContainer());
+		bindAdminEvents();
+		deck.showWidget(3);
 		container.add(dockLayoutPanel);
 	}
 	
+	private void bindAdminEvents() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void bindFriendEvents() {
 		eventBus.addHandler(GroupsChangedEvent.TYPE, friendsView);
 	}

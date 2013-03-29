@@ -3,7 +3,6 @@ package com.sid.cloudynote.client.presenter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;

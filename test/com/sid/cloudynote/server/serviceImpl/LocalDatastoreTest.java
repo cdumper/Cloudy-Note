@@ -1,17 +1,10 @@
 package com.sid.cloudynote.server.serviceImpl;
 
-import java.util.List;
-
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
 import junit.framework.TestCase;
 
 import org.junit.Ignore;
-
-import com.sid.cloudynote.server.TestPMF;
-import com.sid.cloudynote.shared.Notebook;
-import com.sid.cloudynote.shared.User;
 
 @Ignore
 public class LocalDatastoreTest extends TestCase {

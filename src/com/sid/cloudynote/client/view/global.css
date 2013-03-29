@@ -206,6 +206,19 @@ a:link,a:visited,a:hover,a:active {
 	color: #FFFFFF;
 }
 
+/* styles for stackLayoutPanel
+ * AdminView
+ */
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelHeader {
+	font-size: 14px;
+    font-weight: normal;
+    padding: 5px 10px;
+}
+
+.gwt-StackLayoutPanel .gwt-StackLayoutPanelContent {
+	
+}
+
 /* CKEditor styles */
 span.cke_skin_office2003 {
 	-moz-border-radius: 0px;
