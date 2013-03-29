@@ -37,36 +37,56 @@
 					<g:center>
 						<g:DeckPanel ui:field="contentDeck" addStyleNames="{style.contentPanel}">
 							<g:HTMLPanel>
-								<g:HTMLPanel ui:field="groupAccessContentPanel">
-									<div class="{style.labelPanel}">
-										<g:Label ui:field="groupLabel" addStyleNames="{style.label}" text="Group Access" />
-									</div>
-									<g:HTMLPanel ui:field="groupAccessContent">
-									</g:HTMLPanel>
+								<g:HTMLPanel addStyleNames="{style.buttonPanel}">
+									<g:Button ui:field="userAccessSaveButton" addStyleNames="{style.button}" text="Save" />
+									<g:Button ui:field="userAccessRevertButton" addStyleNames="{style.button}" text="Revert" />
 								</g:HTMLPanel>
-								<g:HTMLPanel ui:field="userAccessContentPanel">
-									<div class="{style.labelPanel}">
-										<g:Label ui:field="userLabel" addStyleNames="{style.label}" text="User Access" />
-									</div>
-									<g:HTMLPanel ui:field="userAccessContent">
+								<g:ScrollPanel>
+									<g:HTMLPanel>
+										<g:HTMLPanel ui:field="groupAccessContentPanel">
+											<div class="{style.labelPanel}">
+												<g:Label ui:field="groupLabel" addStyleNames="{style.label}"
+													text="Group Access" />
+											</div>
+											<g:HTMLPanel ui:field="groupAccessContent">
+											</g:HTMLPanel>
+										</g:HTMLPanel>
+										<g:HTMLPanel ui:field="userAccessContentPanel">
+											<div class="{style.labelPanel}">
+												<g:Label ui:field="userLabel" addStyleNames="{style.label}"
+													text="User Access" />
+											</div>
+											<g:HTMLPanel ui:field="userAccessContent">
+											</g:HTMLPanel>
+										</g:HTMLPanel>
 									</g:HTMLPanel>
-								</g:HTMLPanel>
+								</g:ScrollPanel>
 							</g:HTMLPanel>
 							<g:HTMLPanel>
-								<g:HTMLPanel ui:field="notebookPermissionContentPanel">
-									<div class="{style.labelPanel}">
-										<g:Label ui:field="notebookLabel" addStyleNames="{style.label}" text="Notebook Permission" />
-									</div>
-									<g:HTMLPanel ui:field="notebookPermissionContent">
-									</g:HTMLPanel>
+								<g:HTMLPanel addStyleNames="{style.buttonPanel}">
+									<g:Button ui:field="notePermissionSaveButton" addStyleNames="{style.button}" text="Save" />
+									<g:Button ui:field="notePermissionRevertButton" addStyleNames="{style.button}" text="Revert" />
 								</g:HTMLPanel>
-								<g:HTMLPanel ui:field="notePermissionContentPanel">
-									<div class="{style.labelPanel}">
-										<g:Label ui:field="noteLabel" addStyleNames="{style.label}" text="Note Permission" />
-									</div>
-									<g:HTMLPanel ui:field="notePermissionContent">
+								<g:ScrollPanel>
+									<g:HTMLPanel>
+										<g:HTMLPanel ui:field="notebookPermissionContentPanel">
+											<div class="{style.labelPanel}">
+												<g:Label ui:field="notebookLabel" addStyleNames="{style.label}"
+													text="Notebook Permission" />
+											</div>
+											<g:HTMLPanel ui:field="notebookPermissionContent">
+											</g:HTMLPanel>
+										</g:HTMLPanel>
+										<g:HTMLPanel ui:field="notePermissionContentPanel">
+											<div class="{style.labelPanel}">
+												<g:Label ui:field="noteLabel" addStyleNames="{style.label}"
+													text="Note Permission" />
+											</div>
+											<g:HTMLPanel ui:field="notePermissionContent">
+											</g:HTMLPanel>
+										</g:HTMLPanel>
 									</g:HTMLPanel>
-								</g:HTMLPanel>
+								</g:ScrollPanel>
 							</g:HTMLPanel>
 						</g:DeckPanel>
 					</g:center>

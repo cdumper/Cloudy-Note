@@ -17,12 +17,28 @@
 	color: #555E64;
 }
 
+.buttonPanel {
+	padding: 4px 10px;
+	border-bottom: 1px solid #999;
+	background-color: #EAEDEF;
+	font-size: 12px;
+	width: 100%;
+}
+
+.button {
+	padding: 2px;
+	font-size: 12px;
+	height: 24px;
+	margin-right: 5px;
+}
+
 .labelPanel {
 	color: #404040;
 	height: 24px;
 	padding-top: 8px;
 	padding-left: 20px;
-	border-bottom: 1px solid #CED8DF;
+	border-bottom: 1px solid #999;
+	background-color: #EAEDEF;
 }
 
 .contentPanel {
@@ -31,18 +47,26 @@
 	border-left: 1px solid #999;
 }
 
-.contentPanel .label{
+.contentPanel .label {
 	padding-top: 4px;
 }
 
-.contentPanel table{
+.contentPanel table {
 	width: 100%;
 	padding: 5px;
-	border-collapse:collapse;
+	border-collapse: collapse;
 }
 
-.contentPanel td{
+.header{
 	padding: 5px;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #CED8DF;
+	text-align: center;
+	background-color: #EAEDEF;
+	color: #555E64;
+}
+
+.contentPanel td {
+	padding: 5px;
+	border-bottom: 1px solid #CED8DF;
 	text-align: center;
 }

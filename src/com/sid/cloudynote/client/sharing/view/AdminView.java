@@ -8,13 +8,13 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -49,12 +49,16 @@ public class AdminView extends Composite implements IAdminView {
 	private ListDataProvider<InfoNote> noteDataProvider = new ListDataProvider<InfoNote>();
 	private static AdminViewUiBinder uiBinder = GWT
 			.create(AdminViewUiBinder.class);
+	FlexTable groupAccessTable = new FlexTable();
+	FlexTable notebookPermissionTable = new FlexTable();
+	FlexTable userAccessTable = new FlexTable();
+	FlexTable notePermissionTable = new FlexTable();
 
 	interface AdminViewUiBinder extends UiBinder<Widget, AdminView> {
 	}
 
 	interface Style extends CssResource {
-
+		String header();
 	}
 
 	public static final ProvidesKey<Notebook> NOTEBOOK_KEY_PROVIDER = new ProvidesKey<Notebook>() {
@@ -94,361 +98,315 @@ public class AdminView extends Composite implements IAdminView {
 		initialNoteList();
 		subListDeck.showWidget(0);
 	}
-	
+
 	private void presentGroupAccess(Group group) {
 		this.contentDeck.showWidget(0);
+		// this.userAccessSaveButton.setEnabled(false);
 		this.groupAccessContentPanel.setVisible(true);
 		this.userAccessContentPanel.setVisible(false);
-		this.groupLabel.setText(group.getName()+" Access");
-		this.groupAccessContent.clear();
-		if(group.getAccess().size()!=0){
-			final FlexTable table = new FlexTable();
-			//generate the header
-			CheckBox allRead = new CheckBox("Read");
-			CheckBox allWrite = new CheckBox("Write");
-			allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
-
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 1)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
-
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 2)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			table.setWidget(0, 1, allRead);
-			table.setWidget(0, 2, allWrite);
-			table.setWidget(0, 3, new Label("Notebook"));
-			table.setWidget(0, 4, new Label("Note"));
+		this.groupLabel.setText(group.getName() + " Access");
+		this.groupAccessTable.removeAllRows();
+		// generate the header
+		CheckBox allRead = new CheckBox("Read");
+		CheckBox allWrite = new CheckBox("Write");
+		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			
-			//generate table content
-			for(Map.Entry<Key, Integer> entry : group.getAccess().entrySet()){
-				int row = table.getRowCount();
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
+					((CheckBox) groupAccessTable.getWidget(i, 1))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
+					((CheckBox) groupAccessTable.getWidget(i, 2))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		groupAccessTable.setWidget(0, 1, allRead);
+		groupAccessTable.setWidget(0, 2, allWrite);
+		groupAccessTable.setWidget(0, 3, new Label("Notebook"));
+		groupAccessTable.setWidget(0, 4, new Label("Note"));
+		groupAccessTable.getRowFormatter().addStyleName(0, style.header());
+		if (group.getAccess().size() != 0) {
+			// generate table content
+			for (Map.Entry<Key, Integer> entry : group.getAccess().entrySet()) {
+				int row = groupAccessTable.getRowCount();
 				Label rowValue = new Label();
-				rowValue.getElement().setInnerHTML(KeyFactory.keyToString(entry.getKey()));
+				rowValue.getElement().setInnerHTML(
+						KeyFactory.keyToString(entry.getKey()));
 				rowValue.setVisible(false);
 				CheckBox read = new CheckBox("Read");
 				CheckBox write = new CheckBox("Write");
-				table.setWidget(row, 0, rowValue);
-				table.setWidget(row, 1, read);
-				table.setWidget(row, 2, write);
-				table.setWidget(row, 3, new Label("-"));
-				table.setWidget(row, 4, new Label("NoteKey:"+entry.getKey()));
-				if(entry.getValue()==1){
+				groupAccessTable.setWidget(row, 0, rowValue);
+				groupAccessTable.setWidget(row, 1, read);
+				groupAccessTable.setWidget(row, 2, write);
+				groupAccessTable.setWidget(row, 3, new Label("-"));
+				groupAccessTable.setWidget(row, 4,
+						new Label("NoteKey:" + entry.getKey()));
+				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
-				} else if (entry.getValue()==2) {
+				} else if (entry.getValue() == 2) {
 					read.setValue(true);
 					write.setValue(true);
 				}
 			}
-			this.groupAccessContent.add(table);
-			this.groupAccessContent.add(new Button("Save",new ClickHandler(){
-
-				@Override
-				public void onClick(ClickEvent event) {
-					for(int i=1;i<table.getRowCount();i++){
-						String keyString = table.getWidget(i,0).getElement().getInnerHTML();
-						Key key = KeyFactory.stringToKey(keyString);
-						int permission = 0;
-						if(((CheckBox)table.getWidget(i,2)).getValue()){
-							permission = 2;
-						} else if(((CheckBox)table.getWidget(i,1)).getValue()){
-							permission = 1;
-						}
-						// TODO update the database
-					}
-				}
-				
-			}));
+			this.groupAccessContent.add(groupAccessTable);
 		}
 	}
-	
+
 	private void presentNotebookPermission(Notebook notebook) {
 		this.contentDeck.showWidget(1);
+		// this.notePermissionSaveButton.setEnabled(false);
 		this.notebookPermissionContentPanel.setVisible(true);
 		this.notePermissionContentPanel.setVisible(false);
-		this.notebookLabel.setText(notebook.getName()+" Permission");
-		this.notePermissionContent.clear();
-		if(notebook.getAccess().size()!=0){
-			final FlexTable table = new FlexTable();
-			//generate the header
-			CheckBox allRead = new CheckBox("Read");
-			CheckBox allWrite = new CheckBox("Write");
-			allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
-
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 1)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
-
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 2)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			table.setWidget(0, 1, allRead);
-			table.setWidget(0, 2, allWrite);
-			table.setWidget(0, 3, new Label("Group"));
-			table.setWidget(0, 4, new Label("User"));
+		this.notebookLabel.setText(notebook.getName() + " Permission");
+		this.notebookPermissionTable.removeAllRows();
+		// generate the header
+		CheckBox allRead = new CheckBox("Read");
+		CheckBox allWrite = new CheckBox("Write");
+		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			
-			//generate table content
-			for(Map.Entry<String, Integer> entry : notebook.getAccess().entrySet()){
-				int row = table.getRowCount();
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < notebookPermissionTable.getRowCount(); i++) {
+					((CheckBox) notebookPermissionTable.getWidget(i, 1))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < notebookPermissionTable.getRowCount(); i++) {
+					((CheckBox) notebookPermissionTable.getWidget(i, 2))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		notebookPermissionTable.setWidget(0, 1, allRead);
+		notebookPermissionTable.setWidget(0, 2, allWrite);
+		notebookPermissionTable.setWidget(0, 3, new Label("Group"));
+		notebookPermissionTable.setWidget(0, 4, new Label("User"));
+		notebookPermissionTable.getRowFormatter().addStyleName(0, style.header());
+		
+		if (notebook.getAccess().size() != 0) {
+			// generate table content
+			for (Map.Entry<String, Integer> entry : notebook.getAccess()
+					.entrySet()) {
+				int row = notebookPermissionTable.getRowCount();
 				Label rowValue = new Label();
 				rowValue.getElement().setInnerHTML(entry.getKey());
 				rowValue.setVisible(false);
 				CheckBox read = new CheckBox("Read");
 				CheckBox write = new CheckBox("Write");
-				table.setWidget(row, 0, rowValue);
-				table.setWidget(row, 1, read);
-				table.setWidget(row, 2, write);
-				table.setWidget(row, 3, new Label("-"));
-				table.setWidget(row, 4, new Label(entry.getKey()));
-				if(entry.getValue()==1){
+				notebookPermissionTable.setWidget(row, 0, rowValue);
+				notebookPermissionTable.setWidget(row, 1, read);
+				notebookPermissionTable.setWidget(row, 2, write);
+				notebookPermissionTable.setWidget(row, 3, new Label("-"));
+				notebookPermissionTable.setWidget(row, 4,
+						new Label(entry.getKey()));
+				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
-				} else if (entry.getValue()==2) {
+				} else if (entry.getValue() == 2) {
 					read.setValue(true);
 					write.setValue(true);
 				}
 			}
-			this.notebookPermissionContent.add(table);
-			this.notebookPermissionContent.add(new Button("Save",new ClickHandler(){
-
-				@Override
-				public void onClick(ClickEvent event) {
-					for(int i=1;i<table.getRowCount();i++){
-						String keyString = table.getWidget(i,0).getElement().getInnerHTML();
-						Key key = KeyFactory.stringToKey(keyString);
-						int permission = 0;
-						if(((CheckBox)table.getWidget(i,2)).getValue()){
-							permission = 2;
-						} else if(((CheckBox)table.getWidget(i,1)).getValue()){
-							permission = 1;
-						}
-						// TODO update the database
-					}
-				}
-				
-			}));
+			this.notebookPermissionContent.add(notebookPermissionTable);
 		}
 	}
 
 	private void presentUserAccess(User user) {
 		this.contentDeck.showWidget(0);
-		//check whether or not present the group access
+		// this.userAccessSaveButton.setEnabled(false);
+		// check whether or not present the group access
 		if (userAccessSelectionModel.getSelectedObject() != null) {
 			Group group = userAccessSelectionModel.getSelectedObject();
-			if(group.getKey()!=null){
+			if (group.getKey() != null) {
 				presentGroupAccess(group);
 			} else {
 				this.groupAccessContentPanel.setVisible(false);
 			}
 		}
 		this.userAccessContentPanel.setVisible(true);
-		this.userAccessContent.clear();
-		
-		this.userLabel.setText(user.getEmail()+" Access");
-		if(user.getAccess().size()!=0){
-			final FlexTable table = new FlexTable();
-			//generate the header
-			CheckBox allRead = new CheckBox("Read");
-			CheckBox allWrite = new CheckBox("Write");
-			allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
+		this.userAccessTable.removeAllRows();
 
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 1)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
-
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 2)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			table.setWidget(0, 1, allRead);
-			table.setWidget(0, 2, allWrite);
-			table.setWidget(0, 3, new Label("Notebook"));
-			table.setWidget(0, 4, new Label("Note"));
+		this.userLabel.setText(user.getEmail() + " Access");
+		// generate the header
+		CheckBox allRead = new CheckBox("Read");
+		CheckBox allWrite = new CheckBox("Write");
+		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			
-			//generate table content
-			for(Map.Entry<Key, Integer> entry : user.getAccess().entrySet()){
-				int row = table.getRowCount();
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < userAccessTable.getRowCount(); i++) {
+					((CheckBox) userAccessTable.getWidget(i, 1))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < userAccessTable.getRowCount(); i++) {
+					((CheckBox) userAccessTable.getWidget(i, 2))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		userAccessTable.setWidget(0, 1, allRead);
+		userAccessTable.setWidget(0, 2, allWrite);
+		userAccessTable.setWidget(0, 3, new Label("Notebook"));
+		userAccessTable.setWidget(0, 4, new Label("Note"));
+		userAccessTable.getRowFormatter().addStyleName(0, style.header());
+		if (user.getAccess().size() != 0) {
+			// generate table content
+			for (Map.Entry<Key, Integer> entry : user.getAccess().entrySet()) {
+				int row = userAccessTable.getRowCount();
 				Label rowValue = new Label();
-				rowValue.getElement().setInnerHTML(KeyFactory.keyToString(entry.getKey()));
+				rowValue.getElement().setInnerHTML(
+						KeyFactory.keyToString(entry.getKey()));
 				rowValue.setVisible(false);
 				CheckBox read = new CheckBox("Read");
 				CheckBox write = new CheckBox("Write");
-				table.setWidget(row, 0, rowValue);
-				table.setWidget(row, 1, read);
-				table.setWidget(row, 2, write);
-				table.setWidget(row, 3, new Label("-"));
-				table.setWidget(row, 4, new Label("NoteKey:"+entry.getKey()));
-				if(entry.getValue()==1){
+				userAccessTable.setWidget(row, 0, rowValue);
+				userAccessTable.setWidget(row, 1, read);
+				userAccessTable.setWidget(row, 2, write);
+				userAccessTable.setWidget(row, 3, new Label("-"));
+				userAccessTable.setWidget(row, 4,
+						new Label("NoteKey:" + entry.getKey()));
+				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
-				} else if (entry.getValue()==2) {
+				} else if (entry.getValue() == 2) {
 					read.setValue(true);
 					write.setValue(true);
 				}
 			}
-			this.userAccessContent.add(table);
-			this.userAccessContent.add(new Button("Save",new ClickHandler(){
-
-				@Override
-				public void onClick(ClickEvent event) {
-					for(int i=1;i<table.getRowCount();i++){
-						String keyString = table.getWidget(i,0).getElement().getInnerHTML();
-						Key key = KeyFactory.stringToKey(keyString);
-						int permission = 0;
-						if(((CheckBox)table.getWidget(i,2)).getValue()){
-							permission = 2;
-						} else if(((CheckBox)table.getWidget(i,1)).getValue()){
-							permission = 1;
-						}
-						// TODO update the database
-					}
-				}
-			}));
+			this.userAccessContent.add(userAccessTable);
 		}
 	}
-	
+
 	private void presentNotePermission(InfoNote note) {
 		this.contentDeck.showWidget(1);
-		//check whether or not present the notebook access
+		// this.notePermissionSaveButton.setEnabled(false);
+		// check whether or not present the notebook access
 		if (notePermissionSelectionModel.getSelectedObject() != null) {
-			Notebook notebook = notePermissionSelectionModel.getSelectedObject();
-			if(notebook.getKey()!=null){
+			Notebook notebook = notePermissionSelectionModel
+					.getSelectedObject();
+			if (notebook.getKey() != null) {
 				presentNotebookPermission(notebook);
 			} else {
 				this.notebookPermissionContentPanel.setVisible(false);
 			}
 		}
 		this.notePermissionContentPanel.setVisible(true);
-		this.notePermissionContent.clear();
-		
-		this.noteLabel.setText(note.getTitle()+" Permission");
-		if(note.getGroupAccess().size()!=0 || note.getUserAccess().size()!=0){
-			final FlexTable table = new FlexTable();
-			//generate the header
-			CheckBox allRead = new CheckBox("Read");
-			CheckBox allWrite = new CheckBox("Write");
-			allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
+		this.notePermissionTable.removeAllRows();
 
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 1)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
-
-				@Override
-				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					for(int i=1; i<table.getRowCount();i++){
-						((CheckBox)table.getWidget(i, 2)).setValue(event.getValue());
-					}
-				}
-				
-			});
-			table.setWidget(0, 1, allRead);
-			table.setWidget(0, 2, allWrite);
-			table.setWidget(0, 3, new Label("Group"));
-			table.setWidget(0, 4, new Label("User"));
+		this.noteLabel.setText(note.getTitle() + " Permission");
+		// generate the header
+		CheckBox allRead = new CheckBox("Read");
+		CheckBox allWrite = new CheckBox("Write");
+		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			
-			//generate table content
-			//first part to generate group access
-			for(Map.Entry<Key, Integer> entry : note.getGroupAccess().entrySet()){
-				int row = table.getRowCount();
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < notePermissionTable.getRowCount(); i++) {
+					((CheckBox) notePermissionTable.getWidget(i, 1))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				for (int i = 1; i < notePermissionTable.getRowCount(); i++) {
+					((CheckBox) notePermissionTable.getWidget(i, 2))
+					.setValue(event.getValue());
+				}
+			}
+			
+		});
+		notePermissionTable.setWidget(0, 1, allRead);
+		notePermissionTable.setWidget(0, 2, allWrite);
+		notePermissionTable.setWidget(0, 3, new Label("Group"));
+		notePermissionTable.setWidget(0, 4, new Label("User"));
+		notePermissionTable.getRowFormatter().addStyleName(0, style.header());
+
+		if (note.getGroupAccess().size() != 0
+				|| note.getUserAccess().size() != 0) {
+			// generate table content
+			// first part to generate group access
+			for (Map.Entry<Key, Integer> entry : note.getGroupAccess()
+					.entrySet()) {
+				int row = notePermissionTable.getRowCount();
 				Label rowValue = new Label();
-				rowValue.getElement().setInnerHTML(KeyFactory.keyToString(entry.getKey()));
+				rowValue.getElement().setInnerHTML(
+						KeyFactory.keyToString(entry.getKey()));
 				rowValue.setVisible(false);
 				CheckBox read = new CheckBox("Read");
 				CheckBox write = new CheckBox("Write");
-				table.setWidget(row, 0, rowValue);
-				table.setWidget(row, 1, read);
-				table.setWidget(row, 2, write);
-				table.setWidget(row, 3, new Label("GroupKey:"+entry.getKey()));
-				table.setWidget(row, 4, new Label("-"));
-				if(entry.getValue()==1){
+				notePermissionTable.setWidget(row, 0, rowValue);
+				notePermissionTable.setWidget(row, 1, read);
+				notePermissionTable.setWidget(row, 2, write);
+				notePermissionTable.setWidget(row, 3, new Label("GroupKey:"
+						+ entry.getKey()));
+				notePermissionTable.setWidget(row, 4, new Label("-"));
+				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
-				} else if (entry.getValue()==2) {
+				} else if (entry.getValue() == 2) {
 					read.setValue(true);
 					write.setValue(true);
 				}
 			}
-			//second part to generate user access
-			for(Map.Entry<String, Integer> entry : note.getUserAccess().entrySet()){
-				int row = table.getRowCount();
+			// second part to generate user access
+			for (Map.Entry<String, Integer> entry : note.getUserAccess()
+					.entrySet()) {
+				int row = notePermissionTable.getRowCount();
 				Label rowValue = new Label();
 				rowValue.getElement().setInnerHTML(entry.getKey());
 				rowValue.setVisible(false);
 				CheckBox read = new CheckBox("Read");
 				CheckBox write = new CheckBox("Write");
-				table.setWidget(row, 0, rowValue);
-				table.setWidget(row, 1, read);
-				table.setWidget(row, 2, write);
-				table.setWidget(row, 3, new Label("-"));
-				table.setWidget(row, 4, new Label("User:"+entry.getKey()));
-				if(entry.getValue()==1){
+				notePermissionTable.setWidget(row, 0, rowValue);
+				notePermissionTable.setWidget(row, 1, read);
+				notePermissionTable.setWidget(row, 2, write);
+				notePermissionTable.setWidget(row, 3, new Label("-"));
+				notePermissionTable.setWidget(row, 4,
+						new Label("User:" + entry.getKey()));
+				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
-				} else if (entry.getValue()==2) {
+				} else if (entry.getValue() == 2) {
 					read.setValue(true);
 					write.setValue(true);
 				}
 			}
-			
-			this.notePermissionContent.add(table);
-			this.notePermissionContent.add(new Button("Save",new ClickHandler(){
 
-				@Override
-				public void onClick(ClickEvent event) {
-					for(int i=1;i<table.getRowCount();i++){
-						String keyString = table.getWidget(i,0).getElement().getInnerHTML();
-						int permission = 0;
-						if(((CheckBox)table.getWidget(i,2)).getValue()){
-							permission = 2;
-						} else if(((CheckBox)table.getWidget(i,1)).getValue()){
-							permission = 1;
-						}
-						// TODO update the database
-					}
-				}
-			}));
+			this.notePermissionContent.add(notePermissionTable);
 		}
 	}
-	
+
 	private void initialNoteList() {
 		noteSelectionModel = new SingleSelectionModel<InfoNote>(
 				NOTE_KEY_PROVIDER);
@@ -500,11 +458,17 @@ public class AdminView extends Composite implements IAdminView {
 							return;
 						presenter.onUserAccessItemSelected(group);
 						presentGroupAccess(group);
-						
+
 						if (notePermissionSelectionModel.getSelectedObject() != null) {
 							notePermissionSelectionModel.setSelected(
 									notePermissionSelectionModel
 											.getSelectedObject(), false);
+						}
+
+						if (noteSelectionModel.getSelectedObject() != null) {
+							noteSelectionModel.setSelected(
+									noteSelectionModel.getSelectedObject(),
+									false);
 						}
 					}
 				});
@@ -535,6 +499,12 @@ public class AdminView extends Composite implements IAdminView {
 									userAccessSelectionModel
 											.getSelectedObject(), false);
 						}
+
+						if (userSelectionModel.getSelectedObject() != null) {
+							userSelectionModel.setSelected(
+									userSelectionModel.getSelectedObject(),
+									false);
+						}
 					}
 				});
 
@@ -563,6 +533,108 @@ public class AdminView extends Composite implements IAdminView {
 
 	@UiField
 	DeckPanel subListDeck;
+	@UiField
+	Button userAccessSaveButton;
+	@UiField
+	Button userAccessRevertButton;
+	@UiField
+	Button notePermissionSaveButton;
+	@UiField
+	Button notePermissionRevertButton;
+
+	@UiHandler("userAccessSaveButton")
+	void onClickUserAccessSave(ClickEvent e) {
+		if (this.groupAccessContentPanel.isVisible()) {
+			System.out.println("Save group access changes");
+			for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
+				String keyString = groupAccessTable.getWidget(i, 0)
+						.getElement().getInnerHTML();
+				Key key = KeyFactory.stringToKey(keyString);
+				int permission = 0;
+				if (((CheckBox) groupAccessTable.getWidget(i, 2)).getValue()) {
+					permission = 2;
+				} else if (((CheckBox) groupAccessTable.getWidget(i, 1))
+						.getValue()) {
+					permission = 1;
+				}
+				// TODO update the database
+			}
+		}
+		if (this.userAccessContentPanel.isVisible()) {
+			for (int i = 1; i < userAccessTable.getRowCount(); i++) {
+				String keyString = userAccessTable.getWidget(i, 0).getElement()
+						.getInnerHTML();
+				Key key = KeyFactory.stringToKey(keyString);
+				int permission = 0;
+				if (((CheckBox) userAccessTable.getWidget(i, 2)).getValue()) {
+					permission = 2;
+				} else if (((CheckBox) userAccessTable.getWidget(i, 1))
+						.getValue()) {
+					permission = 1;
+				}
+				// TODO update the database
+			}
+		}
+		// this.userAccessSaveButton.setEnabled(false);
+	}
+
+	@UiHandler("userAccessRevertButton")
+	void onClickUserAccessRevert(ClickEvent e) {
+		if (userSelectionModel.getSelectedObject() != null) {
+			this.presentUserAccess(userSelectionModel.getSelectedObject());
+		} else {
+			this.presentGroupAccess(userAccessSelectionModel
+					.getSelectedObject());
+		}
+		// this.userAccessSaveButton.setEnabled(false);
+	}
+
+	@UiHandler("notePermissionSaveButton")
+	void onClickNotePermissionSave(ClickEvent e) {
+		if (this.notebookPermissionContentPanel.isVisible()) {
+			for (int i = 1; i < notebookPermissionTable.getRowCount(); i++) {
+				String keyString = notebookPermissionTable.getWidget(i, 0)
+						.getElement().getInnerHTML();
+				Key key = KeyFactory.stringToKey(keyString);
+				int permission = 0;
+				if (((CheckBox) notebookPermissionTable.getWidget(i, 2))
+						.getValue()) {
+					permission = 2;
+				} else if (((CheckBox) notebookPermissionTable.getWidget(i, 1))
+						.getValue()) {
+					permission = 1;
+				}
+				// TODO update the database
+			}
+		}
+		if (this.notePermissionContentPanel.isVisible()) {
+			for (int i = 1; i < notePermissionTable.getRowCount(); i++) {
+				String keyString = notePermissionTable.getWidget(i, 0)
+						.getElement().getInnerHTML();
+				int permission = 0;
+				if (((CheckBox) notePermissionTable.getWidget(i, 2)).getValue()) {
+					permission = 2;
+				} else if (((CheckBox) notePermissionTable.getWidget(i, 1))
+						.getValue()) {
+					permission = 1;
+				}
+				// TODO update the database
+			}
+		}
+		// this.notePermissionSaveButton.setEnabled(false);
+	}
+
+	@UiHandler("notePermissionRevertButton")
+	void onClickNotePermissionRevert(ClickEvent e) {
+		if (noteSelectionModel.getSelectedObject() != null) {
+			this.presentNotePermission(noteSelectionModel.getSelectedObject());
+		} else {
+			this.presentNotebookPermission(notePermissionSelectionModel
+					.getSelectedObject());
+		}
+		// this.notePermissionSaveButton.setEnabled(false);
+	}
+
 	@UiField(provided = true)
 	CellList<User> userList = new CellList<User>(new AbstractCell<User>() {
 		@Override
@@ -616,7 +688,7 @@ public class AdminView extends Composite implements IAdminView {
 					if (notebook == null) {
 						return;
 					}
-					
+
 					sb.appendHtmlConstant("<div style=\"padding:5px 19px;\">");
 					sb.appendEscaped(notebook.getName());
 					sb.appendHtmlConstant("</div>");
