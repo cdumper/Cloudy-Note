@@ -17,7 +17,7 @@
 	color: #555E64;
 }
 
-.subListPanel .labelPanel {
+.labelPanel {
 	color: #404040;
 	height: 24px;
 	padding-top: 8px;
@@ -29,4 +29,17 @@
 	height: 100%;
 	width: 100%;
 	border-left: 1px solid #999;
+}
+
+.contentPanel .label{
+	padding-top: 4px;
+}
+
+.contentPanel table{
+	padding: 5px;
+}
+
+.contentPanel tr{
+	padding: 5px;
+	border-bottom: 1px solid #999;
 }

@@ -92,7 +92,7 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 				@Override
 				public void onSuccess(List<User> result) {
 					view.setUserList(result);
-					view.setSubListLabel(group.getName());
+					view.setSubListLabel("Members of "+group.getName());
 				}
 				
 			});
@@ -120,7 +120,7 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 				@Override
 				public void onSuccess(List<InfoNote> result) {
 					view.setNoteList(result);
-					view.setSubListLabel(notebook.getName());
+					view.setSubListLabel("Notes in "+notebook.getName());
 				}
 				
 			});

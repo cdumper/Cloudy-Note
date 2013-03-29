@@ -38,24 +38,32 @@
 						<g:DeckPanel ui:field="contentDeck" addStyleNames="{style.contentPanel}">
 							<g:HTMLPanel>
 								<g:HTMLPanel ui:field="groupAccessContentPanel">
-									<g:Label ui:field="groupLabel" text="Group Access" />
+									<div class="{style.labelPanel}">
+										<g:Label ui:field="groupLabel" addStyleNames="{style.label}" text="Group Access" />
+									</div>
 									<g:HTMLPanel ui:field="groupAccessContent">
 									</g:HTMLPanel>
 								</g:HTMLPanel>
 								<g:HTMLPanel ui:field="userAccessContentPanel">
-									<g:Label ui:field="userLabel" text="User Access" />
+									<div class="{style.labelPanel}">
+										<g:Label ui:field="userLabel" addStyleNames="{style.label}" text="User Access" />
+									</div>
 									<g:HTMLPanel ui:field="userAccessContent">
 									</g:HTMLPanel>
 								</g:HTMLPanel>
 							</g:HTMLPanel>
 							<g:HTMLPanel>
 								<g:HTMLPanel ui:field="notebookPermissionContentPanel">
-									<g:Label ui:field="notebookLabel" text="Notebook Permission" />
+									<div class="{style.labelPanel}">
+										<g:Label ui:field="notebookLabel" addStyleNames="{style.label}" text="Notebook Permission" />
+									</div>
 									<g:HTMLPanel ui:field="notebookPermissionContent">
 									</g:HTMLPanel>
 								</g:HTMLPanel>
 								<g:HTMLPanel ui:field="notePermissionContentPanel">
-									<g:Label ui:field="noteLabel" text="Note Permission" />
+									<div class="{style.labelPanel}">
+										<g:Label ui:field="noteLabel" addStyleNames="{style.label}" text="Note Permission" />
+									</div>
 									<g:HTMLPanel ui:field="notePermissionContent">
 									</g:HTMLPanel>
 								</g:HTMLPanel>
