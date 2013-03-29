@@ -10,10 +10,14 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.client.service.GroupServiceAsync;
+import com.sid.cloudynote.client.service.InfoNoteSearchService;
+import com.sid.cloudynote.client.service.InfoNoteSearchServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.sharing.view.interfaces.IAdminView;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.InfoNote;
@@ -36,6 +40,7 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 		this.loadNotebookList();
 		container.clear();
 		container.add(view.asWidget());
+		view.setSelectedGroup(new Group("All Users"));
 	}
 
 	@Override
@@ -91,14 +96,28 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 
 				@Override
 				public void onSuccess(List<User> result) {
-					view.setUserList(result);
 					view.setSubListLabel("Members of "+group.getName());
+					view.setUserList(result);
+					view.setSelectedUser(result.get(0));
 				}
-				
 			});
 		} else {
 			if ("All Users".equals(group.getName())) {
-				// TODO show all users
+				UserServiceAsync service = GWT.create(UserService.class);
+				service.getFriends(AppController.get().getLoginInfo().getEmail(), new AsyncCallback<List<User>>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Failed to get all users");
+					}
+
+					@Override
+					public void onSuccess(List<User> result) {
+						view.setSubListLabel("All Users");
+						view.setUserList(result);
+						view.setSelectedUser(result.get(0));
+					}
+				});
 			} else if ("UnGrouped".equals(group.getName())) {
 				// TODO show ungrouped users
 			}
@@ -119,37 +138,55 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 
 				@Override
 				public void onSuccess(List<InfoNote> result) {
-					view.setNoteList(result);
 					view.setSubListLabel("Notes in "+notebook.getName());
+					view.setNoteList(result);
+					view.setSelectedNote(result.get(0));
 				}
 				
 			});
 		} else {
 			if ("All Notes".equals(notebook.getName())) {
-				// TODO show all notes
-			}
+				//show all notes
+				InfoNoteSearchServiceAsync service = GWT.create(InfoNoteSearchService.class);
+				service.searchNotes("", new AsyncCallback<List<InfoNote>>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Failed to load all notes");
+					}
+
+					@Override
+					public void onSuccess(List<InfoNote> result) {
+						view.setSubListLabel("All Notes");
+						view.setNoteList(result);
+						view.setSelectedNote(result.get(0));
+					}
+				});
+			} 
 		}
 	}
 
 	@Override
 	public void onUserAccessItemSelected(Group group) {
 		this.loadUserList(group);
+		if(group.getKey()==null) return;
+		view.presentGroupAccess(group);
 	}
 
 	@Override
 	public void onNotePermissionItemSelected(Notebook notebook) {
 		this.loadNoteList(notebook);
+		if(notebook.getKey()==null) return;
+		view.presentNotebookPermission(notebook);
 	}
 
 	@Override
 	public void onUserItemSelected(User user) {
-		// TODO Auto-generated method stub
-		
+		view.presentUserAccess(user);
 	}
 
 	@Override
 	public void onNoteItemSelected(InfoNote note) {
-		// TODO Auto-generated method stub
-		
+		view.presentNotePermission(note);
 	}
 }

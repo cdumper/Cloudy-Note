@@ -28,4 +28,12 @@ public interface IAdminView {
 	void setNoteList(List<InfoNote> notes);
 	Widget asWidget();
 	void setPresenter(Presenter presenter);
+	void presentNotePermission(InfoNote note);
+	void presentGroupAccess(Group group);
+	void presentNotebookPermission(Notebook notebook);
+	void presentUserAccess(User user);
+	void setSelectedGroup(Group group);
+	void setSelectedUser(User user);
+	void setSelectedNotebook(Notebook notebook);
+	void setSelectedNote(InfoNote note);
 }

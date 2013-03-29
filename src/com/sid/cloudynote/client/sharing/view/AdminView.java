@@ -99,7 +99,8 @@ public class AdminView extends Composite implements IAdminView {
 		subListDeck.showWidget(0);
 	}
 
-	private void presentGroupAccess(Group group) {
+	@Override
+	public void presentGroupAccess(Group group) {
 		this.contentDeck.showWidget(0);
 		// this.userAccessSaveButton.setEnabled(false);
 		this.groupAccessContentPanel.setVisible(true);
@@ -164,7 +165,8 @@ public class AdminView extends Composite implements IAdminView {
 		}
 	}
 
-	private void presentNotebookPermission(Notebook notebook) {
+	@Override
+	public void presentNotebookPermission(Notebook notebook) {
 		this.contentDeck.showWidget(1);
 		// this.notePermissionSaveButton.setEnabled(false);
 		this.notebookPermissionContentPanel.setVisible(true);
@@ -230,7 +232,8 @@ public class AdminView extends Composite implements IAdminView {
 		}
 	}
 
-	private void presentUserAccess(User user) {
+	@Override
+	public void presentUserAccess(User user) {
 		this.contentDeck.showWidget(0);
 		// this.userAccessSaveButton.setEnabled(false);
 		// check whether or not present the group access
@@ -304,7 +307,8 @@ public class AdminView extends Composite implements IAdminView {
 		}
 	}
 
-	private void presentNotePermission(InfoNote note) {
+	@Override
+	public void presentNotePermission(InfoNote note) {
 		this.contentDeck.showWidget(1);
 		// this.notePermissionSaveButton.setEnabled(false);
 		// check whether or not present the notebook access
@@ -418,7 +422,6 @@ public class AdminView extends Composite implements IAdminView {
 						InfoNote note = noteSelectionModel.getSelectedObject();
 						if (note != null && note.getKey() != null) {
 							presenter.onNoteItemSelected(note);
-							presentNotePermission(note);
 						}
 					}
 				});
@@ -436,7 +439,6 @@ public class AdminView extends Composite implements IAdminView {
 						User user = userSelectionModel.getSelectedObject();
 						if (user != null && user.getEmail() != null) {
 							presenter.onUserItemSelected(user);
-							presentUserAccess(user);
 						}
 					}
 				});
@@ -457,7 +459,6 @@ public class AdminView extends Composite implements IAdminView {
 						if (group == null)
 							return;
 						presenter.onUserAccessItemSelected(group);
-						presentGroupAccess(group);
 
 						if (notePermissionSelectionModel.getSelectedObject() != null) {
 							notePermissionSelectionModel.setSelected(
@@ -472,7 +473,6 @@ public class AdminView extends Composite implements IAdminView {
 						}
 					}
 				});
-
 		this.groupDataProvider.getList().add(new Group("All Users"));
 		this.groupDataProvider.getList().add(new Group("UnGrouped"));
 		this.groupDataProvider.addDataDisplay(this.userAccessList);
@@ -492,7 +492,6 @@ public class AdminView extends Composite implements IAdminView {
 						if (notebook == null)
 							return;
 						presenter.onNotePermissionItemSelected(notebook);
-						presentNotebookPermission(notebook);
 
 						if (userAccessSelectionModel.getSelectedObject() != null) {
 							userAccessSelectionModel.setSelected(
@@ -762,5 +761,25 @@ public class AdminView extends Composite implements IAdminView {
 		this.noteDataProvider.getList().clear();
 		this.noteDataProvider.getList().addAll(notes);
 		this.subListDeck.showWidget(1);
+	}
+
+	@Override
+	public void setSelectedGroup(Group group) {
+		this.userAccessSelectionModel.setSelected(group, true);
+	}
+
+	@Override
+	public void setSelectedUser(User user) {
+		this.userSelectionModel.setSelected(user, true);
+	}
+
+	@Override
+	public void setSelectedNotebook(Notebook notebook) {
+		this.notePermissionSelectionModel.setSelected(notebook, true);
+	}
+
+	@Override
+	public void setSelectedNote(InfoNote note) {
+		this.noteSelectionModel.setSelected(note, true);
 	}
 }
