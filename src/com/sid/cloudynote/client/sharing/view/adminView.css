@@ -47,6 +47,10 @@
 	border-left: 1px solid #999;
 }
 
+.contentPanel .tableContent{
+	margin-bottom: 50px;
+}
+
 .contentPanel .label {
 	padding-top: 4px;
 }

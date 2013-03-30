@@ -23,8 +23,6 @@ import com.sid.cloudynote.client.service.InfoNoteSearchService;
 import com.sid.cloudynote.client.service.InfoNoteSearchServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
-import com.sid.cloudynote.client.service.ShareService;
-import com.sid.cloudynote.client.service.ShareServiceAsync;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.NoteListView;
@@ -179,8 +177,8 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	@Override
 	public void shareNoteToUsers(final InfoNote note,
 			final Map<String, Integer> access) {
-		ShareServiceAsync service = GWT.create(ShareService.class);
-		service.shareNoteToUsers(note, access, new AsyncCallback<Void>() {
+		AccessRightServiceAsync service = GWT.create(AccessRightService.class);
+		service.saveNotePermission(note, null, access, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -218,42 +216,25 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 					}
 
 				});
-		// ShareServiceAsync service = GWT.create(ShareService.class);
-		// service.shareNoteToUsersAndGroups(note, userAccess, groupAccess,
-		// new AsyncCallback<Void>() {
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// GWT.log("Failed to share note to users and groups");
-		// }
-		//
-		// @Override
-		// public void onSuccess(Void result) {
-		// GWT.log("Successfully update sharing settings of note to users and groups");
-		// eventBus.fireEvent(new NoteChangedEvent(DataManager
-		// .getCurrentNotebook()));
-		// }
-		// });
 	}
 
 	@Override
 	public void shareNoteToGroups(InfoNote note, Map<Key, Integer> groupsAccess) {
-		ShareServiceAsync service = GWT.create(ShareService.class);
-		service.shareNoteToGroups(note, groupsAccess,
-				new AsyncCallback<Void>() {
+		AccessRightServiceAsync service = GWT.create(AccessRightService.class);
+		service.saveNotePermission(note, groupsAccess, null, new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log("Failed to share note to groups");
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to share note to groups");
+			}
 
-					@Override
-					public void onSuccess(Void result) {
-						GWT.log("Successfully update sharing settings of note to groups");
-						eventBus.fireEvent(new NoteChangedEvent(DataManager
-								.getCurrentNotebook()));
-					}
-				});
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully update sharing settings of note to groups");
+				eventBus.fireEvent(new NoteChangedEvent(DataManager
+						.getCurrentNotebook()));
+			}
+		});
 	}
 
 	@Override
@@ -261,7 +242,6 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 		InfoNoteSearchServiceAsync service = GWT
 				.create(InfoNoteSearchService.class);
 		service.searchNotes(value, new AsyncCallback<List<InfoNote>>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log("Failed to search notes");
@@ -269,23 +249,6 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 			@Override
 			public void onSuccess(List<InfoNote> result) {
-				// if (result.size() == 0) {
-				// view.setLabel("Search Results");
-				// } else {
-				// Key notebook = result.get(0).getNotebook().getKey();
-				// boolean flag = true;
-				// for (InfoNote note : result) {
-				// if (!notebook.equals(note.getNotebook().getKey())) {
-				// flag = false;
-				// break;
-				// }
-				// }
-				// if (flag) {
-				// view.setLabel(result.get(0).getNotebook().getName());
-				// } else {
-				// view.setLabel("All Notes");
-				// }
-				// }
 				view.setLabel("Search Results");
 				view.setNoteList(result);
 			}

@@ -141,7 +141,7 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		groupAccessTable.setWidget(0, 2, allWrite);
 		groupAccessTable.setWidget(0, 3, new Label("Notebook"));
 		groupAccessTable.setWidget(0, 4, new Label("Note"));
-		groupAccessTable.getRowFormatter().addStyleName(0, style.header());
+		
 		if (group.getAccess().size() != 0) {
 			// generate table content
 			for (Map.Entry<Key, Integer> entry : group.getAccess().entrySet()) {
@@ -156,8 +156,7 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 				groupAccessTable.setWidget(row, 1, read);
 				groupAccessTable.setWidget(row, 2, write);
 				groupAccessTable.setWidget(row, 3, new Label("-"));
-				groupAccessTable.setWidget(row, 4,
-						new Label("NoteKey:" + entry.getKey()));
+				groupAccessTable.setWidget(row, 4, new Label("NoteKey:" + entry.getKey()));
 				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
@@ -166,8 +165,13 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 					write.setValue(true);
 				}
 			}
-			this.groupAccessContent.add(groupAccessTable);
 		}
+		this.groupAccessTable.getRowFormatter().addStyleName(0, style.header());
+		this.groupAccessTable.getColumnFormatter().setWidth(1, "10%");
+		this.groupAccessTable.getColumnFormatter().setWidth(2, "10%");
+		this.groupAccessTable.getColumnFormatter().setWidth(2, "35%");
+		this.groupAccessTable.getColumnFormatter().setWidth(3, "35%");
+		this.groupAccessContent.add(groupAccessTable);
 	}
 
 	@Override
@@ -207,7 +211,6 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		notebookPermissionTable.setWidget(0, 2, allWrite);
 		notebookPermissionTable.setWidget(0, 3, new Label("Group"));
 		notebookPermissionTable.setWidget(0, 4, new Label("User"));
-		notebookPermissionTable.getRowFormatter().addStyleName(0, style.header());
 		
 		if (notebook.getAccess().size() != 0) {
 			// generate table content
@@ -233,8 +236,13 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 					write.setValue(true);
 				}
 			}
-			this.notebookPermissionContent.add(notebookPermissionTable);
 		}
+		this.notebookPermissionTable.getRowFormatter().addStyleName(0, style.header());
+		this.notebookPermissionTable.getColumnFormatter().setWidth(1, "10%");
+		this.notebookPermissionTable.getColumnFormatter().setWidth(2, "10%");
+		this.notebookPermissionTable.getColumnFormatter().setWidth(2, "35%");
+		this.notebookPermissionTable.getColumnFormatter().setWidth(3, "35%");
+		this.notebookPermissionContent.add(notebookPermissionTable);
 	}
 
 	@Override
@@ -283,7 +291,6 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		userAccessTable.setWidget(0, 2, allWrite);
 		userAccessTable.setWidget(0, 3, new Label("Notebook"));
 		userAccessTable.setWidget(0, 4, new Label("Note"));
-		userAccessTable.getRowFormatter().addStyleName(0, style.header());
 		if (user.getAccess().size() != 0) {
 			// generate table content
 			for (Map.Entry<Key, Integer> entry : user.getAccess().entrySet()) {
@@ -308,8 +315,13 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 					write.setValue(true);
 				}
 			}
-			this.userAccessContent.add(userAccessTable);
 		}
+		this.userAccessTable.getRowFormatter().addStyleName(0, style.header());
+		this.userAccessTable.getColumnFormatter().setWidth(1, "10%");
+		this.userAccessTable.getColumnFormatter().setWidth(2, "10%");
+		this.userAccessTable.getColumnFormatter().setWidth(2, "35%");
+		this.userAccessTable.getColumnFormatter().setWidth(3, "35%");
+		this.userAccessContent.add(userAccessTable);
 	}
 
 	@Override
@@ -359,7 +371,6 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		notePermissionTable.setWidget(0, 2, allWrite);
 		notePermissionTable.setWidget(0, 3, new Label("Group"));
 		notePermissionTable.setWidget(0, 4, new Label("User"));
-		notePermissionTable.getRowFormatter().addStyleName(0, style.header());
 
 		if (note.getGroupAccess().size() != 0
 				|| note.getUserAccess().size() != 0) {
@@ -411,9 +422,13 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 					write.setValue(true);
 				}
 			}
-
-			this.notePermissionContent.add(notePermissionTable);
 		}
+		this.notePermissionTable.getRowFormatter().addStyleName(0, style.header());
+		this.notePermissionTable.getColumnFormatter().setWidth(1, "10%");
+		this.notePermissionTable.getColumnFormatter().setWidth(2, "10%");
+		this.notePermissionTable.getColumnFormatter().setWidth(2, "35%");
+		this.notePermissionTable.getColumnFormatter().setWidth(3, "35%");
+		this.notePermissionContent.add(notePermissionTable);
 	}
 
 	private void initialNoteList() {
