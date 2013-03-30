@@ -31,6 +31,10 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.event.GroupsChangedEvent;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
+import com.sid.cloudynote.client.event.interfaces.INotebookChangedHandler;
 import com.sid.cloudynote.client.sharing.view.interfaces.IAdminView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.Group;
@@ -38,7 +42,7 @@ import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.User;
 
-public class AdminView extends Composite implements IAdminView {
+public class AdminView extends Composite implements IAdminView, IGroupsChangedHandler, INotebookChangedHandler {
 	private Presenter presenter;
 	private SingleSelectionModel<Group> userAccessSelectionModel;
 	private SingleSelectionModel<Notebook> notePermissionSelectionModel;
@@ -790,5 +794,21 @@ public class AdminView extends Composite implements IAdminView {
 	@Override
 	public void setSelectedNote(InfoNote note) {
 		this.noteSelectionModel.setSelected(note, true);
+	}
+
+	@Override
+	public void onGroupsChanged(GroupsChangedEvent event) {
+		this.presenter.loadGroupList();
+		if(this.userAccessSelectionModel.getSelectedObject()!=null){
+			this.presenter.loadUserList(this.userAccessSelectionModel.getSelectedObject());
+		}
+	}
+
+	@Override
+	public void onNotebookChanged(NotebookChangedEvent event) {
+		this.presenter.loadNotebookList();
+		if(this.notePermissionSelectionModel.getSelectedObject()!=null){
+			this.presenter.loadNoteList(this.notePermissionSelectionModel.getSelectedObject());
+		}
 	}
 }

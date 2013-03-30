@@ -148,29 +148,51 @@ public class AccessRightServiceImpl extends RemoteServiceServlet implements
 			Map<Key, Integer> noteGroupPermission,
 			Map<String, Integer> noteUserPermission) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		//TODO need to be revised
+		// TODO need to be revised
 		try {
 			pm.currentTransaction().begin();
-			note.getUserAccess().clear();
-			note.getUserAccess().putAll(noteUserPermission);
-			note.getGroupAccess().clear();
-			note.getGroupAccess().putAll(noteGroupPermission);
 
-			for (Entry<Key, Integer> entry : noteGroupPermission.entrySet()) {
-				Group group = pm.getObjectById(Group.class, entry.getKey());
-				if (!group.getAccess().keySet().contains(note.getKey())) {
+			if (noteGroupPermission != null) {
+				// removed old access entries
+				for (Entry<Key, Integer> entry : note.getGroupAccess()
+						.entrySet()) {
+					if (!noteGroupPermission.keySet().contains(entry.getKey())) {
+						Group group = pm.getObjectById(Group.class,
+								entry.getKey());
+						group.getAccess().remove(note.getKey());
+						pm.makePersistent(group);
+					}
+				}
+				note.getGroupAccess().clear();
+				// add new access entries
+				for (Entry<Key, Integer> entry : noteGroupPermission.entrySet()) {
+					note.getGroupAccess().put(entry.getKey(), entry.getValue());
+					Group group = pm.getObjectById(Group.class, entry.getKey());
 					group.getAccess().put(note.getKey(), entry.getValue());
 					pm.makePersistent(group);
 				}
 			}
-
-			for (Entry<String, Integer> entry : noteUserPermission.entrySet()) {
-				User user = pm.getObjectById(User.class, entry.getKey());
-				if (!user.getAccess().keySet().contains(note.getKey())) {
+			
+			if (noteUserPermission != null) {
+				// removed old access entries
+				for (Entry<String, Integer> entry : note.getUserAccess().entrySet()) {
+					if (!noteUserPermission.keySet().contains(entry.getKey())) {
+						User user = pm.getObjectById(User.class,
+								entry.getKey());
+						user.getAccess().remove(note.getKey());
+						pm.makePersistent(user);
+					}
+				}
+				note.getUserAccess().clear();
+				// add new access entries
+				for (Entry<String, Integer> entry : noteUserPermission.entrySet()) {
+					note.getUserAccess().put(entry.getKey(), entry.getValue());
+					User user = pm.getObjectById(User.class, entry.getKey());
 					user.getAccess().put(note.getKey(), entry.getValue());
 					pm.makePersistent(user);
 				}
 			}
+
 			pm.makePersistent(note);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {

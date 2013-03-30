@@ -248,6 +248,7 @@ public class NoteListView extends ResizeComposite implements
 			HTMLPanel scrollContent = new HTMLPanel("");
 
 			Label name = new Label("Share with individuals or groups");
+			items.clear();
 			List<Group> groupsList = new ArrayList<Group>(DataManager.getAllGroups().values());
 			if (groupsList != null && groupsList.size() != 0) {
 				scrollContent.add(new Label("Groups:"));
@@ -306,8 +307,6 @@ public class NoteListView extends ResizeComposite implements
 				public void onClick(ClickEvent event) {
 					Map<String, Integer> users = new HashMap<String, Integer>();
 					Map<Key, Integer> groups = new HashMap<Key, Integer>();
-					// List<InfoNote> notes = new ArrayList<InfoNote>();
-					// notes.add(noteContextMenu.getSelectedNote());
 					for (GrantAccessItem item : items) {
 						if (item.checkBox.getValue()) {
 							String permission = item.access
@@ -543,6 +542,7 @@ public class NoteListView extends ResizeComposite implements
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
+		presenter.loadFriendsList(AppController.get().getLoginInfo().getEmail());
 	}
 
 	@Override

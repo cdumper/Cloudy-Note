@@ -145,9 +145,14 @@ public class AppView extends Composite implements Presenter {
 		container.clear();
 		if (adminView == null) {
 			adminView = new AdminView();
+			adminPresenter = new AdminPresenter(adminView, eventBus);
+			adminView.setPresenter(adminPresenter);
 		}
-		adminPresenter = new AdminPresenter(adminView, eventBus);
-		adminView.setPresenter(adminPresenter);
+		if (adminPresenter == null){
+			adminPresenter = new AdminPresenter(adminView, eventBus);
+			adminView.setPresenter(adminPresenter);
+
+		}
 		adminPresenter.go(adminView.getContainer());
 		bindAdminEvents();
 		deck.showWidget(3);
@@ -156,7 +161,8 @@ public class AppView extends Composite implements Presenter {
 	
 	private void bindAdminEvents() {
 		// TODO Auto-generated method stub
-		
+		eventBus.addHandler(GroupsChangedEvent.TYPE, adminView);
+		eventBus.addHandler(NotebookChangedEvent.TYPE, adminView);
 	}
 
 	private void bindFriendEvents() {
@@ -177,6 +183,7 @@ public class AppView extends Composite implements Presenter {
 		eventBus.addHandler(EditNoteEvent.TYPE, personalView.noteView);
 		eventBus.addHandler(NoteChangedEvent.TYPE, personalView.noteListView);
 		eventBus.addHandler(PresentNotesEvent.TYPE, personalView.noteListView);
+		eventBus.addHandler(GroupsChangedEvent.TYPE, personalView.noteListView);
 		eventBus.addHandler(NotebookChangedEvent.TYPE,
 				personalView.notebookListView);
 		eventBus.addHandler(EditNoteDoneEvent.TYPE, personalView.noteView);

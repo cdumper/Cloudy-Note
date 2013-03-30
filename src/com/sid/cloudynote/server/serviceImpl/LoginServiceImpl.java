@@ -11,6 +11,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.LoginService;
 import com.sid.cloudynote.server.PMF;
+import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.User;
 
 public class LoginServiceImpl extends RemoteServiceServlet implements
@@ -65,14 +66,18 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 				if (!results.isEmpty()) {
 					user = results.get(0);
 				} else {
+					// user does not exist. Create a new user with default notebook
 					user = new User();
 					user.setEmail(email);
-					// user.setId(loginInfo.getUserId());
 					user.setNickname(loginInfo.getNickname().split("@")[0]);
 					List<String> friends = getFakeFriendsData();
 					user.setFriends(friends);
+					//create a default notebook for the user
+					Notebook defaultNotebook = new Notebook(user.getNickname()+"'s notebook");
+					defaultNotebook.setUser(getUser());
 					pm.currentTransaction().begin();
 					pm.makePersistent(user);
+					pm.makePersistent(defaultNotebook);
 					user = pm.detachCopy(user);
 					pm.currentTransaction().commit();
 				}
@@ -95,23 +100,25 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	}
 
 	private void createFakeUsersIfNotExist() {
-//		List<User> users = new ArrayList<User>();
-//		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		for (String email : FAKE_USER_DATA) {
-			// User user = new User();
-			// user.setEmailAddress(email);
-			// users.add(user);
-			this.getUser(email);
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			pm.currentTransaction().begin();
+			for (String email : FAKE_USER_DATA) {
+				 User user = new User();
+				 user.setEmail(email);
+				 user.setNickname(email.split("@")[0]);
+				 pm.makePersistent(user);
+			}
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pm.close();
 		}
-//		try {
-//			pm.currentTransaction().begin();
-//			pm.makePersistentAll(users);
-//			pm.currentTransaction().commit();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			pm.close();
-//		}
-//		pm.close();
+	}
+
+	private com.google.appengine.api.users.User getUser() {
+		UserService userService = UserServiceFactory.getUserService();
+		return userService.getCurrentUser();
 	}
 }

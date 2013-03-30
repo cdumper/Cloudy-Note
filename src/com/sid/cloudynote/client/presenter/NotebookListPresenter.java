@@ -86,7 +86,6 @@ public class NotebookListPresenter implements Presenter,
 					}
 				} else {
 					GWT.log("No notebooks exist!");
-					createDefaultNotebook();
 				}
 			}
 		};
@@ -120,25 +119,6 @@ public class NotebookListPresenter implements Presenter,
 			}
 		};
 		service.getTags(AppController.get().getLoginInfo().getEmail(), callback);
-	}
-
-	private void createDefaultNotebook() {
-		NotebookServiceAsync service = (NotebookServiceAsync) GWT
-				.create(NotebookService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("Add Notebook falied!");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				GWT.log("Default notebook created...");
-				eventBus.fireEvent(new NotebookChangedEvent());
-			}
-		};
-		service.add(new Notebook(AppController.get().getLoginInfo().getNickname()+"'s notebook"), callback);
 	}
 
 	@Override

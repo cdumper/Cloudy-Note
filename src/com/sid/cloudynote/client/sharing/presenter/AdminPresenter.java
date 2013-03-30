@@ -9,7 +9,9 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.AppController;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
+import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.AccessRightService;
@@ -224,6 +226,7 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 				//TODO fire events
 				eventBus.fireEvent(new NotebookChangedEvent());
 				eventBus.fireEvent(new GroupsChangedEvent());
+				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
 			}
 		});
 	}
@@ -248,6 +251,7 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 				//TODO fire events
 				eventBus.fireEvent(new NotebookChangedEvent());
 				eventBus.fireEvent(new GroupsChangedEvent());
+				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
 			}
 		});
 	}

@@ -30,10 +30,10 @@ public class NotebookServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void add(Notebook entity) throws NotLoggedInException {
 		checkLoggedIn();
-		entity.setUser(getUser());
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
+			entity.setUser(getUser());
 			pm.makePersistent(entity);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
