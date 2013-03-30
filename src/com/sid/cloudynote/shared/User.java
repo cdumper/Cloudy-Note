@@ -2,6 +2,7 @@ package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,8 @@ public class User implements Serializable, Comparable<User> {
 	private boolean loggedIn = false;
 	@Persistent
 	private List<Key> groups = new ArrayList<Key>();;
-	@Persistent
-	private List<String> friends = new ArrayList<String>();;
+	@Persistent(serialized = "true", defaultFetchGroup = "true")
+	private Map<String, Date> friends = new LinkedHashMap<String, Date>();
 	@Persistent(serialized = "true", defaultFetchGroup = "true")
 	private Map<Key, Integer> access = new LinkedHashMap<Key, Integer>();
 	@NotPersistent
@@ -65,12 +66,13 @@ public class User implements Serializable, Comparable<User> {
 		this.groups.addAll(groups);
 	}
 	
-	public List<String> getFriends() {
+	public Map<String, Date> getFriends() {
 		return friends;
 	}
 
-	public void setFriends(List<String> friends) {
-		this.friends = friends;
+	public void setFriends(Map<String, Date> friends) {
+		this.friends.clear();
+		this.friends.putAll(friends);
 	}
 
 	public boolean isLoggedIn() {

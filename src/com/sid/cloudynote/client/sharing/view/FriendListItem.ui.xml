@@ -38,17 +38,17 @@
 		<g:HTMLPanel ui:field="content" addStyleNames="{style.friendListItem}">
 			<table>
 				<tr>
-					<td rowspan="2" width="10px">
+					<td rowspan="2" width="20px">
 						<g:CheckBox ui:field="checkBox" addStyleNames="{style.hidden}"></g:CheckBox>
 					</td>
-					<td rowspan="2" width="10%">user image profile</td>
+					<td rowspan="2" width="15%">user image profile</td>
 					<td width="30%">
 						<g:Button ui:field="userLink" text="user name" />
 					</td>
 					<td rowspan="2" width="15%">
 						<g:ListBox ui:field="groups" />
 					</td>
-					<td rowspan="2" width="10%">
+					<td rowspan="2" width="15%">
 						<g:Anchor addStyleNames="{style.ModifyGroup-nav}"
 							ui:field="modifyGroups" text="Modify Groups" />
 					</td>
@@ -59,7 +59,7 @@
 						<g:Label ui:field="totalNotesLabel" text="Total notes" />
 					</td>
 				</tr>
-				<tr>
+				<tr height="20px">
 					<td>
 						<g:Label ui:field="groupLabel" />
 					</td>

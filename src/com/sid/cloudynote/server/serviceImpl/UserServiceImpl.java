@@ -1,6 +1,7 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,8 +96,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		List<User> friends = new ArrayList<User>();
 		User user = getUser(email);
 		if (user.getFriends() != null) {
-			List<String> friendsKeys = user.getFriends();
-			for (String key : friendsKeys) {
+			for (String key : user.getFriends().keySet()) {
 				User friend = getUser(key);
 				friends.add(friend);
 			}
@@ -120,7 +120,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		User currentUser = (User) pm.getObjectById(User.class, getUser()
 				.getEmail());
-		currentUser.getFriends().add(user.getEmail());
+		currentUser.getFriends().put(user.getEmail(), new Date());
 
 		return "Success";
 	}
@@ -190,8 +190,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		tempGroups.removeAll(unchangedGroups);
 		for (Key key : tempGroups) {
 			Group temp = pm.getObjectById(Group.class, key);
-			temp.getMembers().add(email);
-			pm.makePersistent(temp);
+			if(!temp.getMembers().contains(email)){
+				temp.getMembers().add(email);
+				pm.makePersistent(temp);
+			}
 		}
 		
 		user.getGroups().clear();

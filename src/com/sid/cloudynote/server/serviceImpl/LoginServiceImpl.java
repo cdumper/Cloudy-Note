@@ -1,7 +1,10 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -70,7 +73,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 					user = new User();
 					user.setEmail(email);
 					user.setNickname(loginInfo.getNickname().split("@")[0]);
-					List<String> friends = getFakeFriendsData();
+					Map<String, Date> friends = getFakeFriendsData();
 					user.setFriends(friends);
 					//create a default notebook for the user
 					Notebook defaultNotebook = new Notebook(user.getNickname()+"'s notebook");
@@ -91,10 +94,11 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		return user;
 	}
 
-	private List<String> getFakeFriendsData() {
-		List<String> friends = new ArrayList<String>();
+	private Map<String, Date> getFakeFriendsData() {
+		Map<String, Date> friends = new LinkedHashMap<String, Date>();
+		Date currentDate = new Date();
 		for (String email : FAKE_USER_DATA) {
-			friends.add(email);
+			friends.put(email,currentDate);
 		}
 		return friends;
 	}

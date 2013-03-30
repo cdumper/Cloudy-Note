@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.service.UserService;
@@ -76,9 +77,9 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	}
 
 	private void presentUser() {
-		userLink.setText(user.getEmail());
-		joinSinceLabel.setText("Friend since:1999/9/9");
-		totalNotesLabel.setText("Total notes: 42");
+		userLink.setText(user.getNickname());
+		joinSinceLabel.setText("Friend since:"+AppController.get().getLoginInfo().getFriends().get(user.getEmail()));
+		totalNotesLabel.setText("Total notes: "+user.getTotalNotes());
 		for (Group group : DataManager.getMyGroups().values()) {
 			if (group.getMembers().contains(user.getEmail())) {
 				groupList.add(group);
