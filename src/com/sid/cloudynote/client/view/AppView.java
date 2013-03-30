@@ -2,6 +2,7 @@ package com.sid.cloudynote.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -13,7 +14,9 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,17 +46,22 @@ import com.sid.cloudynote.shared.User;
 
 public class AppView extends Composite implements Presenter {
 	@UiField
+	Style style;
+	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
-	Anchor user;
-	@UiField
-	Button aboutButton;
-	@UiField
-	Button notificationButton;
-	@UiField
-	Button settingsButton;
-	@UiField
-	Anchor signOutLink;
+	Anchor gearDownUser;
+	DecoratedPopupPanel settingsPanel = new DecoratedPopupPanel();
+	Anchor userProfile = new Anchor("Edit Profile");
+	Anchor settings = new Anchor("Settings");
+	Anchor notification = new Anchor("Notifications");
+	Anchor about = new Anchor("About");
+	Anchor signOut = new Anchor("Sign Out");
+	@UiHandler("gearDownUser")
+	void onUserSettingClick(ClickEvent e){
+		settingsPanel.show();
+	}
+	
 	@UiField
 	DeckPanel deck;
 	@UiField
@@ -82,6 +90,12 @@ public class AppView extends Composite implements Presenter {
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
 	}
 	
+	interface Style extends CssResource {
+		String dropdownMenu();
+
+		String logout();
+	}
+	
 	interface GlobalResources extends ClientBundle {
 		@NotStrict
 		@Source("global.css")
@@ -95,10 +109,53 @@ public class AppView extends Composite implements Presenter {
 		this.eventBus = eventBus;
 		this.loginInfo = login;
 		this.personalView.setEventBus(eventBus);
-		user.setText(loginInfo.getEmail());
-		signOutLink.setHref(loginInfo.getLogoutUrl());
+		initialDropDownMenu();
 		bindEvents();
 		deck.showWidget(0);
+	}
+
+	private void initialDropDownMenu() {
+		this.gearDownUser.setText(loginInfo.getNickname());
+		signOut.setHref(loginInfo.getLogoutUrl());
+		signOut.addStyleName(style.logout());
+		settingsPanel.setStyleName(style.dropdownMenu());
+		settingsPanel.setAutoHideEnabled(true);
+		HTMLPanel content = new HTMLPanel("");
+		settingsPanel.setWidget(content);
+		content.add(userProfile);
+		content.add(settings);
+		content.add(notification);
+		content.add(about);
+		content.add(signOut);
+		
+		userProfile.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO edit user profile page
+				
+			}
+		});
+		settings.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO settings page
+				
+			}
+		});
+		notification.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO notification
+				
+			}
+		});
+		about.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO "about/help" page
+				
+			}
+		});
 	}
 
 	@Override
@@ -140,7 +197,6 @@ public class AppView extends Composite implements Presenter {
 		container.add(dockLayoutPanel);
 	}
 	
-	//TODO show admin page
 	public void showAdmin(HasWidgets container){
 		container.clear();
 		if (adminView == null) {
@@ -151,7 +207,6 @@ public class AppView extends Composite implements Presenter {
 		if (adminPresenter == null){
 			adminPresenter = new AdminPresenter(adminView, eventBus);
 			adminView.setPresenter(adminPresenter);
-
 		}
 		adminPresenter.go(adminView.getContainer());
 		bindAdminEvents();
