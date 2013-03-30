@@ -109,8 +109,16 @@ public class AdminView extends Composite implements IAdminView,
 	public void presentGroupAccess(Group group) {
 		this.contentDeck.showWidget(0);
 		// this.userAccessSaveButton.setEnabled(false);
+		this.userAccessButtonPanel.setVisible(true);
 		this.groupAccessContentPanel.setVisible(true);
 		this.userAccessContentPanel.setVisible(false);
+		if (group == null || group.getKey() == null) {
+			this.groupLabel.setText("");
+			this.groupAccessTable.removeAllRows();
+			this.groupAccessContentPanel.setVisible(false);
+			this.userAccessButtonPanel.setVisible(false);
+			return;
+		}
 		this.groupLabel.setText(group.getName() + " Access");
 		this.groupAccessTable.removeAllRows();
 		// generate the header
@@ -167,6 +175,8 @@ public class AdminView extends Composite implements IAdminView,
 					write.setValue(true);
 				}
 			}
+		} else {
+			this.userAccessButtonPanel.setVisible(false);
 		}
 		this.groupAccessTable.getRowFormatter().addStyleName(0, style.header());
 		this.groupAccessTable.getColumnFormatter().setWidth(1, "10%");
@@ -180,8 +190,18 @@ public class AdminView extends Composite implements IAdminView,
 	public void presentNotebookPermission(Notebook notebook) {
 		this.contentDeck.showWidget(1);
 		// this.notePermissionSaveButton.setEnabled(false);
+		this.notePermissionButtonPanel.setVisible(true);
 		this.notebookPermissionContentPanel.setVisible(true);
 		this.notePermissionContentPanel.setVisible(false);
+
+		if (notebook == null || notebook.getKey() == null) {
+			this.groupLabel.setText("");
+			this.notebookPermissionTable.removeAllRows();
+			this.notebookPermissionContentPanel.setVisible(false);
+			this.notePermissionButtonPanel.setVisible(true);
+			return;
+		}
+
 		this.notebookLabel.setText(notebook.getName() + " Permission");
 		this.notebookPermissionTable.removeAllRows();
 		// generate the header
@@ -238,6 +258,8 @@ public class AdminView extends Composite implements IAdminView,
 					write.setValue(true);
 				}
 			}
+		} else {
+			this.notePermissionButtonPanel.setVisible(false);
 		}
 		this.notebookPermissionTable.getRowFormatter().addStyleName(0,
 				style.header());
@@ -295,6 +317,7 @@ public class AdminView extends Composite implements IAdminView,
 		userAccessTable.setWidget(0, 3, new Label("Notebook"));
 		userAccessTable.setWidget(0, 4, new Label("Note"));
 		if (user.getAccess().size() != 0) {
+			this.userAccessButtonPanel.setVisible(true);
 			// generate table content
 			for (Map.Entry<Key, Integer> entry : user.getAccess().entrySet()) {
 				int row = userAccessTable.getRowCount();
@@ -377,6 +400,7 @@ public class AdminView extends Composite implements IAdminView,
 
 		if (note.getGroupAccess().size() != 0
 				|| note.getUserAccess().size() != 0) {
+			this.notePermissionButtonPanel.setVisible(true);
 			// generate table content
 			// first part to generate group access
 			for (Map.Entry<Key, Integer> entry : note.getGroupAccess()
@@ -480,9 +504,14 @@ public class AdminView extends Composite implements IAdminView,
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Group group = userAccessSelectionModel
 								.getSelectedObject();
-						if (group == null)
+						if (group == null) {
+							if (userSelectionModel.getSelectedObject() != null) {
+								userSelectionModel.setSelected(
+										userSelectionModel.getSelectedObject(),
+										false);
+							}
 							return;
-						presenter.onUserAccessItemSelected(group);
+						}
 
 						if (notePermissionSelectionModel.getSelectedObject() != null) {
 							notePermissionSelectionModel.setSelected(
@@ -490,11 +519,13 @@ public class AdminView extends Composite implements IAdminView,
 											.getSelectedObject(), false);
 						}
 
-						if (noteSelectionModel.getSelectedObject() != null) {
-							noteSelectionModel.setSelected(
-									noteSelectionModel.getSelectedObject(),
+						if (userSelectionModel.getSelectedObject() != null) {
+							userSelectionModel.setSelected(
+									userSelectionModel.getSelectedObject(),
 									false);
 						}
+
+						presenter.onUserAccessItemSelected(group);
 					}
 				});
 		this.groupDataProvider.getList().add(new Group("All Users"));
@@ -513,9 +544,14 @@ public class AdminView extends Composite implements IAdminView,
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Notebook notebook = notePermissionSelectionModel
 								.getSelectedObject();
-						if (notebook == null)
+						if (notebook == null) {
+							if (noteSelectionModel.getSelectedObject() != null) {
+								noteSelectionModel.setSelected(
+										noteSelectionModel.getSelectedObject(),
+										false);
+							}
 							return;
-						presenter.onNotePermissionItemSelected(notebook);
+						}
 
 						if (userAccessSelectionModel.getSelectedObject() != null) {
 							userAccessSelectionModel.setSelected(
@@ -523,11 +559,13 @@ public class AdminView extends Composite implements IAdminView,
 											.getSelectedObject(), false);
 						}
 
-						if (userSelectionModel.getSelectedObject() != null) {
-							userSelectionModel.setSelected(
-									userSelectionModel.getSelectedObject(),
+						if (noteSelectionModel.getSelectedObject() != null) {
+							noteSelectionModel.setSelected(
+									noteSelectionModel.getSelectedObject(),
 									false);
 						}
+
+						presenter.onNotePermissionItemSelected(notebook);
 					}
 				});
 
@@ -546,6 +584,10 @@ public class AdminView extends Composite implements IAdminView,
 	DisclosurePanel userAccessPanel;
 	@UiField
 	DisclosurePanel notePermissionPanel;
+	@UiField
+	HTMLPanel userAccessButtonPanel;
+	@UiField
+	HTMLPanel notePermissionButtonPanel;
 	@UiField
 	Label subListLabel;
 
@@ -668,16 +710,20 @@ public class AdminView extends Composite implements IAdminView,
 				}
 				// check if it is a email. If yes, then this row is a user,
 				// otherwise is a group
-				if (permission != 0){
-					if (keyString.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+				if (permission != 0) {
+					if (keyString
+							.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
 						noteUserPermission.put(keyString, permission);
 					} else {
-						noteGroupPermission.put(KeyFactory.stringToKey(keyString), permission);
+						noteGroupPermission.put(
+								KeyFactory.stringToKey(keyString), permission);
 					}
 				}
 			}
 		}
-		this.presenter.saveNotePermissionChanges(notebook, notebookGroupPermission, notebookUserPermission, note, noteGroupPermission, noteUserPermission);
+		this.presenter.saveNotePermissionChanges(notebook,
+				notebookGroupPermission, notebookUserPermission, note,
+				noteGroupPermission, noteUserPermission);
 		// this.notePermissionSaveButton.setEnabled(false);
 	}
 

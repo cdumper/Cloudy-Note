@@ -174,6 +174,8 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 						view.setNoteList(result);
 					}
 				});
+			} else if ("UnGrouped".equals(notebook.getName())) {
+				//TODO show ungrouped users
 			}
 		}
 	}
@@ -181,16 +183,12 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 	@Override
 	public void onUserAccessItemSelected(Group group) {
 		this.loadUserList(group);
-		if (group.getKey() == null)
-			return;
 		view.presentGroupAccess(group);
 	}
 
 	@Override
 	public void onNotePermissionItemSelected(Notebook notebook) {
 		this.loadNoteList(notebook);
-		if (notebook.getKey() == null)
-			return;
 		view.presentNotebookPermission(notebook);
 	}
 

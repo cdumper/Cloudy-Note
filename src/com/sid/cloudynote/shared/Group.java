@@ -104,7 +104,7 @@ public class Group implements Serializable,Comparable<Group> {
 	public boolean equals(Object obj) {
 		if (obj instanceof Group) {
 			Group group = (Group) obj;
-			if (this.key == null && group.getKey() == null) {
+			if (this.key == null || group.getKey() == null) {
 				if (this.name.equals(group.getName())){
 					return true;
 				} else {
