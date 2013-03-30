@@ -110,7 +110,6 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 							view.setSubListLabel("Members of "
 									+ group.getName());
 							view.setUserList(result);
-							view.setSelectedUser(result.get(0));
 						}
 					});
 		} else {
@@ -128,7 +127,6 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 					public void onSuccess(List<User> result) {
 						view.setSubListLabel("All Users");
 						view.setUserList(result);
-						view.setSelectedUser(result.get(0));
 					}
 				});
 			} else if ("UnGrouped".equals(group.getName())) {
@@ -155,7 +153,6 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 				public void onSuccess(List<InfoNote> result) {
 					view.setSubListLabel("Notes in " + notebook.getName());
 					view.setNoteList(result);
-					view.setSelectedNote(result.get(0));
 				}
 
 			});
@@ -175,7 +172,6 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 					public void onSuccess(List<InfoNote> result) {
 						view.setSubListLabel("All Notes");
 						view.setNoteList(result);
-						view.setSelectedNote(result.get(0));
 					}
 				});
 			}
