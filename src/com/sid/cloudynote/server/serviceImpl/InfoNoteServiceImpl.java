@@ -233,7 +233,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	@SuppressWarnings("unchecked")
 	public List<InfoNote> getSharedNotes(String email)
 			throws NotLoggedInException {
-		// TODO Auto-generated method stub
 		List<InfoNote> result = new ArrayList<InfoNote>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 
@@ -318,7 +317,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-	// TODO
+	// TODO verify user access in NoteService
 	/**
 	 * Verify the current logged in user whether or not has the edit access to a
 	 * note

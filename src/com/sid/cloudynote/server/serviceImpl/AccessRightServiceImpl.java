@@ -17,6 +17,11 @@ import com.sid.cloudynote.shared.User;
 public class AccessRightServiceImpl extends RemoteServiceServlet implements
 		AccessRightService {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7288183526875394912L;
+
 	@Override
 	public void saveGroupAndUserAccess(Group group,
 			Map<Key, Integer> groupAccess, User user,
@@ -35,9 +40,13 @@ public class AccessRightServiceImpl extends RemoteServiceServlet implements
 			Map<String, Integer> notebookUserPermission, InfoNote note,
 			Map<Key, Integer> noteGroupPermission,
 			Map<String, Integer> noteUserPermission) {
-		this.saveNotebookPermission(notebook, notebookGroupPermission,
-				notebookUserPermission);
-		this.saveNotePermission(note, noteGroupPermission, noteUserPermission);
+		if (notebook != null){
+			this.saveNotebookPermission(notebook, notebookGroupPermission,
+					notebookUserPermission);
+		}
+		if (note != null) {
+			this.saveNotePermission(note, noteGroupPermission, noteUserPermission);
+		}
 	}
 
 	@Override
@@ -99,7 +108,7 @@ public class AccessRightServiceImpl extends RemoteServiceServlet implements
 					if (!userAccess.keySet().contains(entry.getKey())) {
 						Key key = entry.getKey();
 						if (key.getKind().equals("Notebook")) {
-							// TODO group notebook access
+							// TODO user notebook access
 						} else if (key.getKind().equals("InfoNote")) {
 							InfoNote note = pm.getObjectById(InfoNote.class,
 									key);
@@ -113,7 +122,7 @@ public class AccessRightServiceImpl extends RemoteServiceServlet implements
 				for (Entry<Key, Integer> entry : userAccess.entrySet()) {
 					Key key = entry.getKey();
 					if (key.getKind().equals("Notebook")) {
-						// TODO group notebook access
+						// TODO user notebook access
 					} else if (key.getKind().equals("InfoNote")) {
 						user.getAccess().put(key, entry.getValue());
 						InfoNote note = pm.getObjectById(InfoNote.class, key);
@@ -139,7 +148,7 @@ public class AccessRightServiceImpl extends RemoteServiceServlet implements
 	public void saveNotebookPermission(Notebook notebook,
 			Map<Key, Integer> notebookGroupPermission,
 			Map<String, Integer> notebookUserPermission) {
-		// TODO Auto-generated method stub
+		// TODO save notebook permission
 
 	}
 
@@ -148,7 +157,6 @@ public class AccessRightServiceImpl extends RemoteServiceServlet implements
 			Map<Key, Integer> noteGroupPermission,
 			Map<String, Integer> noteUserPermission) {
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		// TODO need to be revised
 		try {
 			pm.currentTransaction().begin();
 

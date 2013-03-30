@@ -103,6 +103,6 @@ public class SharingView extends Composite implements Presenter, IViewSharedNote
 
 	@Override
 	public void onHideSharingNoteView(HideSharingNoteViewEvent event) {
-		// TODO Auto-generated method stub
+		// TODO onHideSharingNoteView in sharingView
 	}
 }

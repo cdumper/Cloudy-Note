@@ -42,7 +42,8 @@ import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.User;
 
-public class AdminView extends Composite implements IAdminView, IGroupsChangedHandler, INotebookChangedHandler {
+public class AdminView extends Composite implements IAdminView,
+		IGroupsChangedHandler, INotebookChangedHandler {
 	private Presenter presenter;
 	private SingleSelectionModel<Group> userAccessSelectionModel;
 	private SingleSelectionModel<Notebook> notePermissionSelectionModel;
@@ -116,32 +117,32 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		CheckBox allRead = new CheckBox("Read");
 		CheckBox allWrite = new CheckBox("Write");
 		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
 					((CheckBox) groupAccessTable.getWidget(i, 1))
-					.setValue(event.getValue());
+							.setValue(event.getValue());
 				}
 			}
-			
+
 		});
 		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
 					((CheckBox) groupAccessTable.getWidget(i, 2))
-					.setValue(event.getValue());
+							.setValue(event.getValue());
 				}
 			}
-			
+
 		});
 		groupAccessTable.setWidget(0, 1, allRead);
 		groupAccessTable.setWidget(0, 2, allWrite);
 		groupAccessTable.setWidget(0, 3, new Label("Notebook"));
 		groupAccessTable.setWidget(0, 4, new Label("Note"));
-		
+
 		if (group.getAccess().size() != 0) {
 			// generate table content
 			for (Map.Entry<Key, Integer> entry : group.getAccess().entrySet()) {
@@ -156,7 +157,8 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 				groupAccessTable.setWidget(row, 1, read);
 				groupAccessTable.setWidget(row, 2, write);
 				groupAccessTable.setWidget(row, 3, new Label("-"));
-				groupAccessTable.setWidget(row, 4, new Label("NoteKey:" + entry.getKey()));
+				groupAccessTable.setWidget(row, 4,
+						new Label("NoteKey:" + entry.getKey()));
 				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
@@ -186,32 +188,32 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		CheckBox allRead = new CheckBox("Read");
 		CheckBox allWrite = new CheckBox("Write");
 		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < notebookPermissionTable.getRowCount(); i++) {
 					((CheckBox) notebookPermissionTable.getWidget(i, 1))
-					.setValue(event.getValue());
+							.setValue(event.getValue());
 				}
 			}
-			
+
 		});
 		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < notebookPermissionTable.getRowCount(); i++) {
 					((CheckBox) notebookPermissionTable.getWidget(i, 2))
-					.setValue(event.getValue());
+							.setValue(event.getValue());
 				}
 			}
-			
+
 		});
 		notebookPermissionTable.setWidget(0, 1, allRead);
 		notebookPermissionTable.setWidget(0, 2, allWrite);
 		notebookPermissionTable.setWidget(0, 3, new Label("Group"));
 		notebookPermissionTable.setWidget(0, 4, new Label("User"));
-		
+
 		if (notebook.getAccess().size() != 0) {
 			// generate table content
 			for (Map.Entry<String, Integer> entry : notebook.getAccess()
@@ -237,7 +239,8 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 				}
 			}
 		}
-		this.notebookPermissionTable.getRowFormatter().addStyleName(0, style.header());
+		this.notebookPermissionTable.getRowFormatter().addStyleName(0,
+				style.header());
 		this.notebookPermissionTable.getColumnFormatter().setWidth(1, "10%");
 		this.notebookPermissionTable.getColumnFormatter().setWidth(2, "10%");
 		this.notebookPermissionTable.getColumnFormatter().setWidth(2, "35%");
@@ -266,26 +269,26 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		CheckBox allRead = new CheckBox("Read");
 		CheckBox allWrite = new CheckBox("Write");
 		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < userAccessTable.getRowCount(); i++) {
-					((CheckBox) userAccessTable.getWidget(i, 1))
-					.setValue(event.getValue());
+					((CheckBox) userAccessTable.getWidget(i, 1)).setValue(event
+							.getValue());
 				}
 			}
-			
+
 		});
 		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < userAccessTable.getRowCount(); i++) {
-					((CheckBox) userAccessTable.getWidget(i, 2))
-					.setValue(event.getValue());
+					((CheckBox) userAccessTable.getWidget(i, 2)).setValue(event
+							.getValue());
 				}
 			}
-			
+
 		});
 		userAccessTable.setWidget(0, 1, allRead);
 		userAccessTable.setWidget(0, 2, allWrite);
@@ -346,26 +349,26 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		CheckBox allRead = new CheckBox("Read");
 		CheckBox allWrite = new CheckBox("Write");
 		allRead.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < notePermissionTable.getRowCount(); i++) {
 					((CheckBox) notePermissionTable.getWidget(i, 1))
-					.setValue(event.getValue());
+							.setValue(event.getValue());
 				}
 			}
-			
+
 		});
 		allWrite.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for (int i = 1; i < notePermissionTable.getRowCount(); i++) {
 					((CheckBox) notePermissionTable.getWidget(i, 2))
-					.setValue(event.getValue());
+							.setValue(event.getValue());
 				}
 			}
-			
+
 		});
 		notePermissionTable.setWidget(0, 1, allRead);
 		notePermissionTable.setWidget(0, 2, allWrite);
@@ -423,7 +426,8 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 				}
 			}
 		}
-		this.notePermissionTable.getRowFormatter().addStyleName(0, style.header());
+		this.notePermissionTable.getRowFormatter().addStyleName(0,
+				style.header());
 		this.notePermissionTable.getColumnFormatter().setWidth(1, "10%");
 		this.notePermissionTable.getColumnFormatter().setWidth(2, "10%");
 		this.notePermissionTable.getColumnFormatter().setWidth(2, "35%");
@@ -569,7 +573,7 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 		Map<Key, Integer> userAccess = null;
 		if (this.groupAccessContentPanel.isVisible()) {
 			group = this.userAccessSelectionModel.getSelectedObject();
-			groupAccess = new LinkedHashMap<Key,Integer>();
+			groupAccess = new LinkedHashMap<Key, Integer>();
 			for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
 				String keyString = groupAccessTable.getWidget(i, 0)
 						.getElement().getInnerHTML();
@@ -581,12 +585,13 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 						.getValue()) {
 					permission = 1;
 				}
-				if(permission!=0)	groupAccess.put(key, permission);
+				if (permission != 0)
+					groupAccess.put(key, permission);
 			}
 		}
 		if (this.userAccessContentPanel.isVisible()) {
 			user = this.userSelectionModel.getSelectedObject();
-			userAccess = new LinkedHashMap<Key,Integer>();
+			userAccess = new LinkedHashMap<Key, Integer>();
 			for (int i = 1; i < userAccessTable.getRowCount(); i++) {
 				String keyString = userAccessTable.getWidget(i, 0).getElement()
 						.getInnerHTML();
@@ -598,7 +603,8 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 						.getValue()) {
 					permission = 1;
 				}
-				if(permission!=0)	userAccess.put(key, permission);
+				if (permission != 0)
+					userAccess.put(key, permission);
 			}
 		}
 		presenter.saveUserAccessChanges(group, groupAccess, user, userAccess);
@@ -618,7 +624,17 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 
 	@UiHandler("notePermissionSaveButton")
 	void onClickNotePermissionSave(ClickEvent e) {
+		Notebook notebook = null;
+		InfoNote note = null;
+		Map<Key, Integer> notebookGroupPermission = null;
+		Map<String, Integer> notebookUserPermission = null;
+		Map<Key, Integer> noteGroupPermission = null;
+		Map<String, Integer> noteUserPermission = null;
 		if (this.notebookPermissionContentPanel.isVisible()) {
+			notebook = this.notePermissionSelectionModel.getSelectedObject();
+			notebookGroupPermission = new LinkedHashMap<Key, Integer>();
+			notebookUserPermission = new LinkedHashMap<String, Integer>();
+			// TODO save all the notebook permission
 			for (int i = 1; i < notebookPermissionTable.getRowCount(); i++) {
 				String keyString = notebookPermissionTable.getWidget(i, 0)
 						.getElement().getInnerHTML();
@@ -631,10 +647,15 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 						.getValue()) {
 					permission = 1;
 				}
-				// TODO update the database
+				if (permission != 0)
+					notebookGroupPermission.put(key, permission);
 			}
 		}
+
 		if (this.notePermissionContentPanel.isVisible()) {
+			note = this.noteSelectionModel.getSelectedObject();
+			noteGroupPermission = new LinkedHashMap<Key, Integer>();
+			noteUserPermission = new LinkedHashMap<String, Integer>();
 			for (int i = 1; i < notePermissionTable.getRowCount(); i++) {
 				String keyString = notePermissionTable.getWidget(i, 0)
 						.getElement().getInnerHTML();
@@ -645,9 +666,18 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 						.getValue()) {
 					permission = 1;
 				}
-				// TODO update the database
+				// check if it is a email. If yes, then this row is a user,
+				// otherwise is a group
+				if (permission != 0){
+					if (keyString.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+						noteUserPermission.put(keyString, permission);
+					} else {
+						noteGroupPermission.put(KeyFactory.stringToKey(keyString), permission);
+					}
+				}
 			}
 		}
+		this.presenter.saveNotePermissionChanges(notebook, notebookGroupPermission, notebookUserPermission, note, noteGroupPermission, noteUserPermission);
 		// this.notePermissionSaveButton.setEnabled(false);
 	}
 
@@ -814,16 +844,18 @@ public class AdminView extends Composite implements IAdminView, IGroupsChangedHa
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		this.presenter.loadGroupList();
-		if(this.userAccessSelectionModel.getSelectedObject()!=null){
-			this.presenter.loadUserList(this.userAccessSelectionModel.getSelectedObject());
+		if (this.userAccessSelectionModel.getSelectedObject() != null) {
+			this.presenter.loadUserList(this.userAccessSelectionModel
+					.getSelectedObject());
 		}
 	}
 
 	@Override
 	public void onNotebookChanged(NotebookChangedEvent event) {
 		this.presenter.loadNotebookList();
-		if(this.notePermissionSelectionModel.getSelectedObject()!=null){
-			this.presenter.loadNoteList(this.notePermissionSelectionModel.getSelectedObject());
+		if (this.notePermissionSelectionModel.getSelectedObject() != null) {
+			this.presenter.loadNoteList(this.notePermissionSelectionModel
+					.getSelectedObject());
 		}
 	}
 }

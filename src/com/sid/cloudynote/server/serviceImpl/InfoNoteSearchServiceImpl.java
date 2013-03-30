@@ -29,8 +29,14 @@ import com.sid.cloudynote.shared.NotLoggedInException;
 public class InfoNoteSearchServiceImpl extends RemoteServiceServlet implements
 		InfoNoteSearchService {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2290681731155436884L;
+
 	@Override
-	public List<InfoNote> searchNotes(String text) {
+	public List<InfoNote> searchNotes(String text) throws NotLoggedInException {
+		checkLoggedIn();
 		List<InfoNote> result = new ArrayList<InfoNote>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		String query;

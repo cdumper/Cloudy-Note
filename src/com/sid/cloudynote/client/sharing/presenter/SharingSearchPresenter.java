@@ -24,25 +24,25 @@ public class SharingSearchPresenter implements Presenter, ISharingSearchView.Pre
 
 	@Override
 	public void onSearchMade() {
-		// TODO Auto-generated method stub
+		// TODO others note search event
 		
 	}
 
 	@Override
 	public void onSortBy() {
-		// TODO Auto-generated method stub
+		// TODO others note sort event
 		
 	}
 
 	@Override
 	public void onView() {
-		// TODO Auto-generated method stub
+		// TODO others note view event
 		
 	}
 
 	@Override
 	public void onSettings() {
-		// TODO Auto-generated method stub
+		// TODO others note setting event
 		
 	}
 }

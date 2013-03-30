@@ -160,7 +160,6 @@ public class AppView extends Composite implements Presenter {
 	}
 	
 	private void bindAdminEvents() {
-		// TODO Auto-generated method stub
 		eventBus.addHandler(GroupsChangedEvent.TYPE, adminView);
 		eventBus.addHandler(NotebookChangedEvent.TYPE, adminView);
 	}

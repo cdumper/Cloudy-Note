@@ -219,7 +219,6 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Successfully saved the user access changes.");
-				//TODO fire events
 				eventBus.fireEvent(new NotebookChangedEvent());
 				eventBus.fireEvent(new GroupsChangedEvent());
 				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));
@@ -244,7 +243,6 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter {
 			@Override
 			public void onSuccess(Void result) {
 				GWT.log("Successfully saved the note permission changes.");
-				//TODO fire events
 				eventBus.fireEvent(new NotebookChangedEvent());
 				eventBus.fireEvent(new GroupsChangedEvent());
 				eventBus.fireEvent(new NoteChangedEvent(DataManager.getCurrentNotebook()));

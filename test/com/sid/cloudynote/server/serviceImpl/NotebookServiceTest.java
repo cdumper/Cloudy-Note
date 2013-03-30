@@ -23,7 +23,6 @@ public class NotebookServiceTest extends GWTTestCase {
 
 	@Override
 	protected void gwtTearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.gwtTearDown();
 	}
 

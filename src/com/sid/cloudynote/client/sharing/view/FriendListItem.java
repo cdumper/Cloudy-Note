@@ -79,13 +79,11 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 		userLink.setText(user.getEmail());
 		joinSinceLabel.setText("Friend since:1999/9/9");
 		totalNotesLabel.setText("Total notes: 42");
-		// TODO get the group which the user is in
 		for (Group group : DataManager.getMyGroups().values()) {
 			if (group.getMembers().contains(user.getEmail())) {
 				groupList.add(group);
 			}
 		}
-
 		presentGroups();
 	}
 
