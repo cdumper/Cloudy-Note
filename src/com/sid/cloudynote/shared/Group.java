@@ -1,10 +1,10 @@
 package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -30,7 +30,7 @@ public class Group implements Serializable,Comparable<Group> {
 	@Persistent
 	private int visibility = Visibility.PRIVATE;
 	@Persistent
-	private Set<String> members = new LinkedHashSet<String>();
+	private List<String> members = new ArrayList<String>();
 
 	@Persistent(serialized = "true", defaultFetchGroup = "true")
 	private Map<Key, Integer> access = new LinkedHashMap<Key, Integer>();
@@ -42,7 +42,7 @@ public class Group implements Serializable,Comparable<Group> {
 		this.name = name;
 	}
 
-	public Group(String name, String owner, Set<String> members) {
+	public Group(String name, String owner, List<String> members) {
 		super();
 		this.name = name;
 		this.owner = owner;
@@ -58,7 +58,7 @@ public class Group implements Serializable,Comparable<Group> {
 		this.name = name;
 	}
 
-	public void setMembers(Set<String> members) {
+	public void setMembers(List<String> members) {
 		this.members.clear();
 		this.members.addAll(members);
 	}
@@ -87,7 +87,7 @@ public class Group implements Serializable,Comparable<Group> {
 		this.visibility = visibility;
 	}
 
-	public Set<String> getMembers() {
+	public List<String> getMembers() {
 		return members;
 	}
 
@@ -111,6 +111,7 @@ public class Group implements Serializable,Comparable<Group> {
 					return false;
 				}
 			}
+			
 			if (this.key.equals(group.getKey())) {
 				return true;
 			}

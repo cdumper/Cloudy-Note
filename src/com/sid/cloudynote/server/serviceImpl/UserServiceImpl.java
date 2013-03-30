@@ -1,12 +1,10 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -97,7 +95,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		List<User> friends = new ArrayList<User>();
 		User user = getUser(email);
 		if (user.getFriends() != null) {
-			Set<String> friendsKeys = user.getFriends();
+			List<String> friendsKeys = user.getFriends();
 			for (String key : friendsKeys) {
 				User friend = getUser(key);
 				friends.add(friend);
@@ -168,14 +166,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void addUserToGroups(String email, Set<Key> groups)
+	public void addUserToGroups(String email, List<Key> groups)
 			throws NotLoggedInException {
 		checkLoggedIn();
 		User user = getUser(email);
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 
-		Set<Key> unchangedGroups = user.getGroups();
-		Set<Key> tempGroups = new HashSet<Key>();
+		List<Key> unchangedGroups = user.getGroups();
+		List<Key> tempGroups = new ArrayList<Key>();
 		tempGroups.addAll(unchangedGroups);
 
 		// get the removed groups

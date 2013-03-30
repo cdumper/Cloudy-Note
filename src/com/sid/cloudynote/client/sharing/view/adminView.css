@@ -57,7 +57,7 @@
 	border-collapse: collapse;
 }
 
-.header{
+.contentPanel .header{
 	padding: 5px;
 	border-bottom: 1px solid #CED8DF;
 	text-align: center;

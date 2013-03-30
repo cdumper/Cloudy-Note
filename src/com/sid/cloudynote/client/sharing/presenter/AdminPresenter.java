@@ -1,13 +1,19 @@
 package com.sid.cloudynote.client.sharing.presenter;
 
 import java.util.List;
+import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.AppController;
+import com.sid.cloudynote.client.event.GroupsChangedEvent;
+import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
+import com.sid.cloudynote.client.service.AccessRightService;
+import com.sid.cloudynote.client.service.AccessRightServiceAsync;
 import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.client.service.GroupServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteSearchService;
@@ -24,10 +30,10 @@ import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.User;
 
-public class AdminPresenter implements Presenter, IAdminView.Presenter{
+public class AdminPresenter implements Presenter, IAdminView.Presenter {
 	private IAdminView view;
 	private HandlerManager eventBus;
-	
+
 	public AdminPresenter(IAdminView view, HandlerManager eventBus) {
 		super();
 		this.view = view;
@@ -46,19 +52,20 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 	@Override
 	public void loadGroupList() {
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
-		groupService.getMyGroups(AppController.get().getLoginInfo().getEmail(), new AsyncCallback<List<Group>>(){
+		groupService.getMyGroups(AppController.get().getLoginInfo().getEmail(),
+				new AsyncCallback<List<Group>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("Failed to get group list");
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Failed to get group list");
+					}
 
-			@Override
-			public void onSuccess(List<Group> result) {
-				view.setGroupList(result);
-			}
-			
-		});
+					@Override
+					public void onSuccess(List<Group> result) {
+						view.setGroupList(result);
+					}
+
+				});
 	}
 
 	@Override
@@ -87,24 +94,28 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 		if (group.getKey() != null) {
 			// get users in group
 			GroupServiceAsync groupService = GWT.create(GroupService.class);
-			groupService.getUsersInGroup(group.getKey(), new AsyncCallback<List<User>>(){
+			groupService.getUsersInGroup(group.getKey(),
+					new AsyncCallback<List<User>>() {
 
-				@Override
-				public void onFailure(Throwable caught) {
-					GWT.log("Failed to get users in group:"+group.getName());
-				}
+						@Override
+						public void onFailure(Throwable caught) {
+							GWT.log("Failed to get users in group:"
+									+ group.getName());
+						}
 
-				@Override
-				public void onSuccess(List<User> result) {
-					view.setSubListLabel("Members of "+group.getName());
-					view.setUserList(result);
-					view.setSelectedUser(result.get(0));
-				}
-			});
+						@Override
+						public void onSuccess(List<User> result) {
+							view.setSubListLabel("Members of "
+									+ group.getName());
+							view.setUserList(result);
+							view.setSelectedUser(result.get(0));
+						}
+					});
 		} else {
 			if ("All Users".equals(group.getName())) {
 				UserServiceAsync service = GWT.create(UserService.class);
-				service.getFriends(AppController.get().getLoginInfo().getEmail(), new AsyncCallback<List<User>>(){
+				service.getFriends(AppController.get().getLoginInfo()
+						.getEmail(), new AsyncCallback<List<User>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -128,27 +139,30 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 	public void loadNoteList(final Notebook notebook) {
 		if (notebook.getKey() != null) {
 			// get notes in notebook
-			InfoNoteServiceAsync noteService = GWT.create(InfoNoteService.class);
-			noteService.getNotes(notebook, new AsyncCallback<List<InfoNote>>(){
+			InfoNoteServiceAsync noteService = GWT
+					.create(InfoNoteService.class);
+			noteService.getNotes(notebook, new AsyncCallback<List<InfoNote>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					GWT.log("Failed to get notes in notebook:"+notebook.getName());
+					GWT.log("Failed to get notes in notebook:"
+							+ notebook.getName());
 				}
 
 				@Override
 				public void onSuccess(List<InfoNote> result) {
-					view.setSubListLabel("Notes in "+notebook.getName());
+					view.setSubListLabel("Notes in " + notebook.getName());
 					view.setNoteList(result);
 					view.setSelectedNote(result.get(0));
 				}
-				
+
 			});
 		} else {
 			if ("All Notes".equals(notebook.getName())) {
-				//show all notes
-				InfoNoteSearchServiceAsync service = GWT.create(InfoNoteSearchService.class);
-				service.searchNotes("", new AsyncCallback<List<InfoNote>>(){
+				// show all notes
+				InfoNoteSearchServiceAsync service = GWT
+						.create(InfoNoteSearchService.class);
+				service.searchNotes("", new AsyncCallback<List<InfoNote>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -162,21 +176,23 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 						view.setSelectedNote(result.get(0));
 					}
 				});
-			} 
+			}
 		}
 	}
 
 	@Override
 	public void onUserAccessItemSelected(Group group) {
 		this.loadUserList(group);
-		if(group.getKey()==null) return;
+		if (group.getKey() == null)
+			return;
 		view.presentGroupAccess(group);
 	}
 
 	@Override
 	public void onNotePermissionItemSelected(Notebook notebook) {
 		this.loadNoteList(notebook);
-		if(notebook.getKey()==null) return;
+		if (notebook.getKey() == null)
+			return;
 		view.presentNotebookPermission(notebook);
 	}
 
@@ -188,5 +204,51 @@ public class AdminPresenter implements Presenter, IAdminView.Presenter{
 	@Override
 	public void onNoteItemSelected(InfoNote note) {
 		view.presentNotePermission(note);
+	}
+
+	@Override
+	public void saveUserAccessChanges(Group group,
+			Map<Key, Integer> groupAccess, User user,
+			Map<Key, Integer> userAccess) {
+		AccessRightServiceAsync service = GWT.create(AccessRightService.class);
+		service.saveGroupAndUserAccess(group, groupAccess, user, userAccess, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to save the user access changes.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully saved the user access changes.");
+				//TODO fire events
+				eventBus.fireEvent(new NotebookChangedEvent());
+				eventBus.fireEvent(new GroupsChangedEvent());
+			}
+		});
+	}
+
+	@Override
+	public void saveNotePermissionChanges(Notebook notebook,
+			Map<Key, Integer> notebookGroupPermission,
+			Map<String, Integer> notebookUserPermission, InfoNote note,
+			Map<Key, Integer> noteGroupPermission,
+			Map<String, Integer> noteUserPermission) {
+		AccessRightServiceAsync service = GWT.create(AccessRightService.class);
+		service.saveNotebookAndNotePermission(notebook, notebookGroupPermission, notebookUserPermission, note, noteGroupPermission, noteUserPermission, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to save the note permission changes.");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully saved the note permission changes.");
+				//TODO fire events
+				eventBus.fireEvent(new NotebookChangedEvent());
+				eventBus.fireEvent(new GroupsChangedEvent());
+			}
+		});
 	}
 }

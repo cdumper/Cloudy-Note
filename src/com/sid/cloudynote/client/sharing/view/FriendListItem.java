@@ -1,9 +1,7 @@
 package com.sid.cloudynote.client.sharing.view;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
@@ -139,7 +137,7 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 //				if(event.isAutoClosed()){
 //					active = !active;
 //				}
-				Set<Key> groups = new HashSet<Key>();
+				List<Key> groups = new ArrayList<Key>();
 				for(Group group : groupList) {
 					groups.add(group.getKey());
 				}

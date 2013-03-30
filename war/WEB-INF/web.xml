@@ -32,6 +32,10 @@
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.NotebookServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>AccessRightService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.AccessRightServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>loginService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.LoginServiceImpl</servlet-class>
 	</servlet>
@@ -87,6 +91,10 @@
 	<servlet-mapping>
 		<servlet-name>NotebookService</servlet-name>
 		<url-pattern>/cloudy_note/notebookService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AccessRightService</servlet-name>
+		<url-pattern>/cloudy_note/accessRightService</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>loginService</servlet-name>

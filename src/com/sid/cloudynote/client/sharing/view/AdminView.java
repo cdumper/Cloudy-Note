@@ -1,5 +1,6 @@
 package com.sid.cloudynote.client.sharing.view;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -543,8 +544,13 @@ public class AdminView extends Composite implements IAdminView {
 
 	@UiHandler("userAccessSaveButton")
 	void onClickUserAccessSave(ClickEvent e) {
+		Group group = null;
+		User user = null;
+		Map<Key, Integer> groupAccess = null;
+		Map<Key, Integer> userAccess = null;
 		if (this.groupAccessContentPanel.isVisible()) {
-			System.out.println("Save group access changes");
+			group = this.userAccessSelectionModel.getSelectedObject();
+			groupAccess = new LinkedHashMap<Key,Integer>();
 			for (int i = 1; i < groupAccessTable.getRowCount(); i++) {
 				String keyString = groupAccessTable.getWidget(i, 0)
 						.getElement().getInnerHTML();
@@ -556,10 +562,12 @@ public class AdminView extends Composite implements IAdminView {
 						.getValue()) {
 					permission = 1;
 				}
-				// TODO update the database
+				if(permission!=0)	groupAccess.put(key, permission);
 			}
 		}
 		if (this.userAccessContentPanel.isVisible()) {
+			user = this.userSelectionModel.getSelectedObject();
+			userAccess = new LinkedHashMap<Key,Integer>();
 			for (int i = 1; i < userAccessTable.getRowCount(); i++) {
 				String keyString = userAccessTable.getWidget(i, 0).getElement()
 						.getInnerHTML();
@@ -571,9 +579,10 @@ public class AdminView extends Composite implements IAdminView {
 						.getValue()) {
 					permission = 1;
 				}
-				// TODO update the database
+				if(permission!=0)	userAccess.put(key, permission);
 			}
 		}
+		presenter.saveUserAccessChanges(group, groupAccess, user, userAccess);
 		// this.userAccessSaveButton.setEnabled(false);
 	}
 

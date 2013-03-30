@@ -1,12 +1,10 @@
 package com.sid.cloudynote.client.sharing.view;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -47,7 +45,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		IGroupsChangedHandler {
 	private final String SEARCHBOX_TEXT = "Search Friends...";
 	private Presenter presenter;
-	private Set<FriendListItem> friendsItemSet;
+	private List<FriendListItem> friendsItemList;
 	private boolean isEditing = false;
 	private Group currentGroup;
 
@@ -159,8 +157,8 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			// gather the group name and members list for storage
 			String groupName = this.groupNameBox.getText();
 			String userEmail = AppController.get().getLoginInfo().getEmail();
-			Set<String> members = new TreeSet<String>();
-			for (FriendListItem item : friendsItemSet) {
+			List<String> members = new ArrayList<String>();
+			for (FriendListItem item : friendsItemList) {
 				if (item.getSelected()) {
 					members.add(item.getUser().getEmail());
 				}
@@ -268,7 +266,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			this.isEditing = true;
 		}
 		namePanel.setStyleName(style);
-		for (FriendListItem item : friendsItemSet) {
+		for (FriendListItem item : friendsItemList) {
 			item.checkBox.setStyleName(style);
 		}
 	}
@@ -298,7 +296,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	}
 
 	public void presentFriends(List<User> users, Boolean checked) {
-		Map<User, Boolean> map = new TreeMap<User, Boolean>();
+		Map<User, Boolean> map = new LinkedHashMap<User, Boolean>();
 		for (User u : users) {
 			map.put(u, checked);
 		}
@@ -306,17 +304,17 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	}
 
 	public void presentFriends(Map<User, Boolean> users) {
-		if (friendsItemSet == null) {
-			friendsItemSet = new TreeSet<FriendListItem>();
+		if (friendsItemList == null) {
+			friendsItemList = new ArrayList<FriendListItem>();
 		}
 		if (users != null) {
-			friendsItemSet.clear();
+			friendsItemList.clear();
 			this.friendsListPanel.clear();
 
 			for (Entry<User, Boolean> user : users.entrySet()) {
 				FriendListItem item = new FriendListItem(user.getKey(),
 						user.getValue(),AppController.get().getEventBus());
-				friendsItemSet.add(item);
+				friendsItemList.add(item);
 				this.friendsListPanel.add(item);
 			}
 		}

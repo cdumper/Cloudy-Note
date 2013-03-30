@@ -1,11 +1,9 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -31,7 +29,7 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 	private static final long serialVersionUID = -7135759983155196260L;
 
 	@Override
-	public void createGroup(String name, String owner, Set<String> users) {
+	public void createGroup(String name, String owner, List<String> users) {
 		List<User> userList = new ArrayList<User>();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		// create the group with given name and members
@@ -86,7 +84,7 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 		checkLoggedIn();
 		User user = getUser(userEmail);
 		List<Group> groups = new ArrayList<Group>();
-		Set<Key> groupKeys;
+		List<Key> groupKeys;
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		Query groupQuery = pm.newQuery(Group.class);
 		groupQuery.setFilter("key == keyParam");
@@ -160,9 +158,9 @@ public class GroupServiceImpl extends RemoteServiceServlet implements
 				GWT.log("You don't have the access to delete since you're not the ower of the group");
 			} else {
 				Group unchangedGroup = pm.getObjectById(Group.class,group.getKey());
-				Set<String> originMembers = unchangedGroup.getMembers();
-				Set<String> newMembers = group.getMembers();
-				Set<String> temp = new HashSet<String>();
+				List<String> originMembers = unchangedGroup.getMembers();
+				List<String> newMembers = group.getMembers();
+				List<String> temp = new ArrayList<String>();
 				temp.addAll(originMembers);
 				
 				//get the users have been removed

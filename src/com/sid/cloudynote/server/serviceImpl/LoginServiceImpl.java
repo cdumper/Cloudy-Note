@@ -1,9 +1,7 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -71,7 +69,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 					user.setEmail(email);
 					// user.setId(loginInfo.getUserId());
 					user.setNickname(loginInfo.getNickname().split("@")[0]);
-					Set<String> friends = getFakeFriendsData();
+					List<String> friends = getFakeFriendsData();
 					user.setFriends(friends);
 					pm.currentTransaction().begin();
 					pm.makePersistent(user);
@@ -88,8 +86,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		return user;
 	}
 
-	private Set<String> getFakeFriendsData() {
-		Set<String> friends = new HashSet<String>();
+	private List<String> getFakeFriendsData() {
+		List<String> friends = new ArrayList<String>();
 		for (String email : FAKE_USER_DATA) {
 			friends.add(email);
 		}

@@ -2,7 +2,6 @@ package com.sid.cloudynote.client.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,7 +10,7 @@ import com.sid.cloudynote.shared.User;
 
 public interface GroupServiceAsync {
 
-	void createGroup(String name, String owner, Set<String> users,
+	void createGroup(String name, String owner, List<String> users,
 			AsyncCallback<Void> callback);
 
 	void getGroups(String userEmail, AsyncCallback<List<Group>> callback);

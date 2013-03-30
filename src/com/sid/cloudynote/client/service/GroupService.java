@@ -2,7 +2,6 @@ package com.sid.cloudynote.client.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -19,7 +18,7 @@ public interface GroupService extends RemoteService {
 	 * @param owner
 	 * @param users
 	 */
-	void createGroup(String name, String owner, Set<String> users) ;
+	void createGroup(String name, String owner, List<String> users) ;
 	/**
 	 * The service to get groups the user is in, including BOTH the ones user owns AND the ones user is in
 	 * @param userEmail

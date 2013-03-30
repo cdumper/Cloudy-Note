@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
@@ -70,7 +68,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 
 	@Override
 	public void createGroup(final String groupName, final String owner,
-			final Set<String> members) {
+			final List<String> members) {
 		GroupServiceAsync groupService = GWT.create(GroupService.class);
 		groupService.createGroup(groupName, owner, members,
 				new AsyncCallback<Void>() {
@@ -116,7 +114,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	}
 
 	@Override
-	public void modifyGroup(Key key, String groupName, Set<String> members) {
+	public void modifyGroup(Key key, String groupName, List<String> members) {
 		Group group = new Group();
 		group.setKey(key);
 		group.setOwner(AppController.get().getLoginInfo().getEmail());
@@ -150,7 +148,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			public void onSuccess(List<User> friends) {
 				view.presentFriends(friends, false);
 				
-				Map<String, User> allFriends = new TreeMap<String, User>();
+				Map<String, User> allFriends = new LinkedHashMap<String, User>();
 				for(User user : friends) {
 					allFriends.put(user.getEmail(), user);
 				}
@@ -192,7 +190,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 
 					@Override
 					public void onSuccess(List<User> result) {
-						Map<User, Boolean> map = new TreeMap<User, Boolean>();
+						Map<User, Boolean> map = new LinkedHashMap<User, Boolean>();
 						for (User u : result) {
 							map.put(u, true);
 						}

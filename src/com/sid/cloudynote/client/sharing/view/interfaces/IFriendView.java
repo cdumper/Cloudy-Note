@@ -1,6 +1,6 @@
 package com.sid.cloudynote.client.sharing.view.interfaces;
 
-import java.util.Set;
+import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,7 +28,7 @@ public interface IFriendView {
 		 * @param owner
 		 * @param members
 		 */
-		void createGroup(String groupName, String owner, Set<String> members);
+		void createGroup(String groupName, String owner, List<String> members);
 
 		/**
 		 * Delete the given group
@@ -41,7 +41,7 @@ public interface IFriendView {
 		 * @param groupName
 		 * @param members
 		 */
-		void modifyGroup(Key key, String groupName, Set<String> members);
+		void modifyGroup(Key key, String groupName, List<String> members);
 
 		/**
 		 * Load and present the friends list of user with given email
@@ -61,6 +61,7 @@ public interface IFriendView {
 		 * @param currentGroup
 		 */
 		void editGroup(Group currentGroup);
+
 	}
 
 	void setPresenter(Presenter presenter);

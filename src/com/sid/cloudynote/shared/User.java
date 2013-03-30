@@ -1,10 +1,10 @@
 package com.sid.cloudynote.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.NotPersistent;
@@ -33,9 +33,9 @@ public class User implements Serializable, Comparable<User> {
 	@Persistent
 	private boolean loggedIn = false;
 	@Persistent
-	private Set<Key> groups;
+	private List<Key> groups = new ArrayList<Key>();;
 	@Persistent
-	private Set<String> friends;
+	private List<String> friends = new ArrayList<String>();;
 	@Persistent(serialized = "true", defaultFetchGroup = "true")
 	private Map<Key, Integer> access = new LinkedHashMap<Key, Integer>();
 	@NotPersistent
@@ -56,31 +56,22 @@ public class User implements Serializable, Comparable<User> {
 		this.access.putAll(access);
 	}
 
-	public Set<Key> getGroups() {
-		if(groups==null) groups = new LinkedHashSet<Key>();
+	public List<Key> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(Set<Key> groups) {
+	public void setGroups(List<Key> groups) {
 		this.groups.clear();
 		this.groups.addAll(groups);
 	}
 	
-	public Set<String> getFriends() {
+	public List<String> getFriends() {
 		return friends;
 	}
 
-	public void setFriends(Set<String> friends) {
+	public void setFriends(List<String> friends) {
 		this.friends = friends;
 	}
-
-//	public String getId() {
-//		return id;
-//	}
-//
-//	public void setId(String id) {
-//		this.id = id;
-//	}
 
 	public boolean isLoggedIn() {
 		return loggedIn;
