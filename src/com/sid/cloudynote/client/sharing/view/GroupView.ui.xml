@@ -4,7 +4,7 @@
 	<ui:style type="com.sid.cloudynote.client.sharing.view.GroupView.Style">
 		.container {
 			border: 1px solid #999;
-			background: #F0F0F0;
+			background: #EAEDEF;
 			color: #606060;
 		}
 		
@@ -30,7 +30,7 @@
 		}
 		
 		.groupItem {
-			background: #F0F0F0;
+			background: #EAEDEF;
 			width: 100%;
 			position: relative;
 			padding-left: 25%;
@@ -43,7 +43,7 @@
 		}
 		
 		.button {
-			background: #F0F0F0;
+			background: #EAEDEF;
 			border-radius: 0px 0px 0px 0px;
 			position: relative;
 			width: 100%;
@@ -57,7 +57,7 @@
 		}
 		
 		.label {
-			background: #F0F0F0;
+			background: #EAEDEF;
 			border-radius: 0px 0px 0px 0px;
 			position: relative;
 			width: 100%;
@@ -72,7 +72,7 @@
 		}
 		
 		.label:hover, .label:active {
-			background: #F0F0F0;
+			background: #EAEDEF;
 			color: #606060;
 			border: 0px solid #999;
 		}
@@ -84,7 +84,7 @@
 		
 		.groupItem:active,.button:active{
 			border: 0 solid #ccc !important;
-			background: #c0c0c0;
+			background: #D8D8D8;
 		}
 	</ui:style>
 	<cn:Container addStyleNames="{style.container}" ui:field="container">

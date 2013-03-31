@@ -38,8 +38,10 @@ import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.presenter.AdminPresenter;
+import com.sid.cloudynote.client.sharing.presenter.EditProfilePresenter;
 import com.sid.cloudynote.client.sharing.presenter.FriendViewPresenter;
 import com.sid.cloudynote.client.sharing.view.AdminView;
+import com.sid.cloudynote.client.sharing.view.EditProfileView;
 import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.shared.User;
@@ -80,10 +82,13 @@ public class AppView extends Composite implements Presenter {
 	FriendView friendsView;
 	@UiField
 	AdminView adminView;
+	@UiField
+	EditProfileView editProfileView;
 
 	private HandlerManager eventBus;
 	private User loginInfo = null;
 	private FriendViewPresenter friendsPresenter;
+	private EditProfilePresenter editProfilePresenter;
 	private AdminPresenter adminPresenter;
 	private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
 
@@ -131,8 +136,9 @@ public class AppView extends Composite implements Presenter {
 		userProfile.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO edit user profile page
-				
+				settingsPanel.hide();
+				AppController.get().setPageState(AppController.EDIT_PROFILE_PAGE);
+				AppController.get().go(RootLayoutPanel.get());
 			}
 		});
 		settings.addClickHandler(new ClickHandler(){
@@ -211,6 +217,23 @@ public class AppView extends Composite implements Presenter {
 		adminPresenter.go(adminView.getContainer());
 		bindAdminEvents();
 		deck.showWidget(3);
+		container.add(dockLayoutPanel);
+	}
+	
+	
+	public void showEditProfile(HasWidgets container) {
+		container.clear();
+		if (this.editProfileView == null) {
+			this.editProfileView = new EditProfileView();
+			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
+			editProfileView.setPresenter(editProfilePresenter);
+		}
+		if (editProfilePresenter == null){
+			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
+			editProfileView.setPresenter(editProfilePresenter);
+		}
+		editProfilePresenter.go(editProfileView.getContainer());
+		deck.showWidget(4);
 		container.add(dockLayoutPanel);
 	}
 	

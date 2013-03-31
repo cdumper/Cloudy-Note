@@ -38,6 +38,7 @@
 					<s:SharingView ui:field='sharingView' />
 					<s:FriendView ui:field='friendsView' />
 					<s:AdminView ui:field='adminView' />
+					<s:EditProfileView ui:field='editProfileView' />
 				</g:DeckPanel>
 			</g:center>
 		</g:DockLayoutPanel>
