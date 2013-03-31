@@ -103,7 +103,7 @@ public class AppView extends Composite implements Presenter {
 	
 	interface GlobalResources extends ClientBundle {
 		@NotStrict
-		@Source("global.css")
+		@Source("../resources/css/global.css")
 		CssResource css();
 	}
 

@@ -107,7 +107,8 @@ public class NoteListView extends ResizeComposite implements
 	};
 
 	static interface Images extends ClientBundle {
-		ImageResource home();
+		@Source("../resources/images/note.png")
+		ImageResource note();
 	}
 
 	private SingleSelectionModel<InfoNote> selectionModel;
@@ -438,7 +439,7 @@ public class NoteListView extends ResizeComposite implements
 
 		bindSearchHandler();
 		
-		noteCell = new NoteCell(images.home());
+		noteCell = new NoteCell(images.note());
 
 		cellList = new CellList<InfoNote>(noteCell, KEY_PROVIDER);
 		cellList.setPageSize(30);

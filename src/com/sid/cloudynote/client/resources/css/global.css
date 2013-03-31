@@ -148,7 +148,7 @@ a:link,a:visited,a:hover,a:active {
 
 .gwt-DisclosurePanel .content {
 	border-left: 0px !important;
-	padding: 0 0 4px 8px;
+	padding: 0 0 4px 0px;
 }
 
 .gwt-DisclosurePanel-open {

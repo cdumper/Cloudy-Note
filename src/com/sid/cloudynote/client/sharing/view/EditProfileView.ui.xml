@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view">
 	<ui:style
 		type="com.sid.cloudynote.client.sharing.view.EditProfileView.Style"
-		src="profile.css">
+		src="../../resources/css/profile.css">
 			
 		</ui:style>
 	<cn:Container ui:field="container" addStyleNames="{style.container}">

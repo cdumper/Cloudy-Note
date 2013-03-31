@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn='urn:import:com.sid.cloudynote.client.view'
 	xmlns:s='urn:import:com.sid.cloudynote.client.sharing.view'>
-	<ui:style src="header.css" type="com.sid.cloudynote.client.view.AppView.Style" />
+	<ui:style src="../resources/css/header.css" type="com.sid.cloudynote.client.view.AppView.Style" />
 		
 	<cn:Container>
 		<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">

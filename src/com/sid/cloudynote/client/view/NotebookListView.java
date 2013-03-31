@@ -77,7 +77,7 @@ public class NotebookListView extends ResizeComposite implements
 
 	//TODO style celllist
 	interface MyCellListResources extends CellList.Resources {
-		@Source({"CellList.css"})
+		@Source({"../resources/css/CellList.css"})
 		@Override
 		public CellListStyle cellListStyle();
 		
@@ -86,18 +86,21 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	public interface Images extends ClientBundle, Tree.Resources {
-		ImageResource drafts();
+		@Source("../resources/images/notebook.png")
+		ImageResource allNotes();
+		
+		@Source("../resources/images/notebook.png")
+		ImageResource notebook();
+		
+		@Source("../resources/images/notebook.png")
+		ImageResource sharedNotebook();
 
-		ImageResource home();
-
-		ImageResource inbox();
-
-		ImageResource sent();
-
-		ImageResource templates();
-
+		@Source("../resources/images/trash.png")
 		ImageResource trash();
-		// @Source("noimage.png")
+		
+		@Source("../resources/images/tag2.png")
+		ImageResource tag();
+		
 		// ImageResource treeLeaf();
 	}
 
@@ -339,7 +342,9 @@ public class NotebookListView extends ResizeComposite implements
 
 			sb.appendHtmlConstant("<div style=\"padding:5px;\">");
 			sb.appendHtmlConstant(imageHtml);
+			sb.appendHtmlConstant("<div style=\"margin-left:10px;vertical-align:middle;display:inline;\">");
 			sb.appendEscaped(notebook.getName()+" ("+notebook.getTotalNotes()+")");
+			sb.appendHtmlConstant("</div>");
 			sb.appendHtmlConstant("</div>");
 		}
 	}
@@ -382,7 +387,9 @@ public class NotebookListView extends ResizeComposite implements
 			if (tag != null) {
 				sb.appendHtmlConstant("<div style=\"padding:5px;\">");
 				sb.appendHtmlConstant(imageHtml);
+				sb.appendHtmlConstant("<div style=\"margin-left:10px;vertical-align:middle;display:inline;\">");
 				sb.appendEscaped(tag.getName());
+				sb.appendHtmlConstant("</div>");
 				sb.appendHtmlConstant("</div>");
 			}
 		}
@@ -643,7 +650,7 @@ public class NotebookListView extends ResizeComposite implements
 
 	private void initialNotebooksList() {
 		this.allNotes.setTotalNotes(AppController.get().getLoginInfo().getTotalNotes());
-		notebookCell = new NotebookCell(images.drafts(), presenter);
+		notebookCell = new NotebookCell(images.notebook(), presenter);
 		// TODO style notebooks cell lsit
 		notebooksCellList = new CellList<Notebook>(notebookCell,GWT.<MyCellListResources> create(MyCellListResources.class),
 				NOTEBOOK_KEY_PROVIDER);
@@ -672,7 +679,7 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	private void initialTagsList() {
-		tagCell = new TagCell(images.templates(), presenter);
+		tagCell = new TagCell(images.tag(), presenter);
 		//TODO style tags cell list
 		CellList.Resources cellListRes = GWT.create(MyCellListResources.class);
 		tagsCellList = new CellList<Tag>(tagCell,cellListRes, TAG_KEY_PROVIDER);

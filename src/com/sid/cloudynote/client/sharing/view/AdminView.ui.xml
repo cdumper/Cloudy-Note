@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view"
 	xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style type="com.sid.cloudynote.client.sharing.view.AdminView.Style"
-		src="adminView.css">
+		src="../../resources/css/adminView.css">
 			
 		</ui:style>
 	<cn:Container ui:field="container" addStyleNames="{style.container}">

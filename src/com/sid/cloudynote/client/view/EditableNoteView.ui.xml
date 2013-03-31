@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cn="urn:import:com.sid.cloudynote.client.view"
 	xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
 	<ui:style type="com.sid.cloudynote.client.view.EditableNoteView.Style"
-		src="editable.css">
+		src="../resources/css/editable.css">
 			
 		</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
