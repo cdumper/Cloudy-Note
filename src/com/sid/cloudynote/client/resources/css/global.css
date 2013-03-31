@@ -1,5 +1,6 @@
 body,table {
 	font-size: small;
+	border-collapse:collapse;
 }
 
 body {

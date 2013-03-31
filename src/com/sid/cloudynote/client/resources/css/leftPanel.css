@@ -10,16 +10,16 @@
 	display: block;
 }
 
-.namePanel{
+.namePanel {
 	padding: 10px 20px;
 	border-bottom: 1px solid #CED8DF;
 }
 
-.namePanel .label{
+.namePanel .label {
 	margin-bottom: 10px;
 }
 
-.namePanel .textbox{
+.namePanel .textbox {
 	margin-bottom: 5px;
 }
 
@@ -52,7 +52,7 @@
 	padding: 5px 10px;
 }
 
-.buttonPanel .button{
+.buttonPanel .button {
 	padding: 0px;
 	font-size: 11px;
 	margin-left: 5px;
@@ -68,14 +68,14 @@
 	background-color: #EAEDEF;
 }
 
-.groupList .firstBlock{
+.groupList .firstBlock {
 	position: relative;
 	width: 100%;
 	float: left;
 	border-right: 1px solid #999;
 }
 
-.groupList .secondBlock{
+.groupList .secondBlock {
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -110,13 +110,38 @@
 	border-radius: 5px;
 }
 
-.groupList .button {
-	width: 100%;
-	margin: 0px auto;
-	padding-left: 20%;
-	position: relative;
+.groupList div.rowDiv {
 	display: block;
+	position: relative;
+	background-color: #EAEDEF;
+	border: 0px solid #D8D8D8;
+	color: #606060;
+	cursor: pointer;
+	font-size: 14px;
+	font-family: Georgia, serif;
+}
+
+.groupList div.rowDiv:hover {
+	background: #D8D8D8;
+	color: #606060;
+}
+
+.groupList div.rowDiv:active {
+	border: 0 solid #ccc !important;
+	background: #D8D8D8;
+}
+
+.groupList div.rowDiv img {
+	display: inline;
+	margin-left: 45px;
+	margin-right: 5px;
+}
+
+.groupList div.rowDiv .button {
+	margin: 0px auto;
+	position: relative;
 	text-align: left;
+	padding-left: 0px;
 	background-color: #EAEDEF;
 	border: 0px solid #D8D8D8;
 	color: #606060;
@@ -125,12 +150,12 @@
 	border-radius: 0px 0px 0px 0px;
 }
 
-.groupList .button:hover {
+.groupList div.rowDiv .button:hover {
 	background: #D8D8D8;
 	color: #606060;
 }
 
-.groupList .button:active {
+.groupList div.rowDiv .button:active {
 	border: 0 solid #ccc !important;
 	background: #c0c0c0;
 }

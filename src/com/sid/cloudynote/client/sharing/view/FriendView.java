@@ -15,11 +15,18 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -48,13 +55,24 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	private List<FriendListItem> friendsItemList;
 	private boolean isEditing = false;
 	private Group currentGroup;
+	@UiField
+	Style style;
 
 	public interface Style extends CssResource {
+		String rowDiv();
+
 		String hidden();
 
 		String visible();
 
 		String button();
+	};
+
+	public interface Resources extends ClientBundle {
+
+		@Source("../../resources/images/group.png")
+		ImageResource group();
+
 	}
 
 	private static FriendViewUiBinder uiBinder = GWT
@@ -66,9 +84,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiField
 	HTMLPanel leftPanel;
 	@UiField
-	Button allFriendsButton;
-	@UiField
-	Button findFriendsButton;
+	HTMLPanel friendsPanel;
 	@UiField
 	TextBox searchBox;
 	@UiField
@@ -90,13 +106,14 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiField
 	HTMLPanel friendsListPanel;
 	@UiField
-	public Style style;
+	public Resources res;
 
 	interface FriendViewUiBinder extends UiBinder<Widget, FriendView> {
 	}
 
 	public FriendView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		initialFriendsPanel();
 		this.searchBox.setText(SEARCHBOX_TEXT);
 
 		this.searchBox.addFocusHandler(new FocusHandler() {
@@ -122,6 +139,37 @@ public class FriendView extends ResizeComposite implements IFriendView,
 				presenter.findFriend(searchBox.getText());
 			}
 		});
+	}
+
+	private void initialFriendsPanel() {
+		this.friendsPanel.clear();
+		Element allFriendsDiv = DOM.createDiv();
+		DOM.sinkEvents(allFriendsDiv, Event.ONCLICK);
+		DOM.setEventListener(allFriendsDiv, new EventListener() {
+			public void onBrowserEvent(Event event) {
+				currentGroup = null;
+				presentFriends(new ArrayList<User>(DataManager.getAllFriends()
+						.values()), false);
+			}
+		});
+		allFriendsDiv.setClassName(style.rowDiv());
+		allFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.group())
+				.getHTML() + "All Firends");
+
+		Element findFriendsDiv = DOM.createDiv();
+		DOM.sinkEvents(findFriendsDiv, Event.ONCLICK);
+		DOM.setEventListener(findFriendsDiv, new EventListener() {
+			public void onBrowserEvent(Event event) {
+				currentGroup = null;
+				showFindFriendsDialog();
+			}
+		});
+		findFriendsDiv.setClassName(style.rowDiv());
+		findFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.group())
+				.getHTML() + "Find Firend");
+
+		this.friendsPanel.getElement().appendChild(allFriendsDiv);
+		this.friendsPanel.getElement().appendChild(findFriendsDiv);
 	}
 
 	public boolean isEditing() {
@@ -185,19 +233,6 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	@UiHandler("deleteGroupButton")
 	void onDeleteGroup(ClickEvent e) {
 		presenter.deleteGroup(this.currentGroup);
-	}
-
-	@UiHandler("allFriendsButton")
-	void onAllFriends(ClickEvent e) {
-		this.currentGroup = null;
-		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends()
-				.values()), false);
-	}
-
-	@UiHandler("findFriendsButton")
-	void onFindFriends(ClickEvent e) {
-		this.currentGroup = null;
-		this.showFindFriendsDialog();
 	}
 
 	private void showFindFriendsDialog() {
@@ -275,23 +310,33 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		presenter
 				.loadMyGroupList(AppController.get().getLoginInfo().getEmail());
-		presenter.loadAllFriendsList(AppController.get().getLoginInfo().getEmail());
+		presenter.loadAllFriendsList(AppController.get().getLoginInfo()
+				.getEmail());
 		this.presentFriends(new ArrayList<User>(DataManager.getAllFriends()
 				.values()), false);
 	}
 
 	public void setGroupList(List<Group> result) {
-		this.groupsPanel.clear();
+		while (this.groupsPanel.getElement().hasChildNodes()) {
+			this.groupsPanel.getElement().removeChild(
+					this.groupsPanel.getElement().getFirstChild());
+		}
 		for (final Group group : result) {
-			Button button = new Button(group.getName()+" ("+group.getMembers().size()+")", new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
+			Element div = DOM.createDiv();
+			DOM.sinkEvents(div, Event.ONCLICK);
+			DOM.setEventListener(div, new EventListener() {
+				public void onBrowserEvent(Event event) {
 					currentGroup = group;
 					presenter.showFriendsInGroup(group.getKey());
 				}
 			});
-			button.addStyleName(style.button());
-			this.groupsPanel.add(button);
+			div.setClassName(style.rowDiv());
+			div.setInnerHTML(AbstractImagePrototype.create(res.group())
+					.getHTML()
+					+ group.getName()
+					+ " ("
+					+ group.getMembers().size() + ")");
+			this.groupsPanel.getElement().appendChild(div);
 		}
 	}
 
@@ -313,7 +358,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 			for (Entry<User, Boolean> user : users.entrySet()) {
 				FriendListItem item = new FriendListItem(user.getKey(),
-						user.getValue(),AppController.get().getEventBus());
+						user.getValue(), AppController.get().getEventBus());
 				friendsItemList.add(item);
 				this.friendsListPanel.add(item);
 			}

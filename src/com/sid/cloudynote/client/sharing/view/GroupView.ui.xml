@@ -82,7 +82,7 @@
 			border: 0px solid #999;
 		}
 		
-		div.groupList ul div:hover, .groupItem:hover {
+		div.groupList ul div:hover {
 			background: #D8D8D8;
 			color: #606060;
 		}
