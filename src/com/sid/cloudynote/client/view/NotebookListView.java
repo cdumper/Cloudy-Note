@@ -340,7 +340,7 @@ public class NotebookListView extends ResizeComposite implements
 				return;
 			}
 
-			sb.appendHtmlConstant("<div style=\"padding:5px;\">");
+			sb.appendHtmlConstant("<div style=\"padding:5px 5px 0px;\">");
 			sb.appendHtmlConstant(imageHtml);
 			sb.appendHtmlConstant("<div style=\"margin-left:10px;vertical-align:middle;display:inline;\">");
 			sb.appendEscaped(notebook.getName()+" ("+notebook.getTotalNotes()+")");
@@ -385,7 +385,7 @@ public class NotebookListView extends ResizeComposite implements
 		@Override
 		public void render(Context context, Tag tag, SafeHtmlBuilder sb) {
 			if (tag != null) {
-				sb.appendHtmlConstant("<div style=\"padding:5px;\">");
+				sb.appendHtmlConstant("<div style=\"padding:5px 5px 0px;\">");
 				sb.appendHtmlConstant(imageHtml);
 				sb.appendHtmlConstant("<div style=\"margin-left:10px;vertical-align:middle;display:inline;\">");
 				sb.appendEscaped(tag.getName());

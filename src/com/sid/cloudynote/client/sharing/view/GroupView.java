@@ -7,7 +7,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -15,9 +17,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
@@ -39,13 +43,17 @@ public class GroupView extends Composite implements IGroupView,
 	UListElement groupList;
 	@UiField
 	Style style;
+	
+	public interface Images extends ClientBundle, Tree.Resources {
+		@Source("../../resources/images/group.png")
+		ImageResource group();
+	}
+	private Images images;
 
 	interface Style extends CssResource {
 		String groupItem();
 
 		String groupLabel();
-
-		String button();
 	}
 
 	public Container getContainer() {
@@ -72,6 +80,7 @@ public class GroupView extends Composite implements IGroupView,
 
 	public GroupView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		images = GWT.create(Images.class);
 	}
 
 	@Override
@@ -92,17 +101,23 @@ public class GroupView extends Composite implements IGroupView,
 			}
 			for (final Group g : groups) {
 				LIElement li = Document.get().createLIElement();
-				Element button = DOM.createButton();
-				button.setInnerText(g.getName());
-				DOM.sinkEvents(button, Event.ONCLICK);
-				DOM.setEventListener(button, new EventListener() {
+				Element div = DOM.createDiv();
+//				Element button = DOM.createButton();
+//				button.setInnerText(g.getName());
+//				button.addClassName(style.groupItem());
+//				button.addClassName(".gwt-Button");
+				DOM.sinkEvents(div, Event.ONCLICK);
+				DOM.setEventListener(div, new EventListener() {
 					public void onBrowserEvent(Event event) {
 						presenter.onGroupItemSelected(g);
 					}
 				});
-				button.addClassName(style.groupItem());
-				button.addClassName(".gwt-Button");
-				li.appendChild(button);
+				div.setAttribute("style", "padding-top: 5px;cursor: pointer;");
+//				div.setInnerHTML("<div style=\"display:inline;padding-left: 45px;\">"+AbstractImagePrototype.create(images.group()).getHTML()+button.getInnerHTML()+"</div>");
+				div.setInnerHTML(AbstractImagePrototype.create(images.group()).getHTML()+g.getName());
+//				div.appendChild(button);
+//				div.insertFirst(new Image(images.group()).getElement());
+				li.appendChild(div);
 				groupList.appendChild(li);
 			}
 		}

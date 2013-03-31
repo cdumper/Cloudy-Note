@@ -1,15 +1,15 @@
-.container {
+.adminContainer {
 	border-top: 1px solid #999;
 }
 
-.leftPanel {
+.adminContainer .leftPanel {
 	height: 100%;
 	width: 100%;
 	background-color: #EAEDEF;
 	color: #555E64;
 }
 
-.subListPanel {
+.adminContainer .subListPanel {
 	border-left: 1px solid #999;
 	height: 100%;
 	width: 100%;
@@ -17,7 +17,7 @@
 	color: #555E64;
 }
 
-.buttonPanel {
+.adminContainer .buttonPanel {
 	padding: 4px 10px;
 	border-bottom: 1px solid #999;
 	background-color: #EAEDEF;
@@ -26,14 +26,14 @@
 	height: 24px;
 }
 
-.button {
+.adminContainer .button {
 	padding: 2px;
 	font-size: 12px;
 	height: 24px;
 	margin-right: 5px;
 }
 
-.labelPanel {
+.adminContainer .labelPanel {
 	color: #404040;
 	height: 24px;
 	padding-top: 8px;
@@ -42,27 +42,27 @@
 	background-color: #EAEDEF;
 }
 
-.contentPanel {
+.adminContainer .contentPanel {
 	height: 100%;
 	width: 100%;
 	border-left: 1px solid #999;
 }
 
-.contentPanel .tableContent{
+.adminContainer .contentPanel .tableContent{
 	margin-bottom: 50px;
 }
 
-.contentPanel .label {
+.adminContainer .contentPanel .label {
 	padding-top: 4px;
 }
 
-.contentPanel table {
+.adminContainer .contentPanel table {
 	width: 100%;
 	padding: 5px;
 	border-collapse: collapse;
 }
 
-.contentPanel .header{
+.adminContainer .contentPanel .header{
 	padding: 5px;
 	border-bottom: 1px solid #CED8DF;
 	text-align: center;
@@ -70,7 +70,7 @@
 	color: #555E64;
 }
 
-.contentPanel td {
+.adminContainer .contentPanel td {
 	padding: 5px;
 	border-bottom: 1px solid #CED8DF;
 	text-align: center;

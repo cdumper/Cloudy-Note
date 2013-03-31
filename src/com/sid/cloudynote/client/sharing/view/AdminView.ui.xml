@@ -6,7 +6,7 @@
 		src="../../resources/css/adminView.css">
 			
 		</ui:style>
-	<cn:Container ui:field="container" addStyleNames="{style.container}">
+	<cn:Container ui:field="container" addStyleNames="{style.adminContainer}">
 		<g:DockLayoutPanel unit="PCT" width="100%" height="100%"
 			ui:field="content">
 			<g:west size="15">

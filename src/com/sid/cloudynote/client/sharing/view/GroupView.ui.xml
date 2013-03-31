@@ -18,6 +18,12 @@
 		div.groupList ul {
 			list-style: none;
 			display: inline;
+			padding: 0px;
+		}
+		
+		div.groupList img {
+			display: inline;
+			margin-left: 45px;
 		}
 		
 		.groupLabel {
@@ -31,9 +37,7 @@
 		
 		.groupItem {
 			background: #EAEDEF;
-			width: 100%;
 			position: relative;
-			padding-left: 25%;
 			diaplay: inline;
 			text-align: left;
 			border: 0px solid #006699;
@@ -68,37 +72,45 @@
 			color: #606060;
 			font-size: 14px;
 			font-family: Georgia, serif;
-			cursor: text;
+			cursor: auto;
 		}
 		
-		.label:hover, .label:active {
+		.label:hover,.label:active {
 			background: #EAEDEF;
 			color: #606060;
+			cursor: auto;
 			border: 0px solid #999;
 		}
 		
-		.groupItem:hover,.button:hover{
+		div.groupList ul div:hover, .groupItem:hover {
 			background: #D8D8D8;
 			color: #606060;
 		}
 		
-		.groupItem:active,.button:active{
+ 		.groupItem:hover,.button:hover {
+			background: #D8D8D8;
+			color: #606060;
+		}
+		
+		.groupItem:active,.button:active {
 			border: 0 solid #ccc !important;
 			background: #D8D8D8;
-		}
+		} 
 	</ui:style>
 	<cn:Container addStyleNames="{style.container}" ui:field="container">
 		<g:HTMLPanel ui:field="content">
 			<div class="{style.groupList}">
 				<ul>
 					<li>
-						<g:Button ui:field="publicButton" addStyleNames="{style.button}" text="Public" />
+						<g:Button ui:field="publicButton" addStyleNames="{style.button}"
+							text="Public" />
 					</li>
 					<li>
-						<g:Button ui:field="sharedButton" addStyleNames="{style.button}" text="Shared With Me"/>
+						<g:Button ui:field="sharedButton" addStyleNames="{style.button}"
+							text="Shared With Me" />
 					</li>
 					<li>
-						<g:Button addStyleNames="{style.label}" text="Groups"/>
+						<g:Button addStyleNames="{style.label}" text="Groups" />
 					</li>
 				</ul>
 				<ul ui:field="groupList">
