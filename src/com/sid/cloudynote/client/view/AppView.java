@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -52,6 +53,12 @@ public class AppView extends Composite implements Presenter {
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
+	FocusPanel gearDownPanel;
+	@UiHandler("gearDownPanel")
+	void onClickGearDown(ClickEvent e){
+		settingsPanel.show();
+	}
+	@UiField
 	Anchor gearDownUser;
 	DecoratedPopupPanel settingsPanel = new DecoratedPopupPanel();
 	Anchor userProfile = new Anchor("Edit Profile");
@@ -61,7 +68,7 @@ public class AppView extends Composite implements Presenter {
 	Anchor signOut = new Anchor("Sign Out");
 	@UiHandler("gearDownUser")
 	void onUserSettingClick(ClickEvent e){
-		settingsPanel.show();
+//		settingsPanel.show();
 	}
 	
 	@UiField

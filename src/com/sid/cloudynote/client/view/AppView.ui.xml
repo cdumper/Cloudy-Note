@@ -23,12 +23,15 @@
 							<div class="{style.divider}"></div>
 							<g:Button ui:field="adminButton" addStyleNames="{style.button}">Admin</g:Button>
 						</div>
-						<div class="{style.right}">
-							<g:Anchor ui:field="gearDownUser" addStyleNames="{style.gear_dropdown_user}"
-								text="cdumper" />
-							<!-- <div class="{style.gear_dropdown_box}"> <div class="{style.gear_dropdown_arrow}"></div> 
-								</div> -->
-						</div>
+						<g:FocusPanel ui:field="gearDownPanel" addStyleNames="{style.right}">
+							<g:HTMLPanel>
+								<img src="images/user-icon.png"></img>
+								<g:Anchor ui:field="gearDownUser" addStyleNames="{style.gear_dropdown_user}"
+									text="cdumper" />
+								<div class="{style.divider}"></div>
+								<img src="images/arrow-down.png"></img>
+							</g:HTMLPanel>
+						</g:FocusPanel>
 					</div>
 				</g:HTMLPanel>
 			</g:north>

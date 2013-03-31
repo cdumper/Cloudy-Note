@@ -9,6 +9,7 @@
 	display: inline;
 	height: 36px;
 	padding-top: 8px;
+	cursor: pointer;
 }
 
 div.logo {
@@ -102,6 +103,10 @@ div.logo img {
 	font-size: 16px;
 	font-weight: bold;
 	font-family: caecilia-bold;
+}
+
+.right img{
+	display: inline;
 }
 
 /*
