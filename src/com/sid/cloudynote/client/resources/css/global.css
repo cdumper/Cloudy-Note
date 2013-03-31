@@ -1,6 +1,6 @@
 body,table {
 	font-size: small;
-	border-collapse:collapse;
+	border-collapse: collapse;
 }
 
 body {
@@ -40,20 +40,11 @@ a:link,a:visited,a:hover,a:active {
 	border: 1px solid #DDDDDD;
 }
 
+/* styles for dialog boxes*/
 .gwt-DialogBox {
 	background: #F0F0F0;
 	border: 1px solid #666;
 	font-size: 14px;
-}
-
-.gwt-DialogBox .Caption {
-	background: #F0F0F0;
-	font-weight: bold;
-	cursor: default;
-	padding: 5px 10px;
-	border-bottom: 1px solid #999;
-	text-align: left;
-	font-size: 18px;
 }
 
 .gwt-DialogBox table {
@@ -63,7 +54,32 @@ a:link,a:visited,a:hover,a:active {
 	height: 100%;
 }
 
-.gwt-DialogBox .dialogMiddleCenter,.gwt-DialogBox .dialogMiddleLeft,.gwt-DialogBox .dialogMiddleRight,.gwt-DialogBox .dialogTopCenter,.gwt-DialogBox .dialogTopLeft,.gwt-DialogBox .dialogTopRight,.gwt-DialogBox .dialogBottomCenter,.gwt-DialogBox .dialogBottomLeft,.gwt-DialogBox .dialogBottomRight
+.gwt-DialogBox .dialogTopLeft,.gwt-DialogBox .dialogTopRight, .gwt-DialogBox .dialogTopCenter
+	{
+	background: #bbb;
+	padding: 0px;
+	width: 0px;
+}
+
+.gwt-DialogBox .Caption {
+	background: #bbb;
+	curosr: pointer !important;
+	font-weight: bold;
+	padding: 5px 10px;
+	text-align: left;
+	font-size: 18px;
+	height: 20px;
+}
+
+.gwt-DialogBox .dialogMiddleCenter,.gwt-DialogBox .dialogMiddleLeft,.gwt-DialogBox .dialogMiddleRight
+	{
+	padding: 10px;
+	background: #F0F0F0;
+	height: 180px;
+	padding: 40px 10px 10px;
+}
+
+.gwt-DialogBox .dialogBottomCenter,.gwt-DialogBox .dialogBottomLeft,.gwt-DialogBox .dialogBottomRight
 	{
 	padding: 0px;
 	background: #F0F0F0;

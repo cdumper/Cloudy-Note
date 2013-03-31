@@ -17,8 +17,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.UserService;
 import com.sid.cloudynote.server.PMF;
@@ -64,7 +68,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void addAccessEntry(final List<String> emails,
-			final Map<Key, Integer> access) {
+			final Map<Key, Integer> access) throws NotLoggedInException {
+		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		List<User> users = new ArrayList<User>();
 		for (String email : emails) {
@@ -92,7 +97,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<User> getFriends(String email) {
+	public List<User> getFriends(String email) throws NotLoggedInException {
+		checkLoggedIn();
 		List<User> friends = new ArrayList<User>();
 		User user = getUser(email);
 		if (user.getFriends() != null) {
@@ -199,5 +205,45 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		user.getGroups().clear();
 		user.getGroups().addAll(groups);
 		pm.makePersistent(user);
+	}
+
+	@Override
+	public String getUserProfile(String email) throws NotLoggedInException {
+		checkLoggedIn();
+		User user = getUser(email);
+		if(user.getProfileImage() == null || "".equals(user.getProfileImage().trim())) {
+			return null;
+		}
+		BlobKey blobKey = new BlobKey(user.getProfileImage());
+        ImagesService imagesService = ImagesServiceFactory.getImagesService();
+
+//        Image oldImage = ImagesServiceFactory.makeImageFromBlob(blobKey);
+//        Transform resize = ImagesServiceFactory.makeResize(200, 300);
+//
+//        Image newImage = imagesService.applyTransform(resize, oldImage);
+//
+//        return newImage.getImageData();
+        return imagesService.getServingUrl(blobKey);
+	}
+
+	@Override
+	public void modifyUser(User user) throws NotLoggedInException {
+		checkLoggedIn();
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			if (!user.getEmail().equals(getUser().getEmail())) {
+				GWT.log("You don't have the access to modify other's profile");
+			} else {
+				pm.currentTransaction().begin();
+				pm.makePersistent(user);
+				pm.currentTransaction().commit();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pm.currentTransaction().isActive())
+				pm.currentTransaction().rollback();
+			pm.close();
+		}
 	}
 }

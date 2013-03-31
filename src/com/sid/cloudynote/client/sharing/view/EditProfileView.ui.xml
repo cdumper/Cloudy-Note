@@ -15,17 +15,30 @@
 					<g:Button ui:field="saveButton" addStyleNames="{style.button}"
 						text="Save" />
 				</div>
-				<div class="{style.row}">
-					<g:Label text="Full Name" addStyleNames="{style.sublabel}"></g:Label>
-					<g:TextBox ui:field="fullName" addStyleNames="{style.input}"></g:TextBox>
+				<div class="{style.imageDiv}">
+					<div class="{style.imageLeftDiv}">
+						<div class="{style.row}">
+							<g:Label text="Full Name" addStyleNames="{style.sublabel}"></g:Label>
+							<g:TextBox ui:field="fullName" addStyleNames="{style.input}"></g:TextBox>
+						</div>
+						<div class="{style.row}">
+							<g:Label text="Nick Name" addStyleNames="{style.sublabel}"></g:Label>
+							<g:TextBox ui:field="nickName" addStyleNames="{style.input}"></g:TextBox>
+						</div>
+						<div class="{style.row}">
+							<g:Label text="Email" addStyleNames="{style.sublabel}"></g:Label>
+							<g:TextBox ui:field="email" addStyleNames="{style.input}"></g:TextBox>
+						</div>
+					</div>
+					<g:HTMLPanel ui:field="imageProfilePanel"
+						addStyleNames="{style.imageRightDiv}">
+						<g:Image ui:field="imageProfile"></g:Image>
+						<g:Button ui:field="uploadButton" addStyleNames="{style.button}" text="change"/>
+					</g:HTMLPanel>
 				</div>
 				<div class="{style.row}">
-					<g:Label text="Nick Name" addStyleNames="{style.sublabel}"></g:Label>
-					<g:TextBox ui:field="nickName" addStyleNames="{style.input}"></g:TextBox>
-				</div>
-				<div class="{style.row}">
-					<g:Label text="Email" addStyleNames="{style.sublabel}"></g:Label>
-					<g:TextBox ui:field="email" addStyleNames="{style.input}"></g:TextBox>
+					<g:Label text="other information" addStyleNames="{style.sublabel}"></g:Label>
+					<g:TextBox ui:field="otherInfo" addStyleNames="{style.input}"></g:TextBox>
 				</div>
 			</div>
 		</g:HTMLPanel>

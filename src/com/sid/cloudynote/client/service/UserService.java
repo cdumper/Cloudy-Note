@@ -12,9 +12,11 @@ import com.sid.cloudynote.shared.User;
 @RemoteServiceRelativePath("userService")
 public interface UserService extends RemoteService{
 	User getUser(String email);
-	List<User> getFriends(String email);
-	void addAccessEntry(List<String> emails, Map<Key,Integer> access);
+	void modifyUser(User user) throws NotLoggedInException;
+	List<User> getFriends(String email) throws NotLoggedInException;
+	void addAccessEntry(List<String> emails, Map<Key,Integer> access) throws NotLoggedInException;
 	String addFriend(String email) throws NotLoggedInException;
 	void inviteUser(String email) throws NotLoggedInException;
 	void addUserToGroups(String email, List<Key> groups) throws NotLoggedInException;
+	String getUserProfile(String email) throws NotLoggedInException;
 }

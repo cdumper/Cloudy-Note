@@ -30,6 +30,10 @@ public class User implements Serializable, Comparable<User> {
 	@Persistent
 	private String nickname;
 	@Persistent
+	private String fullName = "";
+	@Persistent
+	private String profileImage;
+	@Persistent
 	private int totalNotes = 0;
 	@Persistent
 	private boolean loggedIn = false;
@@ -113,6 +117,22 @@ public class User implements Serializable, Comparable<User> {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 
 	public int getTotalNotes() {
