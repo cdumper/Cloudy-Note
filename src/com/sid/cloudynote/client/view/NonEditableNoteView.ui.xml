@@ -8,7 +8,7 @@
 	<cn:Container ui:field="container" height="100%" width="100%">
 		<g:DockLayoutPanel ui:field="content" height="100%"
 			width="100%" unit='PX'>
-			<g:north size="39">
+			<g:north size="50">
 				<g:HTMLPanel addStyleNames='{style.buttonPanel}'>
 					<div class="{style.buttonDiv}">
 						<g:Button ui:field="editButton">Edit</g:Button>
