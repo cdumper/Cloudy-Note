@@ -33,10 +33,12 @@ import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.PresentNotesEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
 import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
 import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
 import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
+import com.sid.cloudynote.client.event.interfaces.IUserInfoChangedHandler;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.presenter.AdminPresenter;
 import com.sid.cloudynote.client.sharing.presenter.EditProfilePresenter;
@@ -47,7 +49,7 @@ import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.shared.User;
 
-public class AppView extends Composite implements Presenter {
+public class AppView extends Composite implements Presenter, IUserInfoChangedHandler {
 	@UiField
 	Style style;
 	@UiField
@@ -123,6 +125,7 @@ public class AppView extends Composite implements Presenter {
 		this.personalView.setEventBus(eventBus);
 		initialDropDownMenu();
 		bindEvents();
+		eventBus.addHandler(UserInfoChangedEvent.TYPE, this);
 		deck.showWidget(0);
 	}
 
@@ -276,6 +279,7 @@ public class AppView extends Composite implements Presenter {
 				personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
 		eventBus.addHandler(GroupsChangedEvent.TYPE, personalView.noteListView);
+		eventBus.addHandler(UserInfoChangedEvent.TYPE, personalView.notebookListView);
 	}
 
 	@UiHandler("myNotesButton")
@@ -300,5 +304,11 @@ public class AppView extends Composite implements Presenter {
 	void showAdmin(ClickEvent e) {
 		AppController.get().setPageState(AppController.ADMIN_PAGE);
 		AppController.get().go(RootLayoutPanel.get());
+	}
+
+	@Override
+	public void onUserInfoChanged(UserInfoChangedEvent event) {
+		AppController.get().setLoginInfo(event.getUser());
+		this.gearDownUser.setText(AppController.get().getLoginInfo().getNickname());
 	}
 }

@@ -24,6 +24,6 @@ public interface UserServiceAsync {
 
 	void getUserProfile(String email, AsyncCallback<String> callback);
 
-	void modifyUser(User user, AsyncCallback<Void> callback);
+	void modifyUser(User user, AsyncCallback<User> callback);
 
 }

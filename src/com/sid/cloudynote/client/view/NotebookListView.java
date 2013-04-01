@@ -56,8 +56,10 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.event.interfaces.INotebookChangedHandler;
 import com.sid.cloudynote.client.event.interfaces.ITagChangedHandler;
+import com.sid.cloudynote.client.event.interfaces.IUserInfoChangedHandler;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.INotebookListView;
@@ -65,7 +67,7 @@ import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
 
 public class NotebookListView extends ResizeComposite implements
-		INotebookChangedHandler, ITagChangedHandler, INotebookListView {
+		INotebookChangedHandler, ITagChangedHandler, INotebookListView, IUserInfoChangedHandler {
 
 	@UiTemplate("NoteBookListView.ui.xml")
 	interface NotebookListPanelUiBinder extends
@@ -748,5 +750,11 @@ public class NotebookListView extends ResizeComposite implements
 	@Override
 	public void onTagChanged(TagChangedEvent event) {
 		presenter.loadTagList();
+	}
+
+	@Override
+	public void onUserInfoChanged(UserInfoChangedEvent event) {
+		this.allNotes.setTotalNotes(event.getUser().getTotalNotes());
+		presenter.loadNotebookList();
 	}
 }

@@ -18,6 +18,10 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	private static AppController singleton;
 	private final HandlerManager eventBus;
 	private User loginInfo;
+	public void setLoginInfo(User loginInfo) {
+		this.loginInfo = loginInfo;
+	}
+
 	private AppView appView;
 	
 	public User getLoginInfo() {

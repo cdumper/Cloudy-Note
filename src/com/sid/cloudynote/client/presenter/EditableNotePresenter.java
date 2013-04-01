@@ -26,6 +26,7 @@ import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.service.BlobService;
 import com.sid.cloudynote.client.service.BlobServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
@@ -34,11 +35,14 @@ import com.sid.cloudynote.client.service.TagService;
 import com.sid.cloudynote.client.service.TagServiceAsync;
 import com.sid.cloudynote.client.service.UploadService;
 import com.sid.cloudynote.client.service.UploadServiceAsync;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.EditableNoteView;
 import com.sid.cloudynote.client.view.interfaces.IEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
+import com.sid.cloudynote.shared.User;
 
 public class EditableNotePresenter implements Presenter, IEditableNoteView.Presenter{
 	private IEditableNoteView view;
@@ -89,7 +93,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 				
 				InfoNoteServiceAsync noteService = (InfoNoteServiceAsync) GWT
 						.create(InfoNoteService.class);
-				noteService.add(note, new AsyncCallback<Void>() {
+				noteService.add(note, new AsyncCallback<InfoNote>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						GWT.log("falied! getNotesList");
@@ -97,11 +101,21 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 					}
 					
 					@Override
-					public void onSuccess(Void result) {
+					public void onSuccess(InfoNote result) {
 						eventBus.fireEvent(new NoteChangedEvent(DataManager
 								.getCurrentNotebook()));
-						eventBus.fireEvent(new NotebookChangedEvent());
 						eventBus.fireEvent(new EditNoteDoneEvent());
+						UserServiceAsync service = GWT.create(UserService.class);
+						service.getUser(AppController.get().getLoginInfo().getEmail(), new AsyncCallback<User>(){
+							@Override
+							public void onFailure(Throwable caught) {
+							}
+
+							@Override
+							public void onSuccess(User result) {
+								eventBus.fireEvent(new UserInfoChangedEvent(result));
+							}
+						});
 						GWT.log("New InfoNote added successfully!");
 					}
 				});
@@ -139,7 +153,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 				note.setTags(keys);
 				InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 						.create(InfoNoteService.class);
-				service.moveNoteTo(note, notebook, new AsyncCallback<Void>() {
+				service.moveNoteTo(note, notebook, new AsyncCallback<InfoNote>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						GWT.log("update note failed");
@@ -147,7 +161,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 					}
 					
 					@Override
-					public void onSuccess(Void result) {
+					public void onSuccess(InfoNote result) {
 						eventBus.fireEvent(new NoteChangedEvent(DataManager
 								.getCurrentNotebook()));
 						eventBus.fireEvent(new EditNoteDoneEvent());
@@ -188,7 +202,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 				note.setTags(keys);
 				InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 						.create(InfoNoteService.class);
-				service.modify(note, new AsyncCallback<Void>() {
+				service.modify(note, new AsyncCallback<InfoNote>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						GWT.log("update note failed");
@@ -196,7 +210,7 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 					}
 					
 					@Override
-					public void onSuccess(Void result) {
+					public void onSuccess(InfoNote result) {
 						eventBus.fireEvent(new NoteChangedEvent(DataManager
 								.getCurrentNotebook()));
 						eventBus.fireEvent(new EditNoteDoneEvent());
@@ -214,14 +228,14 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 
 		InfoNoteServiceAsync service = (InfoNoteServiceAsync) GWT
 				.create(InfoNoteService.class);
-		service.modify(note, new AsyncCallback<Void>() {
+		service.modify(note, new AsyncCallback<InfoNote>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				GWT.log("failed to add attachment");
 			}
 
 			@Override
-			public void onSuccess(Void result) {
+			public void onSuccess(InfoNote result) {
 				GWT.log("attachment added successfully");
 				view.presentAttachmentLink(fileName, key);
 			}

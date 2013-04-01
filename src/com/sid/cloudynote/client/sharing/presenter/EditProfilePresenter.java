@@ -5,6 +5,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.AppController;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.UploadService;
 import com.sid.cloudynote.client.service.UploadServiceAsync;
@@ -42,7 +43,7 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 		user.setFullName(view.getFullName());
 		user.setNickname(view.getNickName());
 		UserServiceAsync service = GWT.create(UserService.class);
-		service.modifyUser(user, new AsyncCallback<Void>(){
+		service.modifyUser(user, new AsyncCallback<User>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -51,8 +52,9 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 			}
 
 			@Override
-			public void onSuccess(Void result) {
+			public void onSuccess(User result) {
 				view.showSuccessfulDialog();
+				eventBus.fireEvent(new UserInfoChangedEvent(result));
 			}
 			
 		});
@@ -102,7 +104,7 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 		User user = AppController.get().getLoginInfo();
 		user.setProfileImage(blobkey);
 		UserServiceAsync service = GWT.create(UserService.class);
-		service.modifyUser(user, new AsyncCallback<Void>() {
+		service.modifyUser(user, new AsyncCallback<User>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -111,8 +113,9 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 			}
 
 			@Override
-			public void onSuccess(Void result) {
+			public void onSuccess(User result) {
 				presentProfileImage();
+				eventBus.fireEvent(new UserInfoChangedEvent(result));
 			}
 		});
 	}

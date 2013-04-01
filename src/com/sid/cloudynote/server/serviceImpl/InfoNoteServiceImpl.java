@@ -44,7 +44,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @throws NotLoggedInException
 	 */
 	@Override
-	public void add(InfoNote note) throws NotLoggedInException {
+	public InfoNote add(InfoNote note) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
@@ -63,7 +63,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			pm.makePersistent(notebook);
 			pm.makePersistent(user);
 			pm.currentTransaction().commit();
-			
+			note = pm.detachCopy(note);
 			//create a searchable document for the newly added note
 			createDocumentForNote(note);
 		} catch (Exception e) {
@@ -74,6 +74,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 			}
 			pm.close();
 		}
+		return note;
 	}
 
 	/**
@@ -114,7 +115,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 	 * @throws NotLoggedInException
 	 */
 	@Override
-	public void modify(InfoNote note) throws NotLoggedInException {
+	public InfoNote modify(InfoNote note) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
@@ -126,6 +127,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.makePersistent(note);
 			}
 			pm.currentTransaction().commit();
+			note = pm.detachCopy(note);
 			createDocumentForNote(note);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,13 +136,14 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
+		return note;
 	}
 
 	/**
 	 * Move a note to another notebook
 	 */
 	@Override
-	public void moveNoteTo(InfoNote note, Notebook notebook)
+	public InfoNote moveNoteTo(InfoNote note, Notebook notebook)
 			throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
@@ -161,6 +164,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.makePersistent(entity);
 			}
 			pm.currentTransaction().commit();
+			note = pm.detachCopy(note);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -168,6 +172,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
+		return note;
 	}
 
 	/**

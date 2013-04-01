@@ -11,17 +11,17 @@ import com.sid.cloudynote.shared.Tag;
 
 public interface InfoNoteServiceAsync {
 
-	void add(InfoNote entity, AsyncCallback<Void> callback);
+	void add(InfoNote entity, AsyncCallback<InfoNote> callback);
 
 	void delete(InfoNote entity, AsyncCallback<Void> callback);
 
-	void modify(InfoNote entity, AsyncCallback<Void> callback);
+	void modify(InfoNote entity, AsyncCallback<InfoNote> callback);
 
 	void getNotes(Notebook currentNotebook,
 			AsyncCallback<List<InfoNote>> callback);
 
 	void moveNoteTo(InfoNote note, Notebook notebook,
-			AsyncCallback<Void> callback);
+			AsyncCallback<InfoNote> callback);
 
 	void getPublicNotes(AsyncCallback<List<InfoNote>> callback);
 

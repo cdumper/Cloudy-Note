@@ -227,7 +227,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void modifyUser(User user) throws NotLoggedInException {
+	public User modifyUser(User user) throws NotLoggedInException {
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
@@ -236,6 +236,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 			} else {
 				pm.currentTransaction().begin();
 				pm.makePersistent(user);
+				user = pm.detachCopy(user);
 				pm.currentTransaction().commit();
 			}
 		} catch (Exception e) {
@@ -245,5 +246,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
+		return user;
 	}
 }
