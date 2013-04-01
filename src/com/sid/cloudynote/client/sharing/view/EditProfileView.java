@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.sharing.view.interfaces.IEditProfileView;
@@ -61,7 +60,7 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	interface EditProfileViewUiBinder extends UiBinder<Widget, EditProfileView> {
 	}
 
-	public interface Images extends ClientBundle, Tree.Resources {
+	public interface Images extends ClientBundle {
 		@Source("../../resources/images/user.png")
 		ImageResource defaultUserProfileImage();
 	}
@@ -161,7 +160,7 @@ public class EditProfileView extends Composite implements IEditProfileView {
 
 	@Override
 	public void presentDefaultUserProfileImage() {
-		this.imageProfile = new Image(images.defaultUserProfileImage());		
+		this.imageProfile.setResource(images.defaultUserProfileImage());		
 	}
 
 	@Override

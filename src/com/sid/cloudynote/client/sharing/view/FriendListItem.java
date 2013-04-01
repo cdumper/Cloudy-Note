@@ -13,7 +13,9 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -44,6 +47,7 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	private List<Group> groupList = new ArrayList<Group>();
 	final DecoratedPopupPanel popup = new DecoratedPopupPanel();
 	private boolean active = false;
+	private Images images;
 
 	public User getUser() {
 		return user;
@@ -59,12 +63,18 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	interface FriendListItemUiBinder extends UiBinder<Widget, FriendListItem> {
 	}
 	
+	public interface Images extends ClientBundle{
+		@Source("../../resources/images/user.png")
+		ImageResource defaultUserProfileImage();
+	}
+	
 	public interface Style extends CssResource {
 		String select();
 	}
 
 	public FriendListItem() {
 		initWidget(uiBinder.createAndBindUi(this));
+		images = GWT.create(Images.class);
 	}
 
 	public FriendListItem(User user, Boolean selected, HandlerManager eventBus) {
@@ -77,12 +87,17 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	}
 
 	private void presentUser() {
-		userLink.setText(user.getNickname());
-		joinSinceLabel.setText("Friend since:"+AppController.get().getLoginInfo().getFriends().get(user.getEmail()));
-		totalNotesLabel.setText("Total notes: "+user.getTotalNotes());
+		if(this.user.getProfileImage()!=null){
+			this.profileImage.setUrl(this.user.getProfileImageUrl());
+		} else {
+			this.profileImage.setResource(images.defaultUserProfileImage());
+		}
+		this.userLink.setText(this.user.getNickname());
+		this.joinSinceLabel.setText("Friend since:"+AppController.get().getLoginInfo().getFriends().get(this.user.getEmail()));
+		this.totalNotesLabel.setText("Total notes: "+this.user.getTotalNotes());
 		for (Group group : DataManager.getMyGroups().values()) {
-			if (group.getMembers().contains(user.getEmail())) {
-				groupList.add(group);
+			if (group.getMembers().contains(this.user.getEmail())) {
+				this.groupList.add(group);
 			}
 		}
 		presentGroups();
@@ -106,6 +121,8 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	Label totalNotesLabel;
 	@UiField
 	Label groupLabel;
+	@UiField
+	Image profileImage;
 	@UiField
 	public Style style;
 

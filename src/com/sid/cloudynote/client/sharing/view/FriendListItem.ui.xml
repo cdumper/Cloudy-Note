@@ -37,22 +37,24 @@
 	<cn:Container ui:field="container">
 		<g:HTMLPanel ui:field="content" addStyleNames="{style.friendListItem}">
 			<table>
-				<tr>
+				<tr height="60px">
 					<td rowspan="2" width="20px">
 						<g:CheckBox ui:field="checkBox" addStyleNames="{style.hidden}"></g:CheckBox>
 					</td>
-					<td rowspan="2" width="15%">user image profile</td>
-					<td width="30%">
+					<td rowspan="2" width="100px">
+						<g:Image ui:field="profileImage" height="50px" width="50px"></g:Image>
+					</td>
+					<td width="380px">
 						<g:Button ui:field="userLink" text="user name" />
 					</td>
-					<td rowspan="2" width="15%">
+					<td rowspan="2" width="180px">
 						<g:ListBox ui:field="groups" />
 					</td>
-					<td rowspan="2" width="15%">
+					<td rowspan="2" width="150px">
 						<g:Anchor addStyleNames="{style.ModifyGroup-nav}"
 							ui:field="modifyGroups" text="Modify Groups" />
 					</td>
-					<td rowspan="2" width="15%">
+					<td rowspan="2" width="150px">
 						<g:Label ui:field="joinSinceLabel" text="Friend since" />
 					</td>
 					<td rowspan="2">
