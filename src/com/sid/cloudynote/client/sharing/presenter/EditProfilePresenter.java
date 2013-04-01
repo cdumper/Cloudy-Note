@@ -34,7 +34,7 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 	private void loadUserProfile() {
 		User user = AppController.get().getLoginInfo();
 		view.presentUserProfile(user.getFullName(), user.getNickname(), user.getEmail());
-		this.presentProfileImage();
+		this.presentProfileImage(AppController.get().getLoginInfo());
 	}
 
 	@Override
@@ -61,25 +61,12 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 	}
 
 	@Override
-	public void presentProfileImage() {
-		UserServiceAsync service = GWT.create(UserService.class);
-		service.getUserProfile(AppController.get().getLoginInfo().getEmail(),
-				new AsyncCallback<String>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log("Failed to retrieve profile image");
-						view.showErrorDialog(caught.getMessage());
-					}
-
-					@Override
-					public void onSuccess(String result) {
-						if(result == null) {
-							view.presentDefaultUserProfileImage();
-						} else {
-							view.setProfileImageUrl(result);
-						}
-					}
-				});
+	public void presentProfileImage(User user) {
+		if (user.getProfileImageUrl()==null || "".equals(user.getProfileImageUrl().trim())){
+			view.presentDefaultUserProfileImage();
+		} else {
+			view.setProfileImageUrl(user.getProfileImageUrl());
+		}
 	}
 
 	@Override
@@ -104,7 +91,7 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 		User user = AppController.get().getLoginInfo();
 		user.setProfileImage(blobkey);
 		UserServiceAsync service = GWT.create(UserService.class);
-		service.modifyUser(user, new AsyncCallback<User>() {
+		service.modifyUserProfileImage(user, new AsyncCallback<User>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -114,7 +101,7 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 
 			@Override
 			public void onSuccess(User result) {
-				presentProfileImage();
+				presentProfileImage(result);
 				eventBus.fireEvent(new UserInfoChangedEvent(result));
 			}
 		});

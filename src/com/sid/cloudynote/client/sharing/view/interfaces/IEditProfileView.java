@@ -1,13 +1,14 @@
 package com.sid.cloudynote.client.sharing.view.interfaces;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.shared.User;
 
 public interface IEditProfileView {
 	public interface Presenter {
 		void saveUserProfile();
-		void presentProfileImage();
 		void onClickUpload();
 		void changeProfileImage(String filename, String blobkey);
+		void presentProfileImage(User user);
 	}
 	Widget asWidget();
 	void setPresenter(Presenter presenter);

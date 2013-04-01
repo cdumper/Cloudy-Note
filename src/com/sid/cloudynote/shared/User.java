@@ -32,7 +32,17 @@ public class User implements Serializable, Comparable<User> {
 	@Persistent
 	private String fullName = "";
 	@Persistent
-	private String profileImage;
+	private String profileImageBlobKey;
+	@Persistent
+	private String profileImageUrl;
+	public String getProfileImageUrl() {
+		return profileImageUrl;
+	}
+
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
+	}
+
 	@Persistent
 	private int totalNotes = 0;
 	@Persistent
@@ -128,11 +138,11 @@ public class User implements Serializable, Comparable<User> {
 	}
 
 	public String getProfileImage() {
-		return profileImage;
+		return profileImageBlobKey;
 	}
 
 	public void setProfileImage(String profileImage) {
-		this.profileImage = profileImage;
+		this.profileImageBlobKey = profileImage;
 	}
 
 	public int getTotalNotes() {

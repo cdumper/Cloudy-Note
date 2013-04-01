@@ -22,8 +22,8 @@ public interface UserServiceAsync {
 	void addUserToGroups(String email, List<Key> groups,
 			AsyncCallback<Void> callback);
 
-	void getUserProfile(String email, AsyncCallback<String> callback);
-
 	void modifyUser(User user, AsyncCallback<User> callback);
+
+	void modifyUserProfileImage(User user, AsyncCallback<User> asyncCallback);
 
 }

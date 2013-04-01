@@ -18,6 +18,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -196,34 +198,15 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		tempGroups.removeAll(unchangedGroups);
 		for (Key key : tempGroups) {
 			Group temp = pm.getObjectById(Group.class, key);
-			if(!temp.getMembers().contains(email)){
+			if (!temp.getMembers().contains(email)) {
 				temp.getMembers().add(email);
 				pm.makePersistent(temp);
 			}
 		}
-		
+
 		user.getGroups().clear();
 		user.getGroups().addAll(groups);
 		pm.makePersistent(user);
-	}
-
-	@Override
-	public String getUserProfile(String email) throws NotLoggedInException {
-		checkLoggedIn();
-		User user = getUser(email);
-		if(user.getProfileImage() == null || "".equals(user.getProfileImage().trim())) {
-			return null;
-		}
-		BlobKey blobKey = new BlobKey(user.getProfileImage());
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-
-//        Image oldImage = ImagesServiceFactory.makeImageFromBlob(blobKey);
-//        Transform resize = ImagesServiceFactory.makeResize(200, 300);
-//
-//        Image newImage = imagesService.applyTransform(resize, oldImage);
-//
-//        return newImage.getImageData();
-        return imagesService.getServingUrl(blobKey);
 	}
 
 	@Override
@@ -246,6 +229,29 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
+		return user;
+	}
+
+	@Override
+	public User modifyUserProfileImage(User user) {
+		//removed the previous image blob
+		User previous = getUser(user.getEmail());
+		BlobKey blobKey;
+		if (previous.getProfileImage()!=null) {
+			blobKey = new BlobKey(previous.getProfileImage());
+			BlobstoreService blobstoreService = BlobstoreServiceFactory
+					.getBlobstoreService();
+			blobstoreService.delete(blobKey);
+		}
+		
+		//add the new image
+		blobKey = new BlobKey(user.getProfileImage());
+		ImagesService imagesService = ImagesServiceFactory.getImagesService();
+		user.setProfileImageUrl(imagesService.getServingUrl(blobKey));
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		pm.makePersistent(user);
+		user = pm.detachCopy(user);
+		pm.close();
 		return user;
 	}
 }
