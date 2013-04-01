@@ -7,9 +7,9 @@
 			
 		</ui:style>
 	<cn:Container ui:field="container" addStyleNames="{style.adminContainer}">
-		<g:DockLayoutPanel unit="PCT" width="100%" height="100%"
+		<g:DockLayoutPanel unit="PX" width="100%" height="100%"
 			ui:field="content">
-			<g:west size="15">
+			<g:west size="205">
 				<g:HTMLPanel addStyleNames="{style.leftPanel}">
 					<g:DisclosurePanel width="100%" ui:field="userAccessPanel">
 						<g:header>User Access</g:header>

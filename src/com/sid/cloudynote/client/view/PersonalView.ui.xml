@@ -4,8 +4,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:cn='urn:import:com.sid.cloudynote.client.view'>
 
-	<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
-		<g:west size='15'>
+	<g:DockLayoutPanel unit='PX' ui:field="dockLayoutPanel">
+		<g:west size='205'>
 			<cn:NotebookListView ui:field='notebookListView' />
 		</g:west>
 		<g:center>
@@ -13,7 +13,6 @@
 				<g:west size='300'>
 					<cn:NoteListView ui:field='noteListView' />
 				</g:west>
-
 				<g:center>
 					<cn:NoteView ui:field='noteView' height="100%" width="100%" />
 				</g:center>

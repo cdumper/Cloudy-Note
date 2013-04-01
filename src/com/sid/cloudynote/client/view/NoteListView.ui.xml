@@ -51,9 +51,9 @@
 		}
 	</ui:style>
 	<cn:Container ui:field="container">
-		<g:DockLayoutPanel unit='PCT' ui:field="content"
+		<g:DockLayoutPanel unit='PX' ui:field="content"
 			width="100%" height="100%">
-			<g:north size='7'>
+			<g:north size='39'>
 				<g:VerticalPanel width="100%" height="100%"
 					addStyleNames="{style.searchContainer}">
 					<g:HTMLPanel addStyleNames="{style.searchPanel}" ui:field="searchField">

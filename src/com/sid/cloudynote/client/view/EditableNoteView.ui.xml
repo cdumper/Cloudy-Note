@@ -7,9 +7,9 @@
 			
 		</ui:style>
 	<cn:Container ui:field="container" height="100%" width="100%">
-		<g:DockLayoutPanel unit="PCT" ui:field="content"
+		<g:DockLayoutPanel unit="PX" ui:field="content"
 			height="100%" width="100%">
-			<g:north size="7">
+			<g:north size="39">
 				<g:HTMLPanel addStyleNames='{style.buttonPanel}'>
 					<g:Button ui:field="doneButton" text="Done" />
 				</g:HTMLPanel>

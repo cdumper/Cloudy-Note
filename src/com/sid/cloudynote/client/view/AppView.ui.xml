@@ -5,9 +5,9 @@
 	<ui:style src="../resources/css/header.css" type="com.sid.cloudynote.client.view.AppView.Style" />
 		
 	<cn:Container>
-		<g:DockLayoutPanel unit='PCT' ui:field="dockLayoutPanel">
-			<g:north size='6'>
-				<g:HTMLPanel height="100%" width="100%" addStyleNames="{style.header}">
+		<g:DockLayoutPanel unit='PX' ui:field="dockLayoutPanel">
+			<g:north size='36'>
+				<g:HTMLPanel addStyleNames="{style.header}">
 					<div class="{style.nav}">
 						<div class="{style.logo}">
 							<img src="images/logo-landscape-trans.png" />
