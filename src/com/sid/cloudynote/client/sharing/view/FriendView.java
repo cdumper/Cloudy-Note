@@ -69,10 +69,14 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	};
 
 	public interface Resources extends ClientBundle {
+		@Source("../../resources/images/allusers.png")
+		ImageResource allUser();
+		
+		@Source("../../resources/images/search.png")
+		ImageResource findUser();
 
 		@Source("../../resources/images/group.png")
 		ImageResource group();
-
 	}
 
 	private static FriendViewUiBinder uiBinder = GWT
@@ -153,7 +157,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			}
 		});
 		allFriendsDiv.setClassName(style.rowDiv());
-		allFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.group())
+		allFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.allUser())
 				.getHTML() + "All Firends");
 
 		Element findFriendsDiv = DOM.createDiv();
@@ -165,7 +169,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			}
 		});
 		findFriendsDiv.setClassName(style.rowDiv());
-		findFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.group())
+		findFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.findUser())
 				.getHTML() + "Find Firend");
 
 		this.friendsPanel.getElement().appendChild(allFriendsDiv);

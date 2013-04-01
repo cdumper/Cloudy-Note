@@ -38,7 +38,7 @@
 		<g:HTMLPanel ui:field="content" addStyleNames="{style.friendListItem}">
 			<table>
 				<tr height="60px">
-					<td rowspan="2" width="20px">
+					<td rowspan="2" width="50px">
 						<g:CheckBox ui:field="checkBox" addStyleNames="{style.hidden}"></g:CheckBox>
 					</td>
 					<td rowspan="2" width="100px">

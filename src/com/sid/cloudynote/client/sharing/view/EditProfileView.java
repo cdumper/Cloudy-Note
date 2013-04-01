@@ -61,7 +61,7 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	}
 
 	public interface Images extends ClientBundle {
-		@Source("../../resources/images/user.png")
+		@Source("../../resources/images/User-Profile-200.png")
 		ImageResource defaultUserProfileImage();
 	}
 	

@@ -64,7 +64,7 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	}
 	
 	public interface Images extends ClientBundle{
-		@Source("../../resources/images/user.png")
+		@Source("../../resources/images/User-Profile-50.png")
 		ImageResource defaultUserProfileImage();
 	}
 	
@@ -87,7 +87,7 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	}
 
 	private void presentUser() {
-		if(this.user.getProfileImage()!=null){
+		if(this.user.getProfileImageUrl()!=null){
 			this.profileImage.setUrl(this.user.getProfileImageUrl());
 		} else {
 			this.profileImage.setResource(images.defaultUserProfileImage());

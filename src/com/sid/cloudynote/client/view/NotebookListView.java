@@ -88,19 +88,19 @@ public class NotebookListView extends ResizeComposite implements
 	}
 
 	public interface Images extends ClientBundle, Tree.Resources {
-		@Source("../resources/images/notebook.png")
+		@Source("../resources/images/allnotes.png")
 		ImageResource allNotes();
 		
 		@Source("../resources/images/notebook.png")
 		ImageResource notebook();
 		
-		@Source("../resources/images/notebook.png")
+		@Source("../resources/images/notebook2.png")
 		ImageResource sharedNotebook();
 
 		@Source("../resources/images/trash.png")
 		ImageResource trash();
 		
-		@Source("../resources/images/tag2.png")
+		@Source("../resources/images/tag.png")
 		ImageResource tag();
 		
 		// ImageResource treeLeaf();
