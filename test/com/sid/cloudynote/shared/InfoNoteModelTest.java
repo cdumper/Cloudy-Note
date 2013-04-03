@@ -19,11 +19,6 @@ public class InfoNoteModelTest extends TestCase{
 		assertEquals(note.getLastModifiedTime(),null);
 	}
 	
-//	public void testSetUser(){
-//		User user = new User();
-//		user.setEmail("test@email.com");
-//		InfoNote note = new InfoNote();
-//		note.setUser(user);
-//		assertEquals(note.getUser().getEmail(),"test@email.com");
-//	}
+	public void testSetUser(){
+	}
 }
