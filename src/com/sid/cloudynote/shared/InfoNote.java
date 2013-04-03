@@ -40,9 +40,9 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 	@Persistent
 	private Date lastModifiedTime;
 	@Persistent(defaultFetchGroup = "true")
-	private List<Key> tags;
+	private List<Key> tags = new ArrayList<Key>();
 	@Persistent
-	private List<String> attachments;
+	private List<String> attachments = new ArrayList<String>();
 	/**
 	 * user access contains the user access information of the note
 	 * String email
@@ -100,10 +100,6 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
-//		this.property = null;
-//		this.tags = null;
-//		this.attachments = null;
-//		this.user = null;
 	}
 
 	public InfoNote(Notebook notebook, String title, String content, List<String> attachments) {
@@ -164,7 +160,6 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 
 
 	public List<String> getAttachments() {
-		if(attachments==null) attachments = new ArrayList<String>();
 		return attachments;
 	}
 

@@ -1,3 +1,6 @@
 /gwt-unitCache
 /.gwt
 /.settings
+/test-result
+/www-test
+/WEB-INF
