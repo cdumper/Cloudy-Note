@@ -1,9 +1,11 @@
 package com.sid.cloudynote.shared;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class InfoNoteModelTest extends TestCase{
+import org.junit.Test;
 
+public class InfoNoteModelTest{
+	@Test
 	public void testConstructor(){
 		InfoNote note = new InfoNote(new Notebook("Notebook"),"Title","Content");
 		assertEquals(note.getNotebook().getName(),"Notebook");
@@ -17,8 +19,5 @@ public class InfoNoteModelTest extends TestCase{
 		assertEquals(note.getUser(),null);
 		assertEquals(note.getCreatedTime(),null);
 		assertEquals(note.getLastModifiedTime(),null);
-	}
-	
-	public void testSetUser(){
 	}
 }

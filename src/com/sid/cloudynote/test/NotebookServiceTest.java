@@ -1,9 +1,10 @@
 package com.sid.cloudynote.test;
 
+import org.junit.Test;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.shared.Notebook;
@@ -19,8 +20,9 @@ public class NotebookServiceTest extends GWTTestCase {
 	@Override
 	protected void gwtSetUp() throws Exception {
 		service = GWT.create(NotebookService.class);
-		ServiceDefTarget target = (ServiceDefTarget) service;
-		target.setServiceEntryPoint(GWT.getModuleBaseURL() + "cloudy_note/notebookService");
+//		ServiceDefTarget target = (ServiceDefTarget) service;
+//		target.setServiceEntryPoint(GWT.getModuleBaseURL() + "cloudy_note/notebookService");
+		
 	}
 
 	@Override
@@ -28,8 +30,9 @@ public class NotebookServiceTest extends GWTTestCase {
 		super.gwtTearDown();
 	}
 
+	@Test
 	public void testAddNotebook() {
-		delayTestFinish(15000);
+		delayTestFinish(5000);
 
 		service.add(new Notebook("New notebook"), new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {

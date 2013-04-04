@@ -669,10 +669,18 @@ public class NotebookListView extends ResizeComposite implements
 		notebookSelectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
+						if (notebookSelectionModel.getSelectedObject() == null) {
+							return;
+						}
+						
 						Notebook notebook = notebookSelectionModel
 								.getSelectedObject();
 						
 						presenter.onNotebookItemSelected(notebook);
+						
+						if (tagSelectionModel.getSelectedObject() != null) {
+							tagSelectionModel.setSelected(tagSelectionModel.getSelectedObject(), false);
+						}
 					}
 				});
 		notebookDataProvider.addDataDisplay(notebooksCellList);
@@ -698,9 +706,17 @@ public class NotebookListView extends ResizeComposite implements
 		tagSelectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
+						if (tagSelectionModel.getSelectedObject() == null) {
+							return;
+						}
+						
 						Tag tag = tagSelectionModel.getSelectedObject();
 						if (tag != null) {
 							presenter.loadNotesByTag(tag);
+						}
+						
+						if (notebookSelectionModel.getSelectedObject() != null) {
+							notebookSelectionModel.setSelected(notebookSelectionModel.getSelectedObject(), false);
 						}
 					}
 				});
@@ -728,6 +744,11 @@ public class NotebookListView extends ResizeComposite implements
 		notebooks.clear();
 		notebooks.add(allNotes);
 		notebooks.addAll(result);
+		if (DataManager.getCurrentNotebook() != null) {
+			this.notebookSelectionModel.setSelected(DataManager.getCurrentNotebook(), true);
+		} else {
+			this.notebookSelectionModel.setSelected(allNotes, true);
+		}
 	}
 
 	@Override

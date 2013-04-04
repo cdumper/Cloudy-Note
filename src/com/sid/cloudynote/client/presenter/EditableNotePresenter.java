@@ -24,7 +24,6 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
-import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.service.BlobService;

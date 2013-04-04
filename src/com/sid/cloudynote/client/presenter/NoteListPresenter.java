@@ -50,9 +50,8 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 	@Override
 	public void loadNoteList(final Notebook notebook) {
-		if (NotebookListView.ALL_NOTES.equals(notebook.getName())
+		if (notebook == null || NotebookListView.ALL_NOTES.equals(notebook.getName())
 				&& notebook.getKey() == null) {
-			System.out.println("all notes");
 			this.searchNotes("");
 			return;
 		}
@@ -238,7 +237,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	}
 
 	@Override
-	public void searchNotes(String value) {
+	public void searchNotes(final String value) {
 		InfoNoteSearchServiceAsync service = GWT
 				.create(InfoNoteSearchService.class);
 		service.searchNotes(value, new AsyncCallback<List<InfoNote>>() {
@@ -249,7 +248,11 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 
 			@Override
 			public void onSuccess(List<InfoNote> result) {
-				view.setLabel("Search Results");
+				if ("".equals(value.trim())) {
+					view.setLabel("All Notes");
+				} else {
+					view.setLabel("Search Results");
+				}
 				view.setNoteList(result);
 			}
 		});

@@ -234,10 +234,6 @@ public class EditableNoteView extends ResizeComposite implements
 		if (this.isNew) {
 			presenter.createNewNote(this.getInfoNote(), this.getTags());
 		} else {
-			// InfoNote note = DataManager.getCurrentNote();
-			// note.setTitle(this.getInfoNote().getTitle());
-			// note.setContent(this.getInfoNote().getContent());
-			// note.setTags(this.getInfoNote().getTags());
 			if (!note.getNotebook().getKey()
 					.equals(this.getInfoNote().getNotebook().getKey())) {
 				presenter.moveNote(note, this.getInfoNote().getNotebook(),
@@ -406,7 +402,7 @@ public class EditableNoteView extends ResizeComposite implements
 				DOM.sinkEvents(image.getElement(), Event.ONCLICK);
 				DOM.setEventListener(image.getElement(), new EventListener() {
 					public void onBrowserEvent(Event event) {
-						tags.remove(tag.getKey());
+						tags.remove(tag);
 						div.removeFromParent();
 					}
 				});

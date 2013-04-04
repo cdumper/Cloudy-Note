@@ -9,5 +9,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GAE-UTIL"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppEngineService Test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EasyMock"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GWT Test Util"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SyncProxy"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

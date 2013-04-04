@@ -178,6 +178,10 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 
 	@Override
 	public int compareTo(InfoNote note) {
-		return this.getTitle().compareToIgnoreCase(note.getTitle());
+		if (this.getKey() != null && note.getKey() != null) {
+			return this.getKey().compareTo(note.getKey());
+		} else {
+			return this.getTitle().compareToIgnoreCase(note.getTitle());
+		}
 	}
 }
