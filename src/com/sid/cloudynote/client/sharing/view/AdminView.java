@@ -17,6 +17,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -31,10 +32,13 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.interfaces.IGroupsChangedHandler;
 import com.sid.cloudynote.client.event.interfaces.INotebookChangedHandler;
+import com.sid.cloudynote.client.service.InfoNoteService;
+import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.sharing.view.interfaces.IAdminView;
 import com.sid.cloudynote.client.view.Container;
 import com.sid.cloudynote.shared.Group;
@@ -165,8 +169,9 @@ public class AdminView extends Composite implements IAdminView,
 				groupAccessTable.setWidget(row, 1, read);
 				groupAccessTable.setWidget(row, 2, write);
 				groupAccessTable.setWidget(row, 3, new Label("-"));
-				groupAccessTable.setWidget(row, 4,
-						new Label("NoteKey:" + entry.getKey()));
+				Label label = new Label();
+				fillNoteTitle(label, entry.getKey());
+				groupAccessTable.setWidget(row, 4, label);
 				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
@@ -249,7 +254,7 @@ public class AdminView extends Composite implements IAdminView,
 				notebookPermissionTable.setWidget(row, 2, write);
 				notebookPermissionTable.setWidget(row, 3, new Label("-"));
 				notebookPermissionTable.setWidget(row, 4,
-						new Label(entry.getKey()));
+						new Label(getUserNickname(entry.getKey())));
 				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
@@ -331,8 +336,9 @@ public class AdminView extends Composite implements IAdminView,
 				userAccessTable.setWidget(row, 1, read);
 				userAccessTable.setWidget(row, 2, write);
 				userAccessTable.setWidget(row, 3, new Label("-"));
-				userAccessTable.setWidget(row, 4,
-						new Label("NoteKey:" + entry.getKey()));
+				Label label = new Label();
+				fillNoteTitle(label, entry.getKey());
+				userAccessTable.setWidget(row, 4, label);
 				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
@@ -415,8 +421,7 @@ public class AdminView extends Composite implements IAdminView,
 				notePermissionTable.setWidget(row, 0, rowValue);
 				notePermissionTable.setWidget(row, 1, read);
 				notePermissionTable.setWidget(row, 2, write);
-				notePermissionTable.setWidget(row, 3, new Label("GroupKey:"
-						+ entry.getKey()));
+				notePermissionTable.setWidget(row, 3, new Label(getGroupName(entry.getKey())));
 				notePermissionTable.setWidget(row, 4, new Label("-"));
 				if (entry.getValue() == 1) {
 					read.setValue(true);
@@ -439,8 +444,8 @@ public class AdminView extends Composite implements IAdminView,
 				notePermissionTable.setWidget(row, 1, read);
 				notePermissionTable.setWidget(row, 2, write);
 				notePermissionTable.setWidget(row, 3, new Label("-"));
-				notePermissionTable.setWidget(row, 4,
-						new Label("User:" + entry.getKey()));
+				notePermissionTable.setWidget(row, 4, 
+						new Label(getUserNickname(entry.getKey())));
 				if (entry.getValue() == 1) {
 					read.setValue(true);
 					write.setValue(false);
@@ -903,5 +908,34 @@ public class AdminView extends Composite implements IAdminView,
 			this.presenter.loadNoteList(this.notePermissionSelectionModel
 					.getSelectedObject());
 		}
+	}
+	
+	private String getGroupName(Key key) {
+		return DataManager.getAllGroups().get(key).getName();
+	}
+	
+	private String getNotebookName(Key key) {
+		return DataManager.getNotebooks().get(key).getName();
+	}
+	
+	private String getUserNickname(String email) {
+		return DataManager.getAllFriends().get(email).getNickname();
+	}
+	
+	private void fillNoteTitle(final Label label, Key key) {
+		InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
+		service.getNoteByKey(key, new AsyncCallback<InfoNote>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(InfoNote result) {
+				label.setText(result.getTitle());
+			}
+			
+		});
 	}
 }

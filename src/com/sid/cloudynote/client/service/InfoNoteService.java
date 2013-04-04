@@ -43,4 +43,6 @@ public interface InfoNoteService extends RemoteService {
 
 	List<InfoNote> getNotesByTag(Tag tag) throws NotLoggedInException;
 
+	InfoNote getNoteByKey(Key key);
+
 }

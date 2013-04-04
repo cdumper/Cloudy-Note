@@ -41,4 +41,6 @@ public interface InfoNoteServiceAsync {
 
 	void getNotesByTag(Tag tag, AsyncCallback<List<InfoNote>> callback);
 
+	void getNoteByKey(Key key, AsyncCallback<InfoNote> callback);
+
 }

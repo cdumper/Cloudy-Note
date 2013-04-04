@@ -69,14 +69,16 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 				if (!results.isEmpty()) {
 					user = results.get(0);
 				} else {
-					// user does not exist. Create a new user with default notebook
+					// user does not exist. Create a new user with default
+					// notebook
 					user = new User();
 					user.setEmail(email);
 					user.setNickname(loginInfo.getNickname().split("@")[0]);
 					Map<String, Date> friends = getFakeFriendsData();
 					user.setFriends(friends);
-					//create a default notebook for the user
-					Notebook defaultNotebook = new Notebook(user.getNickname()+"'s notebook");
+					// create a default notebook for the user
+					Notebook defaultNotebook = new Notebook(user.getNickname()
+							+ "'s notebook");
 					defaultNotebook.setUser(getUser());
 					pm.currentTransaction().begin();
 					pm.makePersistent(user);
@@ -98,7 +100,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		Map<String, Date> friends = new LinkedHashMap<String, Date>();
 		Date currentDate = new Date();
 		for (String email : FAKE_USER_DATA) {
-			friends.put(email,currentDate);
+			friends.put(email, currentDate);
 		}
 		return friends;
 	}
@@ -108,10 +110,12 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		try {
 			pm.currentTransaction().begin();
 			for (String email : FAKE_USER_DATA) {
-				 User user = new User();
-				 user.setEmail(email);
-				 user.setNickname(email.split("@")[0]);
-				 pm.makePersistent(user);
+				if (getUser(email) == null) {
+					User user = new User();
+					user.setEmail(email);
+					user.setNickname(email.split("@")[0]);
+					pm.makePersistent(user);
+				}
 			}
 			pm.currentTransaction().commit();
 		} catch (Exception e) {

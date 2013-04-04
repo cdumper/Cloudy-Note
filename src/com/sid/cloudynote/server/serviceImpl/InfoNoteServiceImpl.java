@@ -502,4 +502,12 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
 	}
+
+	@Override
+	public InfoNote getNoteByKey(Key key) {
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		InfoNote note = pm.detachCopy(pm.getObjectById(InfoNote.class, key));
+		pm.close();
+		return note;
+	}
 }
