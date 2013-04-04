@@ -37,6 +37,12 @@
 	padding-right: 5px;
 }
 
+.tagsEditContainer img{
+	vertical-align: middle;
+	margin-left: 3px;
+	cursor: pointer;
+}
+
 .tagsEditPanel {
 	background: none repeat scroll 0 0 white;
 	border: 1px solid #B3B3B3;

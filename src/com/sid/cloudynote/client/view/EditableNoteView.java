@@ -25,7 +25,9 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -79,12 +81,13 @@ public class EditableNoteView extends ResizeComposite implements
 	@UiField
 	ListBox notebook;
 	@UiField
-	Anchor attach;
+	Image attach;
 	@UiField
 	public Style style;
 	@UiField
 	HTMLPanel editorContainer;
 	CKEditor ckeditor;
+	Images images;
 
 	public interface Style extends CssResource {
 		String tagsEditLozenge();
@@ -92,6 +95,11 @@ public class EditableNoteView extends ResizeComposite implements
 		String tagsEditIcon();
 	}
 
+	public interface Images extends ClientBundle {
+		@Source("../resources/images/attach.png")
+		ImageResource attach();
+	}
+	
 	private static final String TAGINPUT_DEFAULT = "Add tags seperated by comma";
 	private boolean isNew;
 	private Presenter presenter;
@@ -116,7 +124,7 @@ public class EditableNoteView extends ResizeComposite implements
 
 	public EditableNoteView() {
 		initWidget(uiBinder.createAndBindUi(this));
-
+		images = GWT.create(Images.class);
 		bindTagsEditingHandler();
 		initalizeCKEditor();
 	}
@@ -329,7 +337,9 @@ public class EditableNoteView extends ResizeComposite implements
 		Anchor file = new Anchor();
 		file.setText(fileName);
 		file.setHref("/cloudy_note/serve?blob-key=" + key);
-		topPanel.add(file);
+		file.setTarget("_blank");
+//		topPanel.add(file);
+		this.attach.getElement().getParentElement().appendChild(file.getElement());
 	}
 
 	@Override
