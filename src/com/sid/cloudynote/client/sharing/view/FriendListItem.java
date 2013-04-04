@@ -1,11 +1,11 @@
 package com.sid.cloudynote.client.sharing.view;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -13,14 +13,13 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
@@ -30,7 +29,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
@@ -93,7 +91,8 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 			this.profileImage.setResource(images.defaultUserProfileImage());
 		}
 		this.userLink.setText(this.user.getNickname());
-		this.joinSinceLabel.setText("Friend since:"+AppController.get().getLoginInfo().getFriends().get(this.user.getEmail()));
+		Date joinSince = AppController.get().getLoginInfo().getFriends().get(this.user.getEmail());
+		this.joinSinceLabel.setText("Friend since:"+DateTimeFormat.getLongDateFormat().format(joinSince));
 		this.totalNotesLabel.setText("Total notes: "+this.user.getTotalNotes());
 		for (Group group : DataManager.getMyGroups().values()) {
 			if (group.getMembers().contains(this.user.getEmail())) {
@@ -113,8 +112,8 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	Button userLink;
 	@UiField
 	ListBox groups;
-	@UiField
-	Anchor modifyGroups;
+//	@UiField
+//	Anchor modifyGroups;
 	@UiField
 	Label joinSinceLabel;
 	@UiField
@@ -126,23 +125,24 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	@UiField
 	public Style style;
 
-	@UiHandler("modifyGroups")
-	void onClickModifyGroups(ClickEvent e) {
-		if (!active) {
-			popup.showRelativeTo(modifyGroups);
-			active = true;
-			modifyGroups.addStyleName(style.select());
-		} else {
-			popup.hide();
-			active = false;
-			modifyGroups.removeStyleName(style.select());
-		}
-	}
+//	@UiHandler("modifyGroups")
+//	void onClickModifyGroups(ClickEvent e) {
+//		if (!active) {
+//			popup.showRelativeTo(modifyGroups);
+//			active = true;
+//			modifyGroups.addStyleName(style.select());
+//		} else {
+//			popup.hide();
+//			active = false;
+//			modifyGroups.removeStyleName(style.select());
+//		}
+//	}
 
 	private void populateGroupList() {
-		VerticalPanel content = new VerticalPanel();
-		popup.setWidget(content);
+		HTMLPanel content = new HTMLPanel("");
+		popup.setWidth("150px");
 		popup.setAutoHideEnabled(true);
+		popup.setWidget(content);
 		/**
 		 * Persist the changes when the pop-up panel is closed
 		 */

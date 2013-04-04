@@ -33,6 +33,10 @@
 			background: url("http://a.xnimg.cn/imgpro/bg/ModifyGroupl.png")
 				no-repeat scroll left top transparent;
 		}
+		
+		.friendListItem td {
+			padding-left: 12px;
+		}
 	</ui:style>
 	<cn:Container ui:field="container">
 		<g:HTMLPanel ui:field="content" addStyleNames="{style.friendListItem}">
@@ -47,14 +51,10 @@
 					<td width="380px">
 						<g:Button ui:field="userLink" text="user name" />
 					</td>
-					<td rowspan="2" width="180px">
+					<td rowspan="2" width="200px">
 						<g:ListBox ui:field="groups" />
 					</td>
-					<td rowspan="2" width="150px">
-						<g:Anchor addStyleNames="{style.ModifyGroup-nav}"
-							ui:field="modifyGroups" text="Modify Groups" />
-					</td>
-					<td rowspan="2" width="150px">
+					<td rowspan="2" width="200px">
 						<g:Label ui:field="joinSinceLabel" text="Friend since" />
 					</td>
 					<td rowspan="2">
