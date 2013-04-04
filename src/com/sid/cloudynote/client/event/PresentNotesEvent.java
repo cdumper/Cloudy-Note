@@ -7,6 +7,15 @@ import com.sid.cloudynote.client.event.interfaces.IPresentNotesHandler;
 import com.sid.cloudynote.shared.InfoNote;
 
 public class PresentNotesEvent extends GwtEvent<IPresentNotesHandler>{
+	private String message;
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	private List<InfoNote> notes;
 	public List<InfoNote> getNotes() {
 		return notes;
@@ -16,8 +25,9 @@ public class PresentNotesEvent extends GwtEvent<IPresentNotesHandler>{
 		this.notes = notes;
 	}
 
-	public PresentNotesEvent(List<InfoNote> notes) {
+	public PresentNotesEvent(String message, List<InfoNote> notes) {
 		super();
+		this.message = message;
 		this.notes = notes;
 	}
 

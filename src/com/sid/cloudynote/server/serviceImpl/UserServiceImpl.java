@@ -5,17 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -27,6 +19,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.server.EmailService;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.Group;
 import com.sid.cloudynote.shared.NotLoggedInException;
@@ -151,26 +144,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	 */
 	@Override
 	public void inviteUser(String email) throws NotLoggedInException {
-		Properties props = new Properties();
-		Session session = Session.getDefaultInstance(props, null);
-
 		String msgBody = getUser().getEmail()
 				+ " just invited you to use Cloudy Note.\n"
 				+ "Please click on the following link:\n"
 				+ "<a href='http://cloudy-note.appspot.com/'>http://cloudy-note.appspot.com/</a>";
-
-		try {
-			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress(getUser().getEmail()));
-			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					email));
-			msg.setSubject("You're invited to use Cloudy Note");
-			msg.setText(msgBody);
-			Transport.send(msg);
-
-		} catch (AddressException e) {
-		} catch (MessagingException e) {
-		}
+		EmailService.sendEmail(getUser().getEmail(), email, "You're invited to use Cloudy Note", msgBody);
 	}
 
 	@Override

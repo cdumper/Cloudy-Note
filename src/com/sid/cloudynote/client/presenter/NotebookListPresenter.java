@@ -252,7 +252,7 @@ public class NotebookListPresenter implements Presenter,
 
 			@Override
 			public void onSuccess(List<InfoNote> result) {
-				eventBus.fireEvent(new PresentNotesEvent(result));
+				eventBus.fireEvent(new PresentNotesEvent(tag.getName(), result));
 			}
 
 		});

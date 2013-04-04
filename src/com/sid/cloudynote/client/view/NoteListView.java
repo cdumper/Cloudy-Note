@@ -548,6 +548,7 @@ public class NoteListView extends ResizeComposite implements
 
 	@Override
 	public void onPresentNotes(PresentNotesEvent event) {
+		this.setLabel(event.getMessage());
 		this.setNoteList(event.getNotes());
 	}
 }

@@ -24,6 +24,10 @@
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.InfoNoteServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>ShareNoteService</servlet-name>
+		<servlet-class>com.sid.cloudynote.server.serviceImpl.ShareNoteServiceImpl</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>NotebookService</servlet-name>
 		<servlet-class>com.sid.cloudynote.server.serviceImpl.NotebookServiceImpl</servlet-class>
 	</servlet>
@@ -79,6 +83,10 @@
 	<servlet-mapping>
 		<servlet-name>InfoNoteService</servlet-name>
 		<url-pattern>/cloudy_note/noteService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ShareNoteService</servlet-name>
+		<url-pattern>/cloudy_note/shareNoteService</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>NotebookService</servlet-name>
