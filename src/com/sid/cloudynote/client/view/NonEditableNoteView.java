@@ -178,7 +178,7 @@ public class NonEditableNoteView extends ResizeComposite implements
 				"We're sorry. This feature is still under development...");
 		content.add(message);
 		popup.center();
-		timer.schedule(1000);
+		timer.schedule(1500);
 	}
 
 	@UiHandler("deleteButton")

@@ -95,7 +95,7 @@ public class AdminView extends Composite implements IAdminView,
 	public static final ProvidesKey<User> USER_KEY_PROVIDER = new ProvidesKey<User>() {
 		@Override
 		public Object getKey(User user) {
-			return user == null ? null : user.getEmail();
+			return user == null ? null : user.getNickname();
 		}
 	};
 
