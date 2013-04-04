@@ -65,6 +65,7 @@ public class NonEditableNoteView extends ResizeComposite implements
 	@UiHandler("shareButton")
 	void onClickShare(ClickEvent e) {
 		final DecoratedPopupPanel popup = new DecoratedPopupPanel();
+		popup.setStyleName(style.shareDropdown());
 		HTMLPanel content = new HTMLPanel("");
 		popup.setWidget(content);
 		popup.setAutoHideEnabled(true);
@@ -125,9 +126,9 @@ public class NonEditableNoteView extends ResizeComposite implements
 				dialog.center();
 			}
 		});
-		email.setAttribute("display", "inline-block;color: #646E71;cursor: pointer;");
+		email.setClassName(style.item());
 		email.setInnerHTML(AbstractImagePrototype.create(resources.email())
-				.getHTML() + "Email");
+				.getHTML() + "<span>Email</span>");
 		content.getElement().appendChild(email);
 
 		Element facebook = DOM.createDiv();
@@ -139,10 +140,10 @@ public class NonEditableNoteView extends ResizeComposite implements
 				showNotImplementedMessage();
 			}
 		});
-		facebook.setAttribute("display", "inline-block;color: #646E71;cursor: pointer;");
+		facebook.setClassName(style.item());
 		facebook.setInnerHTML(AbstractImagePrototype.create(
 				resources.facebook()).getHTML()
-				+ "Facebook");
+				+ "<span>Facebook</span>");
 		content.getElement().appendChild(facebook);
 
 		Element twitter = DOM.createDiv();
@@ -154,9 +155,9 @@ public class NonEditableNoteView extends ResizeComposite implements
 				showNotImplementedMessage();
 			}
 		});
-		twitter.setAttribute("display", "inline-block;color: #646E71;cursor: pointer;");
+		twitter.setClassName(style.item());
 		twitter.setInnerHTML(AbstractImagePrototype.create(resources.twitter())
-				.getHTML() + "Twitter");
+				.getHTML() + "<span>Twitter</span>");
 		content.getElement().appendChild(twitter);
 
 		popup.showRelativeTo(this.shareButton);
@@ -186,7 +187,8 @@ public class NonEditableNoteView extends ResizeComposite implements
 	}
 
 	public interface Style extends CssResource {
-
+		String item();
+		String shareDropdown();
 	}
 
 	interface Resources extends ClientBundle {

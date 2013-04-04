@@ -18,7 +18,7 @@
 	margin-right: 10px;
 }
 
-.titlePanel{
+.titlePanel {
 	color: #404040;
 	height: 24px;
 	padding-top: 8px;
@@ -27,7 +27,7 @@
 	border-bottom: 1px solid #CED8DF;
 }
 
-.propertyPanel{
+.propertyPanel {
 	background-color: #EAEDEF;
 	color: #404040;
 	height: 24px;
@@ -35,4 +35,37 @@
 	padding-left: 10px;
 	font-size: 11px;
 	border-bottom: 1px solid #CED8DF;
+}
+
+.shareDropdown {
+	background-color: #F4F6F7;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border: 1px solid #B3B3B3;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	width: 100px;
+}
+
+.shareDropdown .item {
+	display: block;
+	color: #646E71;
+	cursor: pointer;
+	height: 24px;
+	width: 100px;
+}
+
+.shareDropdown img {
+	margin-top: 4px;
+	margin-left: 5px;
+	vertical-align: middle;
+}
+
+.shareDropdown span {
+	padding-left:6px;
+	padding-top:3px;
+	vertical-align: middle;
+}
+
+.shareDropdown .item:hover {
+	background-color: #D1D4D7;
 }
