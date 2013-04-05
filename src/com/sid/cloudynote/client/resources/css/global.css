@@ -268,12 +268,13 @@ select {
 }
 
 /* CKEditor styles */
-span.cke_skin_office2003 {
+/* span.cke_skin_office2003 {
 	-moz-border-radius: 0px;
 	-webkit-border-radius: 0px;
 	-o-border-radius: 0px;
-	border: 1px solid #D3D3D3;
+	border: 0px solid #D3D3D3;
 	padding: 0px;
+	height: 385px;
 }
 
 .cke_top {
@@ -317,4 +318,4 @@ span.cke_wrapper cke_ltr,table.cke_editor,td.cke_contents,span.cke_skin_kama,spa
 
 .cke_toolbar {
 	background-image: none !important;
-}
+} */

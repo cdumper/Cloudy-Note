@@ -126,10 +126,10 @@ public class EditableNoteView extends ResizeComposite implements
 		initWidget(uiBinder.createAndBindUi(this));
 		images = GWT.create(Images.class);
 		bindTagsEditingHandler();
-		initalizeCKEditor();
+		initializeCKEditor();
 	}
 
-	private void initalizeCKEditor() {
+	private void initializeCKEditor() {
 		// Creates a new config, with FULL preset toolbar as default
 		CKConfig ckf = new CKConfig(PRESET_TOOLBAR.FULL);
 		// ckf.setSkin("kama");
@@ -138,7 +138,7 @@ public class EditableNoteView extends ResizeComposite implements
 //		ckf.setUiColor("#EAEDEF");
 //		ckf.setWidth("100%");
 		//TODO ckeditor height
-		ckf.setHeight("600px");
+		ckf.setHeight("326px");
 		ckf.setResizeEnabled(false);
 
 		// Creating personalized toolbar

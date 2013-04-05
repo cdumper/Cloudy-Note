@@ -1,0 +1,178 @@
+.sharingContainer {
+	border: 1px solid #999;
+	background: #EAEDEF;
+	color: #606060;
+}
+
+.sharingContainer .topPanel {
+	border-bottom: 1px solid #999;
+	background: #EAEDEF;
+}
+
+.sharingContainer .topPanel div.searchPanel {
+	cursor: text;
+	margin-top: 10px;
+	margin-left: 10px;
+	border: 1px solid #B3B3B3;
+	border-radius: 5px 5px 5px 5px;
+	position: relative;
+	background-color: white;
+	height: 25px;
+	width: 300px;
+	display: inline-block;
+}
+
+.sharingContainer .topPanel div.settingPanel {
+	display: inline;
+	margin-top: 13px;
+	margin-left: 80px;
+	position: absolute;
+}
+
+.sharingContainer .topPanel div.searchPanel .searchBox {
+	border-radius: 5px 5px 5px 5px;
+	border: 0;
+	float: left;
+	color: #A2A2A2;
+}
+
+.sharingContainer .topPanel div.searchPanel .searchButton {
+	border: 0 none;
+	height: 25px;
+	float: right;
+	color: #4C4C4C;
+	cursor: pointer;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0 5px;
+	border-radius: 0px 5px 5px 0px;
+	border-left: 1px solid #B3B3B3;
+	background-color: #EAEAEA;
+}
+
+.sharingContainer .topPanel .dropdown {
+	margin-left: 20px;
+}
+
+.sharingContainer div.groupList {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	float: left;
+	border-top: 1px solid #999;
+	background-color: #EAEDEF;
+}
+
+.sharingContainer div.groupList ul {
+	list-style: none;
+	display: inline;
+	padding: 0px;
+}
+
+.sharingContainer div.groupList img {
+	display: inline;
+	margin-left: 45px;
+}
+
+.sharingContainer .groupLabel {
+	width: 100%;
+	padding-left: 20%;
+	position: relative;
+	list-style: none;
+	display: inline;
+	text-align: left;
+}
+
+.sharingContainer .groupItem {
+	background: #EAEDEF;
+	position: relative;
+	diaplay: inline;
+	text-align: left;
+	border: 0px solid #006699;
+	color: #606060;
+	font-size: 14px;
+	font-family: Georgia, serif;
+}
+
+.sharingContainer .button {
+	background: #EAEDEF;
+	border-radius: 0px 0px 0px 0px;
+	position: relative;
+	width: 100%;
+	padding-left: 20%;
+	display: block;
+	text-align: left;
+	border: 0px solid #D8D8D8;
+	color: #606060;
+	font-size: 14px;
+	font-family: Georgia, serif;
+}
+
+.sharingContainer .label {
+	background: #EAEDEF;
+	border-radius: 0px 0px 0px 0px;
+	position: relative;
+	width: 100%;
+	padding-left: 20%;
+	display: block;
+	text-align: left;
+	border: 0px solid #D8D8D8;
+	color: #606060;
+	font-size: 14px;
+	font-family: Georgia, serif;
+	cursor: auto;
+}
+
+.sharingContainer .label:hover,.label:active {
+	background: #EAEDEF;
+	color: #606060;
+	cursor: auto;
+	border: 0px solid #999;
+}
+
+.sharingContainer div.groupList ul div:hover {
+	background: #D8D8D8;
+	color: #606060;
+}
+
+.sharingContainer .groupItem:hover,.button:hover {
+	background: #D8D8D8;
+	color: #606060;
+}
+
+.sharingContainer .groupItem:active,.button:active {
+	border: 0 solid #ccc !important;
+	background: #D8D8D8;
+}
+
+.sharingContainer .noteListPanel {
+	background-color: white;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+}
+
+.sharingContainer .notePanel {
+	background-color: white;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+}
+
+.sharingContainer .titlePanel {
+	width: 100%;
+	padding: 10px 5px 5px;
+	display: inline;
+	border-bottom: 1px solid #C0C0C0;
+}
+
+.sharingContainer .titlePanel .title {
+	padding: 5px;
+	display: inline;
+	width: 750px;
+}
+
+.sharingContainer .titlePanel .right-button {
+	float: right;
+	display: inline-block;
+	margin-right: 20px;
+}

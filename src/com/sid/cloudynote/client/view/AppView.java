@@ -25,7 +25,6 @@ import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.event.EditNoteDoneEvent;
 import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
-import com.sid.cloudynote.client.event.HideSharingNoteViewEvent;
 import com.sid.cloudynote.client.event.NewNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
@@ -34,15 +33,12 @@ import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.PresentNotesEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
 import com.sid.cloudynote.client.event.UserInfoChangedEvent;
-import com.sid.cloudynote.client.event.ViewGroupNotesEvent;
-import com.sid.cloudynote.client.event.ViewPublicNotesEvent;
-import com.sid.cloudynote.client.event.ViewSharedNoteEvent;
-import com.sid.cloudynote.client.event.ViewSharedNotesEvent;
 import com.sid.cloudynote.client.event.interfaces.IUserInfoChangedHandler;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.sharing.presenter.AdminPresenter;
 import com.sid.cloudynote.client.sharing.presenter.EditProfilePresenter;
 import com.sid.cloudynote.client.sharing.presenter.FriendViewPresenter;
+import com.sid.cloudynote.client.sharing.presenter.SharingPresenter;
 import com.sid.cloudynote.client.sharing.view.AdminView;
 import com.sid.cloudynote.client.sharing.view.EditProfileView;
 import com.sid.cloudynote.client.sharing.view.FriendView;
@@ -96,6 +92,7 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 
 	private HandlerManager eventBus;
 	private User loginInfo = null;
+	private SharingPresenter sharingPresenter;
 	private FriendViewPresenter friendsPresenter;
 	private EditProfilePresenter editProfilePresenter;
 	private AdminPresenter adminPresenter;
@@ -189,8 +186,14 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 		container.clear();
 		if (sharingView == null) {
 			sharingView = new SharingView();
+			sharingPresenter = new SharingPresenter(sharingView, eventBus);
+			sharingView.setPresenter(sharingPresenter);
 		}
-		sharingView.seteEventBus(eventBus);
+		if (sharingPresenter == null) {
+			sharingPresenter = new SharingPresenter(sharingView,eventBus);
+			sharingView.setPresenter(sharingPresenter);
+		}
+		sharingPresenter.go(sharingView.getContainer());
 		bindSharingEvents();
 		deck.showWidget(1);
 		container.add(dockLayoutPanel);
@@ -257,12 +260,7 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 	}
 	
 	private void bindSharingEvents() {
-		eventBus.addHandler(ViewPublicNotesEvent.TYPE, sharingView.noteListView);
-		eventBus.addHandler(ViewSharedNotesEvent.TYPE, sharingView.noteListView);
-		eventBus.addHandler(ViewGroupNotesEvent.TYPE, sharingView.noteListView);
-		eventBus.addHandler(ViewSharedNoteEvent.TYPE, sharingView);
-		eventBus.addHandler(HideSharingNoteViewEvent.TYPE, sharingView);
-		eventBus.addHandler(GroupsChangedEvent.TYPE, sharingView.groupView);
+		eventBus.addHandler(GroupsChangedEvent.TYPE, sharingView);
 	}
 
 	private void bindEvents() {

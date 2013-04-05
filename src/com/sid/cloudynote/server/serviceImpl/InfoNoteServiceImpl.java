@@ -334,20 +334,22 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		// com.sid.cloudynote.shared.User user = AppController.get()
 		// .getLoginInfo();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		boolean flag = false;
 
 		// verify the user access
 		String userEmail = this.getUser().getEmail();
 		InfoNote note = pm.detachCopy(pm.getObjectById(InfoNote.class,
 				infoNote.getKey()));
+		//check if is the owner
+		if (note.getUser().getEmail().equals(userEmail)) {
+			return true;
+		}
+		
 		if (note.getUserAccess().containsKey(userEmail)) {
 			if (note.getUserAccess().get(userEmail) == 1) {
 				// read-only access
-				flag = false;
 			} else if (note.getUserAccess().get(userEmail) == 2) {
 				// write access
-				flag = true;
-				return flag;
+				return true;
 			}
 		}
 
@@ -358,12 +360,11 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 						entry.getKey()));
 				if (group.getOwner().equals(userEmail)
 						|| group.getMembers().contains(userEmail)) {
-					flag = true;
-					return flag;
+					return true;
 				}
 			}
 		}
-		return flag;
+		return false;
 	}
 
 	/**

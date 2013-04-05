@@ -5,7 +5,7 @@
 		type='com.sid.cloudynote.client.sharing.view.FriendView.Resources' />
 	<ui:style type="com.sid.cloudynote.client.sharing.view.FriendView.Style"
 		src="../../resources/css/leftPanel.css"></ui:style>
-	<cn:Container addStyleNames="{style.container}" ui:field="container">
+	<cn:Container addStyleNames="{style.friendContainer}" ui:field="container">
 		<g:DockLayoutPanel width="100%" height="100%" unit="PX"
 			ui:field="content">
 			<g:north size="50">

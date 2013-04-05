@@ -1,36 +1,36 @@
-.container {
+.friendContainer {
 	border: 1px solid #999;
 }
 
-.hidden {
+.friendContainer .hidden {
 	display: none;
 }
 
-.visible {
+.friendContainer .visible {
 	display: block;
 }
 
-.namePanel {
+.friendContainer .namePanel {
 	padding: 10px 20px;
 	border-bottom: 1px solid #CED8DF;
 }
 
-.namePanel .label {
+.friendContainer .namePanel .label {
 	margin-bottom: 10px;
 }
 
-.namePanel .textbox {
+.friendContainer .namePanel .textbox {
 	margin-bottom: 5px;
 }
 
-.leftPanel {
+.friendContainer .leftPanel {
 	width: 100%;
 	height: 100%;
 	border: 0px solid grey;
 	border-top: 1px solid #999;
 }
 
-.centerPanel {
+.friendContainer .centerPanel {
 	width: 100%;
 	height: 100%;
 	border: 0px solid grey;
@@ -38,7 +38,7 @@
 	border-top: 1px solid #999;
 }
 
-.searchContainer {
+.friendContainer .searchContainer {
 	width: 100%;
 	border: 0px solid #EAEDEF;
 	border-bottom: 1px solid #999;
@@ -46,21 +46,21 @@
 	position: relative;
 }
 
-.buttonPanel {
+.friendContainer .buttonPanel {
 	width: 100%;
 	border: 0px solid grey;
 	padding-top: 10px;
 	padding-left: 10px;
 }
 
-.buttonPanel .button {
+.friendContainer .buttonPanel .button {
 	padding: 0px;
 	font-size: 11px;
 	margin-left: 5px;
 	margin-right: 5px;
 }
 
-.groupList {
+.friendContainer .groupList {
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -69,14 +69,14 @@
 	background-color: #EAEDEF;
 }
 
-.groupList .firstBlock {
+.friendContainer .groupList .firstBlock {
 	position: relative;
 	width: 100%;
 	float: left;
 	border-right: 1px solid #999;
 }
 
-.groupList .secondBlock {
+.friendContainer .groupList .secondBlock {
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -86,7 +86,7 @@
 	border-right: 1px solid #999;
 }
 
-.groupList .label {
+.friendContainer .groupList .label {
 	font-size: 16px;
 	width: 100%;
 	padding-left: 20%;
@@ -98,7 +98,7 @@
 	background-color: #EAEDEF;
 }
 
-.groupList .textBox {
+.friendContainer .groupList .textBox {
 	display: block;
 	position: relative;
 	text-align: left;
@@ -112,7 +112,7 @@
 	border-radius: 5px;
 }
 
-.groupList div.rowDiv {
+.friendContainer .groupList div.rowDiv {
 	display: block;
 	position: relative;
 	background-color: #EAEDEF;
@@ -123,23 +123,23 @@
 	font-family: Georgia, serif;
 }
 
-.groupList div.rowDiv:hover {
+.friendContainer .groupList div.rowDiv:hover {
 	background: #D8D8D8;
 	color: #606060;
 }
 
-.groupList div.rowDiv:active {
+.friendContainer .groupList div.rowDiv:active {
 	border: 0 solid #ccc !important;
 	background: #D8D8D8;
 }
 
-.groupList div.rowDiv img {
+.friendContainer .groupList div.rowDiv img {
 	display: inline;
 	margin-left: 45px;
 	margin-right: 5px;
 }
 
-.groupList div.rowDiv .button {
+.friendContainer .groupList div.rowDiv .button {
 	margin: 0px auto;
 	position: relative;
 	text-align: left;
@@ -152,12 +152,12 @@
 	border-radius: 0px 0px 0px 0px;
 }
 
-.groupList div.rowDiv .button:hover {
+.friendContainer .groupList div.rowDiv .button:hover {
 	background: #D8D8D8;
 	color: #606060;
 }
 
-.groupList div.rowDiv .button:active {
+.friendContainer .groupList div.rowDiv .button:active {
 	border: 0 solid #ccc !important;
 	background: #c0c0c0;
 }

@@ -1,25 +1,99 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:s='urn:import:com.sid.cloudynote.client.sharing.view'>
-	<ui:style>
-	
-	</ui:style>
-	<g:DockLayoutPanel unit='PX' ui:field="dockLayoutPanel">
-		<g:north size='50'>
-			<s:SharingSearchView ui:field='searchView' />
-		</g:north>
-		<g:west size='205'>
-			<s:GroupView ui:field='groupView' />
-		</g:west>
-		<g:center>
-			<g:LayoutPanel width="100%" height="100%">
-				<g:layer left="0" width="300">
-					<s:SharingNoteListView ui:field='noteListView' />
-				</g:layer>
-				<g:layer left="300" right="0">
-					<s:SharingNoteView ui:field='noteView' />
-				</g:layer>
-			</g:LayoutPanel>
-		</g:center>
-	</g:DockLayoutPanel>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:s='urn:import:com.sid.cloudynote.client.sharing.view'
+	xmlns:cn='urn:import:com.sid.cloudynote.client.view' xmlns:ck="urn:import:com.axeiya.gwtckeditor.client">
+	<ui:style type="com.sid.cloudynote.client.sharing.view.SharingView.Style"
+		src="../../resources/css/sharing.css">
+			
+		</ui:style>
+	<cn:Container ui:field="container" addStyleNames="{style.sharingContainer}">
+		<g:DockLayoutPanel unit='PX' ui:field="content"
+			width="100%" height="100%">
+			<g:north size='50'>
+				<g:HTMLPanel ui:field="searchPanel" width="100%" height="100%"
+					addStyleNames="{style.topPanel}">
+					<g:HTMLPanel addStyleNames="{style.searchPanel}" ui:field="searchField">
+						<g:TextBox ui:field="searchBox" addStyleNames="{style.searchBox}" />
+						<g:Button ui:field="searchButton" addStyleNames="{style.searchButton}"
+							text="Search" />
+					</g:HTMLPanel>
+					<g:HTMLPanel addStyleNames="{style.settingPanel}">
+						<g:ListBox ui:field='sortBy' addStyleNames="{style.dropdown}" />
+						<g:ListBox ui:field='view' addStyleNames="{style.dropdown}" />
+						<g:ListBox ui:field='settings' addStyleNames="{style.dropdown}" />
+					</g:HTMLPanel>
+				</g:HTMLPanel>
+			</g:north>
+			<g:west size='205'>
+				<g:HTMLPanel ui:field="groupPanel" width="100%" height="100%"
+					addStyleNames="{style.groupList}">
+					<div>
+						<ul>
+							<li>
+								<g:Button ui:field="publicButton" addStyleNames="{style.button}"
+									text="Public" />
+							</li>
+							<li>
+								<g:Button ui:field="sharedButton" addStyleNames="{style.button}"
+									text="Shared With Me" />
+							</li>
+							<li>
+								<g:Button addStyleNames="{style.label}" text="Groups" />
+							</li>
+						</ul>
+						<ul ui:field="groupList">
+						</ul>
+					</div>
+				</g:HTMLPanel>
+			</g:west>
+			<g:center>
+				<g:DockLayoutPanel width="100%" height="100%"
+					unit="PX">
+					<g:west size="300">
+						<g:HTMLPanel ui:field="noteListPanel" height="100%"
+							width="100%" addStyleNames="{style.noteListPanel}">
+						</g:HTMLPanel>
+					</g:west>
+					<g:center>
+						<g:DeckPanel ui:field="notePanel" height="100%"
+							addStyleNames="{style.notePanel}">
+							<g:DockLayoutPanel unit="PX" width="100%"
+								height="100%" ui:field="viewPanel">
+								<g:north size="50">
+									<g:HTMLPanel ui:field="titlePanel" addStyleNames="{style.titlePanel}">
+										<g:Label text="Title" ui:field="titleLabel"
+											addStyleNames="{style.title}" />
+										<g:Button text="Edit" ui:field="editButton"
+											addStyleNames="{style.right-button}" />
+									</g:HTMLPanel>
+								</g:north>
+								<g:center>
+									<g:HTMLPanel width="100%" height="100%" ui:field="viewCenterPanel">
+										<g:HTML wordWrap="true" width="100%" height="100%"
+											ui:field="viewContent" />
+									</g:HTMLPanel>
+								</g:center>
+
+							</g:DockLayoutPanel>
+							<g:DockLayoutPanel unit="PX" width="100%"
+								height="100%" ui:field="editPanel">
+								<g:north size="50">
+									<g:HTMLPanel ui:field="editTitlePanel"
+										addStyleNames="{style.titlePanel}">
+										<g:TextBox addStyleNames="{style.title}" ui:field="editTitle" />
+										<g:Button ui:field="doneButton" text="Save"
+											addStyleNames="{style.right-button}" />
+									</g:HTMLPanel>
+								</g:north>
+								<g:center>
+									<g:HTMLPanel ui:field="editContent">
+									</g:HTMLPanel>
+								</g:center>
+							</g:DockLayoutPanel>
+						</g:DeckPanel>
+					</g:center>
+				</g:DockLayoutPanel>
+			</g:center>
+		</g:DockLayoutPanel>
+	</cn:Container>
 </ui:UiBinder> 
