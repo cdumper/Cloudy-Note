@@ -34,6 +34,7 @@
 	border: 0;
 	float: left;
 	color: #A2A2A2;
+	outline: none;
 }
 
 .sharingContainer .topPanel div.searchPanel .searchButton {

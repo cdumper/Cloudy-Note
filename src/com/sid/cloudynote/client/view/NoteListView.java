@@ -241,7 +241,7 @@ public class NoteListView extends ResizeComposite implements
 
 		public void showSharePanel() {
 			// TODO add cross for closing the dialog
-			final DialogBox dialog = new MyDialog();
+			final DialogBox dialog = new DialogBox();
 			dialog.setText("Share Note: "+noteContextMenu.getSelectedNote().getTitle());
 
 			showChooseWayToSharePanel(dialog);
@@ -391,7 +391,7 @@ public class NoteListView extends ResizeComposite implements
 		}
 
 		public void showDeletePanel() {
-			final DialogBox dialog = new MyDialog();
+			final DialogBox dialog = new DialogBox();
 			dialog.setWidth("200px");
 			dialog.setText("Delete Note: "+noteContextMenu.getSelectedNote().getTitle());
 			VerticalPanel content = new VerticalPanel();

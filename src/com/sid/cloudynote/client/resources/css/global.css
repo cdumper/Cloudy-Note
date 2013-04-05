@@ -71,6 +71,10 @@ select {
 	border: 1px solid #939393;
 }
 
+.gwt-TextBox {
+	padding: 3px 4px;
+}
+
 /* styles for dialog boxes*/
 .gwt-DialogBox {
 	background: #F0F0F0;
