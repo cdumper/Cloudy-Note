@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -19,6 +20,7 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -277,6 +279,14 @@ public class NotebookListView extends ResizeComposite implements
 						}
 					}
 				}
+
+				@Override
+				protected void render(Context context, SafeHtml value,
+						SafeHtmlBuilder sb) {
+					sb.appendHtmlConstant("<div style=\"margin: 5px;\">");
+					sb.append(value);
+					sb.appendHtmlConstant("</div>");
+				}
 			};
 			CellList<String> operationList = new CellList<String>(cell);
 			operationList.setRowData(OPERATION_LIST);
@@ -515,36 +525,23 @@ public class NotebookListView extends ResizeComposite implements
 		private void present() {
 			add(this.image);
 			add(this.html);
-			add(this.button);
 		}
 
 		private HTML html;
-		Button button = new Button("$");
 		final DisclosurePanelImages images = (DisclosurePanelImages) GWT
 				.create(DisclosurePanelImages.class);
 
 		public DisclosurePanelHeader(boolean isOpen, String html) {
-			// it has to add this piece of code otherwise the onBrowserEvent
-			// won't work
 			this.addDomHandler(new ContextMenuHandler() {
 				@Override
 				public void onContextMenu(ContextMenuEvent event) {
 					System.out.println("context menu event");
 				}
 			}, ContextMenuEvent.getType());
-			// this.addDomHandler(new MouseUpHandler(){
-			// @Override
-			// public void onMouseUp(MouseUpEvent event) {
-			// if (event.getNativeButton()==NativeEvent.BUTTON_RIGHT){
-			// System.out.println("right button event");
-			// }
-			// }
-			// }, MouseUpEvent.getType());
 
 			this.image = (isOpen ? images.disclosurePanelOpen().createImage()
 					: images.disclosurePanelClosed().createImage());
 			this.html = new HTML(html);
-			button.setSize("5px", "5px");
 			present();
 		}
 

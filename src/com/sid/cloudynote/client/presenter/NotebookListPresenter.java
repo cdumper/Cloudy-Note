@@ -73,19 +73,15 @@ public class NotebookListPresenter implements Presenter,
 
 			@Override
 			public void onSuccess(List<Notebook> result) {
-				if (result.size() != 0) {
-					view.setNotebookList(result);
-					Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
-					for (Notebook notebook : result) {
-						notebookMap.put(notebook.getKey(), notebook);
-					}
-					DataManager.setNotebooks(notebookMap);
-					if (DataManager.getCurrentNotebookKey() == null) {
-						DataManager.setCurrentNotebook(result.get(0).getKey());
-						eventBus.fireEvent(new NoteChangedEvent(result.get(0)));
-					}
-				} else {
-					GWT.log("No notebooks exist!");
+				view.setNotebookList(result);
+				Map<Key, Notebook> notebookMap = new HashMap<Key, Notebook>();
+				for (Notebook notebook : result) {
+					notebookMap.put(notebook.getKey(), notebook);
+				}
+				DataManager.setNotebooks(notebookMap);
+				if (DataManager.getCurrentNotebookKey() == null) {
+					DataManager.setCurrentNotebook(result.get(0).getKey());
+					eventBus.fireEvent(new NoteChangedEvent(result.get(0)));
 				}
 			}
 		};

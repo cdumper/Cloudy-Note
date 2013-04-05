@@ -31,63 +31,9 @@ public class TreeRootItem extends Composite{
 
 	public TreeRootItem(ImageResource image, String text) {
 		initWidget(uiBinder.createAndBindUi(this));
-		this.image.setResource(image);
 		this.text.setText(text);
-//		this.dropdown.setSize("5px", "5px");
-		
-		Image img = new Image("https://ssl.gstatic.com/ui/v1/zippy/arrow_down.png");
-
-        dropdown = new PushButton(img);
-
-        dropdown.getElement().getStyle().setPaddingLeft(5,  Unit.PX);
-        dropdown.getElement().getStyle().setPaddingRight(5,  Unit.PX);
-        dropdown.getElement().getStyle().setPaddingTop(3,  Unit.PX);
-        dropdown.getElement().getStyle().setPaddingBottom(7,  Unit.PX);
-
-//        dropdown.addClickHandler(this);
-        dropdown.removeStyleName("gwt-PushButton");
-
-//        textBox.getElement().getStyle().setBorderWidth(0, Unit.PX);
-
-
-//        HorizontalPanel panel = new HorizontalPanel();
-//        panel.add(textBox);
-//        panel.add(dropdown);
-
-//        panel.getElement().getStyle().setBorderWidth(1, Unit.PX);
-//        panel.getElement().getStyle().setBorderColor("black");
-//        panel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-
-        // All composites must call initWidget() in their constructors.
-//        initWidget(panel);
 	}
 
-	@UiHandler("dropdown")
-	void onClick(ClickEvent e) {
-		NotebookServiceAsync service = (NotebookServiceAsync) GWT
-				.create(NotebookService.class);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				GWT.log("getNotebooksList falied!");
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				GWT.log("Notebook added successfully!");
-			}
-
-		};
-		service.add(new Notebook(), callback);
-	}
-
-	@UiField
-	Image image;
 	@UiField
 	Label text;
-	@UiField
-	PushButton dropdown;
-
 }

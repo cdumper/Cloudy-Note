@@ -8,8 +8,8 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.sharing.view.interfaces.IEditProfileView;
 import com.sid.cloudynote.client.view.Container;
 
@@ -47,13 +48,23 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	@UiField
 	TextBox email;
 
-	@UiHandler("saveButton")
-	void onSave(ClickEvent e) {
-		presenter.saveUserProfile();
-	}
-
+	private String userEmail;
 	private Images images;
 	private Presenter presenter;
+	private ClickListener saveHandler = new ClickListener(){
+		@Override
+		public void onClick(Widget sender) {
+			presenter.saveUserProfile();
+		}
+	};
+	
+	private ClickListener addFriendHandler = new ClickListener(){
+		@Override
+		public void onClick(Widget sender) {
+			presenter.addFriend();
+		}
+	};
+	
 	private static EditProfileViewUiBinder uiBinder = GWT
 			.create(EditProfileViewUiBinder.class);
 
@@ -67,13 +78,20 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	
 	interface Style extends CssResource {
 	}
-
+	
 	public EditProfileView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		images = GWT.create(Images.class);
 		initialWidgets();
 	}
 
+	public EditProfileView(String email) {
+		initWidget(uiBinder.createAndBindUi(this));
+		images = GWT.create(Images.class);
+		initialWidgets();
+		this.userEmail = email;
+	}
+	
 	private void initialWidgets() {
 		this.email.setEnabled(false);
 		this.uploadButton.addClickHandler(new ClickHandler() {
@@ -84,9 +102,6 @@ public class EditProfileView extends Composite implements IEditProfileView {
 		});
 	}
 
-	public EditProfileView(String firstName) {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
 
 	@Override
 	public void setPresenter(Presenter presenter) {
@@ -164,11 +179,35 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	}
 
 	@Override
-	public void presentUserProfile(String fullName, String nickName,
+	public void presentMyProfile(String fullName, String nickName,
 			String email) {
 		this.fullName.setText(fullName);
 		this.nickName.setText(nickName);
 		this.email.setText(email);
+		this.fullName.setEnabled(true);
+		this.nickName.setEnabled(true);
+		this.uploadButton.setVisible(true);
+		this.saveButton.setText("Save");
+		this.saveButton.removeClickListener(addFriendHandler);
+		this.saveButton.addClickListener(saveHandler);
+		this.saveButton.setVisible(true);
+	}
+	
+
+	@Override
+	public void viewOthersProfile(String fullName, String nickName, String email) {
+		this.fullName.setText(fullName);
+		this.nickName.setText(nickName);
+		this.email.setText(email);
+		this.fullName.setEnabled(false);
+		this.nickName.setEnabled(false);
+		this.uploadButton.setVisible(false);
+		this.saveButton.setText("Add Friend");
+		this.saveButton.removeClickListener(saveHandler);
+		this.saveButton.addClickListener(addFriendHandler);
+		if (DataManager.getAllFriends().containsKey(email)) {
+			this.saveButton.setVisible(false);
+		}
 	}
 
 	@Override
@@ -203,5 +242,14 @@ public class EditProfileView extends Composite implements IEditProfileView {
 		}));
 		dialog.add(content);
 		dialog.center();
+	}
+
+	@Override
+	public String getUser() {
+		return userEmail;
+	}
+	
+	public void setUser(String email) {
+		this.userEmail = email;
 	}
 }

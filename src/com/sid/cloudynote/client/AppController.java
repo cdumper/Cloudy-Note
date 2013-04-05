@@ -70,4 +70,8 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 			this.appView.showEditProfile(container);
 		}
 	}
+	
+	public void viewUserProfile(String email){
+		this.appView.viewEditProfile(email);
+	}
 }

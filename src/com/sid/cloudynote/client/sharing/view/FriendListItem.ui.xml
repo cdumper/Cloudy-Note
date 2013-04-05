@@ -49,7 +49,7 @@
 						<g:Image ui:field="profileImage" height="50px" width="50px"></g:Image>
 					</td>
 					<td width="380px">
-						<g:Button ui:field="userLink" text="user name" />
+						<g:Anchor ui:field="userLink" text="user name" />
 					</td>
 					<td rowspan="2" width="200px">
 						<g:ListBox ui:field="groups" />

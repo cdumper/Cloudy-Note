@@ -20,24 +20,55 @@ a:link,a:visited,a:hover,a:active {
 	text-decoration: none;
 }
 
+/*
+ * styles for dropdown list
+ */
+select {
+	width: 150px;
+	border-radius: 3px;
+	border: 1px solid #B3B3B3;
+}
+
+/* select {
+	background: url(images/down_arrow_select.jpg) no-repeat right #ddd;
+	-webkit-appearance: button;
+	-webkit-border-radius: 2px;
+	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	-webkit-padding-end: 20px;
+	-webkit-padding-start: 2px;
+	-webkit-user-select: none;
+	background-image: url(images/down_arrow_select.jpg),
+		-webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background-position: center right;
+	background-repeat: no-repeat;
+	border: 1px solid #AAA;
+	color: #555;
+	font-size: inherit;
+	margin: 0;
+	overflow: hidden;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+} */
 .gwt-Button {
 	height: 28px;
 	font-size: 13px;
 	font-weight: normal;
 	font-family: Caecilia-bold, Helvetica, sans-serif;
-	background: #D1D1D1;
-	border: 1px solid #C4C4C4;
+	background: #4183c4;
+	color: #FFFFFF;
+	border: 1px solid #939393;
 	border-radius: 3px;
-	color: #333333;
 }
 
 .gwt-Button:hover {
-	background: #4183c4;
+	background: #4183dd;
 	color: #FFFFFF;
 }
 
 .gwt-Button:active {
-	border: 1px solid #DDDDDD;
+	border: 1px solid #939393;
 }
 
 /* styles for dialog boxes*/
@@ -54,12 +85,16 @@ a:link,a:visited,a:hover,a:active {
 	height: 100%;
 }
 
-.gwt-DialogBox .dialogTopLeft,.gwt-DialogBox .dialogTopRight, .gwt-DialogBox .dialogTopCenter
+.gwt-DialogBox .dialogTopLeft,.gwt-DialogBox .dialogTopRight,.gwt-DialogBox .dialogTopCenter
 	{
-	background: #bbb ;
+	background: #bbb;
 	padding: 0px;
 	width: 0px;
 }
+
+/* .gwt-DialogBox .dialogTopRight {
+	background: url("images/cross.png") no-repeat scroll 15px 5px #BBBBBB;
+} */
 
 .gwt-DialogBox .Caption {
 	background: #bbb;
@@ -71,12 +106,17 @@ a:link,a:visited,a:hover,a:active {
 	height: 20px;
 }
 
+.CloseButton {
+	background: #bbb;
+	curosr: pointer !important;
+	position:relative;
+	float: right;
+}
+
 .gwt-DialogBox .dialogMiddleCenter,.gwt-DialogBox .dialogMiddleLeft,.gwt-DialogBox .dialogMiddleRight
 	{
-	padding: 10px;
-	background: #F0F0F0;
-	height: 180px;
-	padding: 20px;
+	padding: 20px !important;
+	background: #F0F0F0 !important;
 }
 
 .gwt-DialogBox .dialogBottomCenter,.gwt-DialogBox .dialogBottomLeft,.gwt-DialogBox .dialogBottomRight
@@ -125,17 +165,20 @@ a:link,a:visited,a:hover,a:active {
 	border: 1px solid #999;
 }
 
-.gwt-DecoratedPopupPanel .popupTopLeft, .gwt-DecoratedPopupPanel .popupTopCenter, .gwt-DecoratedPopupPanel .popupTopRight{
+.gwt-DecoratedPopupPanel .popupTopLeft,.gwt-DecoratedPopupPanel .popupTopCenter,.gwt-DecoratedPopupPanel .popupTopRight
+	{
 	background: none repeat scroll 0 0 #F0F0F0 !important;
 }
 
-.gwt-DecoratedPopupPanel .popupMiddleLeft, .gwt-DecoratedPopupPanel .popupMiddleCenter, .gwt-DecoratedPopupPanel .popupMiddleRight{
+.gwt-DecoratedPopupPanel .popupMiddleLeft,.gwt-DecoratedPopupPanel .popupMiddleCenter,.gwt-DecoratedPopupPanel .popupMiddleRight
+	{
 	background: none repeat scroll 0 0 #F0F0F0 !important;
 }
 
-.gwt-DecoratedPopupPanel .popupBottomLeft, .gwt-DecoratedPopupPanel .popupBottomCenter, .gwt-DecoratedPopupPanel .popupBottomRight{
+.gwt-DecoratedPopupPanel .popupBottomLeft,.gwt-DecoratedPopupPanel .popupBottomCenter,.gwt-DecoratedPopupPanel .popupBottomRight
+	{
 	background: none repeat scroll 0 0 #F0F0F0 !important;
-}  
+}
 
 /* GWT Tree */
 .gwt-Tree {
@@ -253,14 +296,6 @@ a:link,a:visited,a:hover,a:active {
 
 .gwt-StackLayoutPanel .gwt-StackLayoutPanelContent {
 	
-}
-
-/*
- * styles for dropdown list
- */
-select {
-	width: 150px;
-	background: url(images/down_arrow_select.jpg) no-repeat right #ddd;
 }
 
 .gwt-ListBox option {

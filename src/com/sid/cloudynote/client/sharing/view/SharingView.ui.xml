@@ -63,6 +63,8 @@
 									<g:HTMLPanel ui:field="titlePanel" addStyleNames="{style.titlePanel}">
 										<g:Label text="Title" ui:field="titleLabel"
 											addStyleNames="{style.title}" />
+										<span>From:</span>
+										<g:Anchor ui:field="userLink"></g:Anchor>
 										<g:Button text="Edit" ui:field="editButton"
 											addStyleNames="{style.right-button}" />
 									</g:HTMLPanel>

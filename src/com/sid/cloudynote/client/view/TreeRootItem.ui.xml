@@ -2,16 +2,14 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
-		.dropdown {
+		.treeRoot .dropdown {
 			overflow: hidden;
 			border-color: #FF9600 transparent transparent transparent;
 			border-style: solid dashed dashed dashed;
 			border-width: 5px;
 		}
 	</ui:style>
-	<g:HorizontalPanel>
-		<g:Image ui:field="image" />
+	<g:HTMLPanel addStyleNames="{style.treeRoot}">
 		<g:Label ui:field="text" />
-		<g:PushButton ui:field="dropdown" />
-	</g:HorizontalPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -65,7 +65,8 @@ import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.User;
 
 public class NoteListView extends ResizeComposite implements
-		INoteChangedHandler, IPresentNotesHandler, INoteListView, IGroupsChangedHandler {
+		INoteChangedHandler, IPresentNotesHandler, INoteListView,
+		IGroupsChangedHandler {
 	@UiTemplate("NoteListView.ui.xml")
 	interface NoteListPanelUiBinder extends UiBinder<Widget, NoteListView> {
 	}
@@ -150,17 +151,23 @@ public class NoteListView extends ResizeComposite implements
 				return;
 			}
 
-			sb.appendHtmlConstant("<table height='30px'>");
+			// sb.appendHtmlConstant("<div style=\"height:72px;padding:12px\"><table height='50px'>");
+			//
+			// sb.appendHtmlConstant("<tr><td rowspan='3'>");
+			// sb.appendHtmlConstant(imageHtml);
+			// sb.appendHtmlConstant("</td>");
+			//
+			// sb.appendHtmlConstant("<td style='font-size:95%;'>");
+			// sb.appendEscaped(note.getTitle());
+			// sb.appendHtmlConstant("</td></tr><tr><td>");
+			// sb.appendEscaped(note.getContent().replaceAll("\\<.*?>", ""));
+			// sb.appendHtmlConstant("</td></tr></table></div>");
 
-			sb.appendHtmlConstant("<tr><td rowspan='3'>");
-			sb.appendHtmlConstant(imageHtml);
-			sb.appendHtmlConstant("</td>");
-
-			sb.appendHtmlConstant("<td style='font-size:95%;'>");
+			sb.appendHtmlConstant("<div style=\"height:50px;padding:5px;color:#404040;border-bottom:1px solid #E6E6E6 !important;\"><div style=\"font-size: 12px;font-weight:bold;height: 18px;line-height: 16px;margin-bottom: 3px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;\">");
 			sb.appendEscaped(note.getTitle());
-			sb.appendHtmlConstant("</td></tr><tr><td>");
+			sb.appendHtmlConstant("</div><p style=\"font-size: 11px;line-height: 16px;margin: 0px;max-height: 35px;overflow: hidden;text-overflow: ellipsis;word-break: break-all;\">");
 			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>", ""));
-			sb.appendHtmlConstant("</td></tr></table>");
+			sb.appendHtmlConstant("</p></div>");
 		}
 
 		@Override
@@ -233,24 +240,29 @@ public class NoteListView extends ResizeComposite implements
 		}
 
 		public void showSharePanel() {
-			final DialogBox dialog = new DialogBox();
-			dialog.setText(noteContextMenu.getSelectedNote().getTitle());
+			// TODO add cross for closing the dialog
+			final DialogBox dialog = new MyDialog();
+			dialog.setText("Share Note: "+noteContextMenu.getSelectedNote().getTitle());
 
 			showChooseWayToSharePanel(dialog);
-			dialog.center();
+			dialog.setPopupPosition(450, 90);
+			dialog.show();
 		}
 
 		private void showShareToIndividual(final DialogBox dialog) {
 			InfoNote note = noteContextMenu.getSelectedNote();
 
-			VerticalPanel content = new VerticalPanel();
+			HTMLPanel content = new HTMLPanel("");
+			content.setHeight("300px");
+			content.setWidth("380px");
 			dialog.setWidget(content);
 			ScrollPanel scrollPanel = new ScrollPanel();
 			HTMLPanel scrollContent = new HTMLPanel("");
 
 			Label name = new Label("Share with individuals or groups");
 			items.clear();
-			List<Group> groupsList = new ArrayList<Group>(DataManager.getAllGroups().values());
+			List<Group> groupsList = new ArrayList<Group>(DataManager
+					.getAllGroups().values());
 			if (groupsList != null && groupsList.size() != 0) {
 				scrollContent.add(new Label("Groups:"));
 				for (Group g : groupsList) {
@@ -273,8 +285,9 @@ public class NoteListView extends ResizeComposite implements
 					scrollContent.add(item.asWidget());
 				}
 			}
-			
-			List<User> friendsList = new ArrayList<User>(DataManager.getAllFriends().values());
+
+			List<User> friendsList = new ArrayList<User>(DataManager
+					.getAllFriends().values());
 			if (friendsList != null && friendsList.size() != 0) {
 				scrollContent.add(new Label("Friends:"));
 				for (User user : friendsList) {
@@ -298,7 +311,7 @@ public class NoteListView extends ResizeComposite implements
 				}
 			}
 
-			HorizontalPanel buttonPanel = new HorizontalPanel();
+			HTMLPanel buttonPanel = new HTMLPanel("");
 			buttonPanel.add(new Button("Cancel", new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					showChooseWayToSharePanel(dialog);
@@ -328,7 +341,8 @@ public class NoteListView extends ResizeComposite implements
 							}
 						}
 					}
-					presenter.shareNoteToUsersAndGroups(noteContextMenu.getSelectedNote(), users, groups);
+					presenter.shareNoteToUsersAndGroups(
+							noteContextMenu.getSelectedNote(), users, groups);
 					dialog.hide();
 				}
 			}));
@@ -347,7 +361,8 @@ public class NoteListView extends ResizeComposite implements
 
 		private void showChooseWayToSharePanel(final DialogBox dialog) {
 			// the UI for choosing Share or Public
-			VerticalPanel content = new VerticalPanel();
+			HTMLPanel content = new HTMLPanel("");
+			content.setWidth("380px");
 			dialog.setWidget(content);
 
 			Label chooseLabel = new Label(
@@ -376,8 +391,9 @@ public class NoteListView extends ResizeComposite implements
 		}
 
 		public void showDeletePanel() {
-			final DialogBox dialog = new DialogBox();
-			dialog.setText("Delete Note");
+			final DialogBox dialog = new MyDialog();
+			dialog.setWidth("200px");
+			dialog.setText("Delete Note: "+noteContextMenu.getSelectedNote().getTitle());
 			VerticalPanel content = new VerticalPanel();
 			dialog.setWidget(content);
 
@@ -438,7 +454,7 @@ public class NoteListView extends ResizeComposite implements
 		Images images = GWT.create(Images.class);
 
 		bindSearchHandler();
-		
+
 		noteCell = new NoteCell(images.note());
 
 		cellList = new CellList<InfoNote>(noteCell, KEY_PROVIDER);
@@ -456,7 +472,7 @@ public class NoteListView extends ResizeComposite implements
 					public void onSelectionChange(SelectionChangeEvent event) {
 						InfoNote note = selectionModel.getSelectedObject();
 						presenter.onNoteItemSelected(note);
-						// DataManager.setCurrentNote(note.getKey());
+//						DataManager.setCurrentNote(note.getKey());
 					}
 				});
 		dataProvider.addDataDisplay(cellList);
@@ -466,41 +482,41 @@ public class NoteListView extends ResizeComposite implements
 
 	private void bindSearchHandler() {
 		this.searchBox.setText(NoteListView.DEFAULT_SEARCH_LABEL);
-		this.searchBox.addFocusHandler(new FocusHandler(){
+		this.searchBox.addFocusHandler(new FocusHandler() {
 
 			@Override
 			public void onFocus(FocusEvent event) {
-				TextBox widget = (TextBox)event.getSource();
-				if(DEFAULT_SEARCH_LABEL.equals(widget.getText())){
+				TextBox widget = (TextBox) event.getSource();
+				if (DEFAULT_SEARCH_LABEL.equals(widget.getText())) {
 					widget.setText("");
 				}
 			}
-			
+
 		});
-		this.searchBox.addBlurHandler(new BlurHandler(){
+		this.searchBox.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				TextBox widget = (TextBox)event.getSource();
-				if("".equals(widget.getText())){
+				TextBox widget = (TextBox) event.getSource();
+				if ("".equals(widget.getText())) {
 					widget.setText(DEFAULT_SEARCH_LABEL);
 				}
 			}
 		});
-		this.searchBox.addValueChangeHandler(new ValueChangeHandler<String>(){
+		this.searchBox.addValueChangeHandler(new ValueChangeHandler<String>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				presenter.searchNotes(event.getValue());
 			}
 		});
 		this.searchField.sinkEvents(Event.ONCLICK);
-		this.searchField.addHandler(new ClickHandler(){
+		this.searchField.addHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				searchBox.setFocus(true);
 			}
 		}, ClickEvent.getType());
-		
-		this.searchButton.addClickHandler(new ClickHandler(){
+
+		this.searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				presenter.searchNotes(searchBox.getText());
@@ -519,16 +535,22 @@ public class NoteListView extends ResizeComposite implements
 		noteCell.setPresenter(presenter);
 
 		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
-		presenter.loadFriendsList(AppController.get().getLoginInfo().getEmail());
+		presenter
+				.loadFriendsList(AppController.get().getLoginInfo().getEmail());
 	}
 
 	@Override
 	public void setNoteList(List<InfoNote> result) {
 		List<InfoNote> notes = dataProvider.getList();
 		notes.clear();
-		if(result!=null)	notes.addAll(result);
-		if (DataManager.getCurrentNote() != null)
-			selectionModel.setSelected(DataManager.getCurrentNote(), true);
+		if (result != null){
+			notes.addAll(result);
+			if (result.size()!=0){
+				selectionModel.setSelected(result.get(0), true);
+			}
+		}
+//		if (DataManager.getCurrentNote() != null)
+//			selectionModel.setSelected(DataManager.getCurrentNote(), true);
 	}
 
 	public void setLabel(String text) {
@@ -543,7 +565,8 @@ public class NoteListView extends ResizeComposite implements
 	@Override
 	public void onGroupsChanged(GroupsChangedEvent event) {
 		presenter.loadGroupList(AppController.get().getLoginInfo().getEmail());
-		presenter.loadFriendsList(AppController.get().getLoginInfo().getEmail());
+		presenter
+				.loadFriendsList(AppController.get().getLoginInfo().getEmail());
 	}
 
 	@Override

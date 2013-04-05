@@ -29,6 +29,7 @@ public class SharingPresenter implements Presenter, ISharingView.Presenter {
 		this.view = view;
 		this.eventBus = eventBus;
 		this.loadGroupList();
+		this.viewPublicNotes();
 	}
 
 	@Override
@@ -169,5 +170,10 @@ public class SharingPresenter implements Presenter, ISharingView.Presenter {
 	public void searchNotes(String text) {
 		// TODO search sharing notes
 		System.out.println("Search: "+text);
+	}
+
+	@Override
+	public void viewUserProfile(String user) {
+		AppController.get().viewUserProfile(user);
 	}
 }

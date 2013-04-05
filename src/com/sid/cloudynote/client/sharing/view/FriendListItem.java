@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -20,7 +22,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -91,6 +93,14 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 			this.profileImage.setResource(images.defaultUserProfileImage());
 		}
 		this.userLink.setText(this.user.getNickname());
+		this.userLink.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				AppController.get().viewUserProfile(user.getEmail());
+			}
+			
+		});
 		Date joinSince = AppController.get().getLoginInfo().getFriends().get(this.user.getEmail());
 		this.joinSinceLabel.setText("Friend since:"+DateTimeFormat.getLongDateFormat().format(joinSince));
 		this.totalNotesLabel.setText("Total notes: "+this.user.getTotalNotes());
@@ -109,7 +119,7 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 	@UiField
 	CheckBox checkBox;
 	@UiField
-	Button userLink;
+	Anchor userLink;
 	@UiField
 	ListBox groups;
 //	@UiField

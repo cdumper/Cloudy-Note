@@ -32,9 +32,28 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 	}
 
 	private void loadUserProfile() {
+		final String userEmail = view.getUser();
 		User user = AppController.get().getLoginInfo();
-		view.presentUserProfile(user.getFullName(), user.getNickname(), user.getEmail());
-		this.presentProfileImage(AppController.get().getLoginInfo());
+		if (userEmail.equals(user.getEmail())) {
+			view.presentMyProfile(user.getFullName(), user.getNickname(), user.getEmail());
+			this.presentProfileImage(AppController.get().getLoginInfo());
+		} else {
+			UserServiceAsync service = GWT.create(UserService.class);
+			service.getUser(userEmail, new AsyncCallback<User>(){
+
+				@Override
+				public void onFailure(Throwable caught) {
+					GWT.log("Failed to get user profile of:"+userEmail);
+				}
+
+				@Override
+				public void onSuccess(User result) {
+					view.viewOthersProfile(result.getFullName(), result.getNickname(), userEmail);
+					presentProfileImage(result);
+				}
+				
+			});
+		}
 	}
 
 	@Override
@@ -105,5 +124,11 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 				eventBus.fireEvent(new UserInfoChangedEvent(result));
 			}
 		});
+	}
+
+	@Override
+	public void addFriend() {
+		// TODO friend request
+		System.out.println("add friend");
 	}
 }

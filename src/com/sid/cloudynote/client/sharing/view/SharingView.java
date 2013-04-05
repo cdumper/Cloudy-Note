@@ -31,6 +31,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -105,6 +106,8 @@ public class SharingView extends Composite implements ISharingView,
 	HTMLPanel titlePanel;
 	@UiField
 	DockLayoutPanel viewPanel;
+	@UiField
+	Anchor userLink;
 	// @UiField
 	// Label createdTimeLabel;
 	@UiField
@@ -178,14 +181,14 @@ public class SharingView extends Composite implements ISharingView,
 				return;
 			}
 
-			sb.appendHtmlConstant("<table width=\"100%\" style='border-bottom:1px solid #cccccc;'>");
+			sb.appendHtmlConstant("<table width=\"100%\" style='border-bottom:1px solid #E6E6E6;'>");
 
 			sb.appendHtmlConstant("<tr><th colspan=\"2\" height=\"15px\">");
 			sb.appendHtmlConstant(note.getTitle());
 			sb.appendHtmlConstant("</div></th></tr>");
 
-			sb.appendHtmlConstant("<tr><td colspan=\"2\" height=\"50px\">");
-			sb.appendEscaped(note.getContent());
+			sb.appendHtmlConstant("<tr><td colspan=\"2\" height=\"50px\"><p style=\"max-height: 50px;overflow: hidden;\">");
+			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>", ""));
 			sb.appendHtmlConstant("</td></tr>");
 
 			sb.appendHtmlConstant("<tr><td align=\"left\">Author:");
@@ -318,11 +321,20 @@ public class SharingView extends Composite implements ISharingView,
 	}
 
 	@Override
-	public void presentNote(InfoNote note) {
+	public void presentNote(final InfoNote note) {
 		viewPanel.setVisible(true);
 		this.titleLabel.setText(note.getTitle());
 		// this.createdTimeLabel.setText(note.getCreatedTime().toString());
 		this.viewContent.setHTML(note.getContent());
+		this.userLink.setText(note.getUser().getNickname());
+		this.userLink.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				presenter.viewUserProfile(note.getUser().getEmail());
+			}
+			
+		});
 		this.notePanel.showWidget(0);
 	}
 

@@ -156,6 +156,7 @@
 	background-color: white;
 	border-top: 1px solid #999;
 	border-left: 1px solid #999;
+	padding-left: 10px;
 }
 
 .sharingContainer .titlePanel {

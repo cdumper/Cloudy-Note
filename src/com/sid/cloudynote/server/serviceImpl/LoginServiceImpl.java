@@ -41,12 +41,42 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		if (loginInfo != null) {
 			this.createFakeUsersIfNotExist();
 			user = getUser(loginInfo.getEmail());
+			if (user == null) {
+				user = createUser(getUser().getEmail());
+			}
+
 			user.setLoggedIn(true);
 			user.setLogoutUrl(userService.createLogoutURL(requestUri));
 		} else {
 			user = new User();
 			user.setLoggedIn(false);
 			user.setLoginUrl(userService.createLoginURL(requestUri));
+		}
+		return user;
+	}
+
+	private User createUser(String email) {
+		User user = new User();
+		user.setEmail(email);
+		// user.setNickname(loginInfo.getNickname().split("@")[0]);
+		user.setNickname(email.split("@")[0]);
+		Map<String, Date> friends = getFakeFriendsData();
+		user.setFriends(friends);
+		// create a default notebook for the user
+		Notebook defaultNotebook = new Notebook(user.getNickname()
+				+ "'s notebook");
+		defaultNotebook.setUser(getUser());
+		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+		try {
+			pm.currentTransaction().begin();
+			pm.makePersistent(user);
+			pm.makePersistent(defaultNotebook);
+			user = pm.detachCopy(user);
+			pm.currentTransaction().commit();
+		} catch (Exception e) {
+
+		} finally {
+			pm.close();
 		}
 		return user;
 	}
@@ -68,23 +98,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 				results.size();
 				if (!results.isEmpty()) {
 					user = results.get(0);
-				} else {
-					// user does not exist. Create a new user with default
-					// notebook
-					user = new User();
-					user.setEmail(email);
-					user.setNickname(loginInfo.getNickname().split("@")[0]);
-					Map<String, Date> friends = getFakeFriendsData();
-					user.setFriends(friends);
-					// create a default notebook for the user
-					Notebook defaultNotebook = new Notebook(user.getNickname()
-							+ "'s notebook");
-					defaultNotebook.setUser(getUser());
-					pm.currentTransaction().begin();
-					pm.makePersistent(user);
-					pm.makePersistent(defaultNotebook);
-					user = pm.detachCopy(user);
-					pm.currentTransaction().commit();
 				}
 			}
 		} catch (Exception e) {
@@ -106,22 +119,10 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	}
 
 	private void createFakeUsersIfNotExist() {
-		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
-		try {
-			pm.currentTransaction().begin();
-			for (String email : FAKE_USER_DATA) {
-				if (getUser(email) == null) {
-					User user = new User();
-					user.setEmail(email);
-					user.setNickname(email.split("@")[0]);
-					pm.makePersistent(user);
-				}
+		for (String email : FAKE_USER_DATA) {
+			if (getUser(email) == null) {
+				createUser(email);
 			}
-			pm.currentTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			pm.close();
 		}
 	}
 

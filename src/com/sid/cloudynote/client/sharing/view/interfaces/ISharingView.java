@@ -23,6 +23,8 @@ public interface ISharingView {
 		void backToList();
 		
 		void searchNotes(String text);
+
+		void viewUserProfile(String email);
 	}
 
 	void setPresenter(Presenter presenter);

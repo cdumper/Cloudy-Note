@@ -236,15 +236,34 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 	
 	public void showEditProfile(HasWidgets container) {
 		container.clear();
-		if (this.editProfileView == null) {
-			this.editProfileView = new EditProfileView();
+//		if (this.editProfileView == null) {
+			this.editProfileView.setUser(AppController.get().getLoginInfo().getEmail());
+//			this.editProfileView = new EditProfileView(AppController.get().getLoginInfo().getEmail());
 			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
 			editProfileView.setPresenter(editProfilePresenter);
-		}
-		if (editProfilePresenter == null){
+//		}
+//		if (editProfilePresenter == null){
+//			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
+//			editProfileView.setPresenter(editProfilePresenter);
+//		}
+		editProfilePresenter.go(editProfileView.getContainer());
+		deck.showWidget(4);
+		container.add(dockLayoutPanel);
+	}
+	
+	public void viewEditProfile(String email) {
+		//TODO
+		HasWidgets container = RootLayoutPanel.get();
+		container.clear();
+//		if (this.editProfileView == null) {
+			this.editProfileView.setUser(email);
 			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
 			editProfileView.setPresenter(editProfilePresenter);
-		}
+//		}
+//		if (editProfilePresenter == null){
+//			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
+//			editProfileView.setPresenter(editProfilePresenter);
+//		}
 		editProfilePresenter.go(editProfileView.getContainer());
 		deck.showWidget(4);
 		container.add(dockLayoutPanel);
