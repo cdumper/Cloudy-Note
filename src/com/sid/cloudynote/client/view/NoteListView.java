@@ -166,7 +166,7 @@ public class NoteListView extends ResizeComposite implements
 			sb.appendHtmlConstant("<div style=\"height:50px;padding:5px;color:#404040;border-bottom:1px solid #E6E6E6 !important;\"><div style=\"font-size: 12px;font-weight:bold;height: 18px;line-height: 16px;margin-bottom: 3px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;\">");
 			sb.appendEscaped(note.getTitle());
 			sb.appendHtmlConstant("</div><p style=\"font-size: 11px;line-height: 16px;margin: 0px;max-height: 35px;overflow: hidden;text-overflow: ellipsis;word-break: break-all;\">");
-			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>", ""));
+			sb.appendEscaped(note.getContent().getValue().replaceAll("\\<.*?>", ""));
 			sb.appendHtmlConstant("</p></div>");
 		}
 

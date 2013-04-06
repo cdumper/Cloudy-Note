@@ -73,6 +73,8 @@ select {
 
 .gwt-TextBox {
 	padding: 3px 4px;
+	height: 18px;
+	display: block;
 }
 
 /* styles for dialog boxes*/
@@ -91,7 +93,7 @@ select {
 
 .gwt-DialogBox .dialogTopLeft,.gwt-DialogBox .dialogTopRight,.gwt-DialogBox .dialogTopCenter
 	{
-	background: #bbb;
+	background: #F0F0F0;
 	padding: 0px;
 	width: 0px;
 }
@@ -101,17 +103,19 @@ select {
 } */
 
 .gwt-DialogBox .Caption {
-	background: #bbb;
+	background: #F0F0F0;
 	curosr: pointer !important;
 	font-weight: bold;
 	padding: 5px 10px;
+	color: #3B3B3B;
+	font-family: "caecilia";
 	text-align: left;
 	font-size: 18px;
 	height: 20px;
 }
 
 .CloseButton {
-	background: #bbb;
+	background: #F0F0F0;
 	curosr: pointer !important;
 	position:relative;
 	float: right;
@@ -131,7 +135,7 @@ select {
 
 .gwt-DialogBox .gwt-Label {
 	font-size: 16px;
-	margin: 15px 10px;
+	margin: 15px 0px;
 }
 
 .gwt-DialogBox #item {
@@ -145,7 +149,7 @@ select {
 
 .gwt-DialogBox .gwt-Button {
 	max-width: 180px;
-	margin: 10px auto;
+	margin: 20px 15px 10px 0px;
 	padding: 5px;
 	position: relative;
 	display: inline;
@@ -156,6 +160,7 @@ select {
 	font-size: 14px;
 	font-family: Georgia, serif;
 	border-radius: 0px 0px 0px 0px;
+	float: left;
 }
 
 .gwt-DialogBox .gwt-Button:hover {

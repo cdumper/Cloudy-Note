@@ -129,6 +129,24 @@ public class EditProfilePresenter implements Presenter, IEditProfileView.Present
 	@Override
 	public void addFriend() {
 		// TODO friend request
-		System.out.println("add friend");
+		UserServiceAsync service = GWT.create(UserService.class);
+		service.addFriend(view.getUser(), new AsyncCallback<User>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to add friend:"+view.getUser());
+			}
+
+			@Override
+			public void onSuccess(User user) {
+				if(user == null){
+					System.out.println("User does not exist. Invitation has already sent");
+				} else {
+					System.out.println("Successfully added user "+view.getUser()+" as friend");
+					eventBus.fireEvent(new UserInfoChangedEvent(user));
+				}
+			}
+			
+		});
 	}
 }

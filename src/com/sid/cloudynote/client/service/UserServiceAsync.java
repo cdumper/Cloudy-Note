@@ -15,7 +15,7 @@ public interface UserServiceAsync {
 
 	void getFriends(String email, AsyncCallback<List<User>> callback);
 
-	void addFriend(String email, AsyncCallback<String> callback);
+	void addFriend(String email, AsyncCallback<User> callback);
 
 	void inviteUser(String email, AsyncCallback<Void> callback);
 

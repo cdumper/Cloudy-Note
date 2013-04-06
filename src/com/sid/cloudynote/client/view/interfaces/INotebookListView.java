@@ -18,6 +18,7 @@ public interface INotebookListView {
 		void renameTag(Tag tag, String text);
 		void deleteTag(Tag tag);
 		void loadNotesByTag(Tag tag);
+		void onNewTagButtonClicked();
 	}
 	
 	void setPresenter(Presenter presenter);

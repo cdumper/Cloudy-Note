@@ -45,7 +45,7 @@ public class User implements Serializable, Comparable<User> {
 
 	@Persistent
 	private int totalNotes = 0;
-	@Persistent
+	@NotPersistent
 	private boolean loggedIn = false;
 	@Persistent
 	private List<Key> groups = new ArrayList<Key>();;

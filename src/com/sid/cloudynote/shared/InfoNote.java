@@ -14,6 +14,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
@@ -30,7 +31,7 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 	@Persistent
 	private String title;
 	@Persistent
-	private String content;
+	private Text content;
 	@Persistent(defaultFetchGroup = "true")
 	private Notebook notebook;
 	@Persistent
@@ -96,20 +97,20 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 		super();
 	}
 
-	public InfoNote(Notebook notebook, String title, String content) {
+	public InfoNote(Notebook notebook, String title, Text content) {
 		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
 	}
 
-	public InfoNote(Notebook notebook, String title, String content, List<String> attachments) {
+	public InfoNote(Notebook notebook, String title, Text content, List<String> attachments) {
 		this.notebook = notebook;
 		this.title = title;
 		this.content = content;
 		this.attachments = attachments;
 	}
 
-	public String getContent() {
+	public Text getContent() {
 		return content;
 	}
 
@@ -133,7 +134,7 @@ public class InfoNote implements Serializable, Comparable<InfoNote> {
 		this.user = user;
 	}
 
-	public void setContent(String content) {
+	public void setContent(Text content) {
 		this.content = content;
 	}
 

@@ -13,6 +13,7 @@ import com.axeiya.gwtckeditor.client.CKEditor;
 import com.axeiya.gwtckeditor.client.Toolbar;
 import com.axeiya.gwtckeditor.client.ToolbarLine;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Text;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -266,7 +267,7 @@ public class EditableNoteView extends ResizeComposite implements
 		if (note != null) {
 			title.setText(note.getTitle());
 			setSelectedNotebook(DataManager.getCurrentNotebookKey());
-			ckeditor.setHTML(note.getContent());
+			ckeditor.setHTML(note.getContent().getValue());
 			if (note.getAttachments() != null) {
 				presentAttachmentLinks(note.getAttachments());
 			}
@@ -282,7 +283,7 @@ public class EditableNoteView extends ResizeComposite implements
 	public InfoNote getInfoNote() {
 		note.setTitle(title.getText());
 		note.setNotebook(getSelectedNotebook());
-		note.setContent(ckeditor.getHTML());
+		note.setContent(new Text(ckeditor.getHTML()));
 		return note;
 	}
 

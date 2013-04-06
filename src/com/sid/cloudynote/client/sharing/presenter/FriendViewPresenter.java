@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.GroupsChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.presenter.Presenter;
 import com.sid.cloudynote.client.service.GroupService;
 import com.sid.cloudynote.client.service.GroupServiceAsync;
@@ -35,7 +36,7 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 	}
 
 	@Override
-	public void findFriend(String string) {
+	public void SearchFriend(String string) {
 		List<User> result = new ArrayList<User>();
 		for(User user : DataManager.getAllFriends().values()){
 			if(user.getEmail().contains(string) || user.getNickname().contains(string)){
@@ -209,6 +210,28 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 						view.changeEditingMode();
 					}
 				});
+	}
+
+	@Override
+	public void addFriend(String email) {
+		UserServiceAsync service = GWT.create(UserService.class);
+		service.addFriend(email, new AsyncCallback<User>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(User result) {
+				if (result==null) {
+					System.out.println("User does not exist! Invitation has been sent");
+				} else {
+					System.out.println("Successfully added friend");
+					eventBus.fireEvent(new UserInfoChangedEvent(result));
+				}
+			}
+		});
 	}
 
 }

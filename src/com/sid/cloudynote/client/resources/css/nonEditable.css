@@ -27,6 +27,12 @@
 	border-bottom: 1px solid #CED8DF;
 }
 
+.viewContent{
+	font-family: Helvetica,Arial,"Droid Sans",sans-serif;
+	font-size: 14px;
+	padding-left: 10px;	
+}
+
 .propertyPanel {
 	background-color: #EAEDEF;
 	color: #404040;

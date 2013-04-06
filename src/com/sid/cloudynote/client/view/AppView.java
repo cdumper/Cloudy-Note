@@ -45,17 +45,20 @@ import com.sid.cloudynote.client.sharing.view.FriendView;
 import com.sid.cloudynote.client.sharing.view.SharingView;
 import com.sid.cloudynote.shared.User;
 
-public class AppView extends Composite implements Presenter, IUserInfoChangedHandler {
+public class AppView extends Composite implements Presenter,
+		IUserInfoChangedHandler {
 	@UiField
 	Style style;
 	@UiField
 	DockLayoutPanel dockLayoutPanel;
 	@UiField
 	FocusPanel gearDownPanel;
+
 	@UiHandler("gearDownPanel")
-	void onClickGearDown(ClickEvent e){
+	void onClickGearDown(ClickEvent e) {
 		settingsPanel.show();
 	}
+
 	@UiField
 	Anchor gearDownUser;
 	DecoratedPopupPanel settingsPanel = new DecoratedPopupPanel();
@@ -64,11 +67,12 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 	Anchor notification = new Anchor("Notifications");
 	Anchor about = new Anchor("About");
 	Anchor signOut = new Anchor("Sign Out");
+
 	@UiHandler("gearDownUser")
-	void onUserSettingClick(ClickEvent e){
-//		settingsPanel.show();
+	void onUserSettingClick(ClickEvent e) {
+		// settingsPanel.show();
 	}
-	
+
 	@UiField
 	DeckPanel deck;
 	@UiField
@@ -100,13 +104,13 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
 	}
-	
+
 	interface Style extends CssResource {
 		String dropdownMenu();
 
 		String logout();
 	}
-	
+
 	interface GlobalResources extends ClientBundle {
 		@NotStrict
 		@Source("../resources/css/global.css")
@@ -139,34 +143,35 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 		content.add(notification);
 		content.add(about);
 		content.add(signOut);
-		
-		userProfile.addClickHandler(new ClickHandler(){
+
+		userProfile.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				settingsPanel.hide();
-				AppController.get().setPageState(AppController.EDIT_PROFILE_PAGE);
+				AppController.get().setPageState(
+						AppController.EDIT_PROFILE_PAGE);
 				AppController.get().go(RootLayoutPanel.get());
 			}
 		});
-		settings.addClickHandler(new ClickHandler(){
+		settings.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// TODO settings page
-				
+
 			}
 		});
-		notification.addClickHandler(new ClickHandler(){
+		notification.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// TODO notification
-				
+
 			}
 		});
-		about.addClickHandler(new ClickHandler(){
+		about.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// TODO "about/help" page
-				
+
 			}
 		});
 	}
@@ -175,24 +180,19 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 	public void go(HasWidgets container) {
 		showMyNotes(container);
 	}
-	
-	public void showMyNotes(HasWidgets container){
+
+	public void showMyNotes(HasWidgets container) {
 		container.clear();
 		deck.showWidget(0);
 		container.add(dockLayoutPanel);
 	}
-	
+
 	public void showOthersNotes(HasWidgets container) {
 		container.clear();
-		if (sharingView == null) {
-			sharingView = new SharingView();
-			sharingPresenter = new SharingPresenter(sharingView, eventBus);
-			sharingView.setPresenter(sharingPresenter);
-		}
 		if (sharingPresenter == null) {
-			sharingPresenter = new SharingPresenter(sharingView,eventBus);
-			sharingView.setPresenter(sharingPresenter);
+			sharingPresenter = new SharingPresenter(sharingView, eventBus);
 		}
+		sharingView.setPresenter(sharingPresenter);
 		sharingPresenter.go(sharingView.getContainer());
 		bindSharingEvents();
 		deck.showWidget(1);
@@ -201,74 +201,52 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 
 	public void showFriends(HasWidgets container) {
 		container.clear();
-		if (friendsView == null) {
-			friendsView = new FriendView();
-			friendsPresenter = new FriendViewPresenter(friendsView,eventBus);
-			friendsView.setPresenter(friendsPresenter);
-		}
 		if (friendsPresenter == null) {
-			friendsPresenter = new FriendViewPresenter(friendsView,eventBus);
-			friendsView.setPresenter(friendsPresenter);
+			friendsPresenter = new FriendViewPresenter(friendsView, eventBus);
 		}
+		friendsView.setPresenter(friendsPresenter);
 		friendsPresenter.go(friendsView.getContainer());
 		bindFriendEvents();
 		deck.showWidget(2);
 		container.add(dockLayoutPanel);
 	}
-	
-	public void showAdmin(HasWidgets container){
+
+	public void showAdmin(HasWidgets container) {
 		container.clear();
-		if (adminView == null) {
-			adminView = new AdminView();
+		if (adminPresenter == null) {
 			adminPresenter = new AdminPresenter(adminView, eventBus);
-			adminView.setPresenter(adminPresenter);
 		}
-		if (adminPresenter == null){
-			adminPresenter = new AdminPresenter(adminView, eventBus);
-			adminView.setPresenter(adminPresenter);
-		}
+		adminView.setPresenter(adminPresenter);
 		adminPresenter.go(adminView.getContainer());
 		bindAdminEvents();
 		deck.showWidget(3);
 		container.add(dockLayoutPanel);
 	}
-	
-	
+
 	public void showEditProfile(HasWidgets container) {
 		container.clear();
-//		if (this.editProfileView == null) {
-			this.editProfileView.setUser(AppController.get().getLoginInfo().getEmail());
-//			this.editProfileView = new EditProfileView(AppController.get().getLoginInfo().getEmail());
-			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
-			editProfileView.setPresenter(editProfilePresenter);
-//		}
-//		if (editProfilePresenter == null){
-//			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
-//			editProfileView.setPresenter(editProfilePresenter);
-//		}
+		this.editProfileView.setUser(AppController.get().getLoginInfo()
+				.getEmail());
+		editProfilePresenter = new EditProfilePresenter(editProfileView,
+				eventBus);
+		editProfileView.setPresenter(editProfilePresenter);
 		editProfilePresenter.go(editProfileView.getContainer());
 		deck.showWidget(4);
 		container.add(dockLayoutPanel);
 	}
-	
+
 	public void viewEditProfile(String email) {
-		//TODO
 		HasWidgets container = RootLayoutPanel.get();
 		container.clear();
-//		if (this.editProfileView == null) {
-			this.editProfileView.setUser(email);
-			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
-			editProfileView.setPresenter(editProfilePresenter);
-//		}
-//		if (editProfilePresenter == null){
-//			editProfilePresenter = new EditProfilePresenter(editProfileView, eventBus);
-//			editProfileView.setPresenter(editProfilePresenter);
-//		}
+		this.editProfileView.setUser(email);
+		editProfilePresenter = new EditProfilePresenter(editProfileView,
+				eventBus);
+		editProfileView.setPresenter(editProfilePresenter);
 		editProfilePresenter.go(editProfileView.getContainer());
 		deck.showWidget(4);
 		container.add(dockLayoutPanel);
 	}
-	
+
 	private void bindAdminEvents() {
 		eventBus.addHandler(GroupsChangedEvent.TYPE, adminView);
 		eventBus.addHandler(NotebookChangedEvent.TYPE, adminView);
@@ -277,7 +255,7 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 	private void bindFriendEvents() {
 		eventBus.addHandler(GroupsChangedEvent.TYPE, friendsView);
 	}
-	
+
 	private void bindSharingEvents() {
 		eventBus.addHandler(GroupsChangedEvent.TYPE, sharingView);
 	}
@@ -296,7 +274,8 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 				personalView.noteView);
 		eventBus.addHandler(TagChangedEvent.TYPE, personalView.notebookListView);
 		eventBus.addHandler(GroupsChangedEvent.TYPE, personalView.noteListView);
-		eventBus.addHandler(UserInfoChangedEvent.TYPE, personalView.notebookListView);
+		eventBus.addHandler(UserInfoChangedEvent.TYPE,
+				personalView.notebookListView);
 	}
 
 	@UiHandler("myNotesButton")
@@ -316,7 +295,7 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 		AppController.get().setPageState(AppController.FRIENDS_PAGE);
 		AppController.get().go(RootLayoutPanel.get());
 	}
-	
+
 	@UiHandler("adminButton")
 	void showAdmin(ClickEvent e) {
 		AppController.get().setPageState(AppController.ADMIN_PAGE);
@@ -326,6 +305,7 @@ public class AppView extends Composite implements Presenter, IUserInfoChangedHan
 	@Override
 	public void onUserInfoChanged(UserInfoChangedEvent event) {
 		AppController.get().setLoginInfo(event.getUser());
-		this.gearDownUser.setText(AppController.get().getLoginInfo().getNickname());
+		this.gearDownUser.setText(AppController.get().getLoginInfo()
+				.getNickname());
 	}
 }

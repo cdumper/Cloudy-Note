@@ -32,7 +32,9 @@
 					<div class="{style.propertyPanel}">
 						<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
 					</div>
-					<g:HTML ui:field="noteContent" text="content"/>
+					<div class="{style.viewContent}">
+						<g:HTML ui:field="noteContent" text="content" />
+					</div>
 				</g:HTMLPanel>
 			</g:center>
 		</g:DockLayoutPanel>

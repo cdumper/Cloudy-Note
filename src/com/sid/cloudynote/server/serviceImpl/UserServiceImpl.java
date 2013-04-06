@@ -106,7 +106,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public String addFriend(String email) throws NotLoggedInException {
+	public User addFriend(String email) throws NotLoggedInException {
 		checkLoggedIn();
 		/**
 		 * Retrieve the user with specific email. If not exist send a invite
@@ -115,15 +115,17 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 		User user = this.getUser(email);
 		if (user == null) {
 			this.inviteUser(email);
-			return "Fail";
+			return null;
 		}
 
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		User currentUser = (User) pm.getObjectById(User.class, getUser()
 				.getEmail());
 		currentUser.getFriends().put(user.getEmail(), new Date());
+		pm.makePersistent(currentUser);
+		currentUser = pm.detachCopy(currentUser);
 
-		return "Success";
+		return currentUser;
 	}
 
 	private void checkLoggedIn() throws NotLoggedInException {

@@ -15,7 +15,7 @@ public interface UserService extends RemoteService{
 	User modifyUser(User user) throws NotLoggedInException;
 	List<User> getFriends(String email) throws NotLoggedInException;
 	void addAccessEntry(List<String> emails, Map<Key,Integer> access) throws NotLoggedInException;
-	String addFriend(String email) throws NotLoggedInException;
+	User addFriend(String email) throws NotLoggedInException;
 	void inviteUser(String email) throws NotLoggedInException;
 	void addUserToGroups(String email, List<Key> groups) throws NotLoggedInException;
 	User modifyUserProfileImage(User user);

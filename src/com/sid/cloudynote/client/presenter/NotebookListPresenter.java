@@ -12,9 +12,10 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.NewNoteEvent;
@@ -172,22 +173,65 @@ public class NotebookListPresenter implements Presenter,
 
 	private DialogBox newNotebookDialog() {
 		final DialogBox dialog = new DialogBox();
+		dialog.setAnimationEnabled(true);
+		dialog.setGlassEnabled(true);
+		dialog.setText("Create a new Notebook");
 		final TextBox name = new TextBox();
+		name.setWidth("200px");
+		Label label = new Label();
+		label.setText("Notebook Name:");
 		Button confirm = new Button("Confirm");
 		Button cancel = new Button("Cancel");
-		dialog.setTitle("Create new notebook");
-		VerticalPanel panel = new VerticalPanel();
-		dialog.add(panel);
-		panel.add(name);
-		panel.add(cancel);
-		panel.add(confirm);
-		panel.setSize("200", "200");
+		HTMLPanel content = new HTMLPanel("");
+		dialog.add(content);
+		content.setWidth("250px");
+		content.add(label);
+		content.add(name);
+		content.add(cancel);
+		content.add(confirm);
 
 		confirm.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// call rpc to create new notebook
 				createNewNotebook(name.getText());
+				dialog.hide();
+			}
+		});
+
+		cancel.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				dialog.hide();
+			}
+		});
+		return dialog;
+	}
+	
+	private DialogBox newTagDialog() {
+		final DialogBox dialog = new DialogBox();
+		dialog.setAnimationEnabled(true);
+		dialog.setGlassEnabled(true);
+		dialog.setText("Create a new Tag");
+		final TextBox name = new TextBox();
+		name.setWidth("200px");
+		Label label = new Label();
+		label.setText("Tag Name:");
+		Button confirm = new Button("Confirm");
+		Button cancel = new Button("Cancel");
+		HTMLPanel content = new HTMLPanel("");
+		dialog.add(content);
+		content.setWidth("250px");
+		content.add(label);
+		content.add(name);
+		content.add(cancel);
+		content.add(confirm);
+
+		confirm.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// call rpc to create new tag
+				createNewTag(name.getText());
 				dialog.hide();
 			}
 		});
@@ -252,5 +296,10 @@ public class NotebookListPresenter implements Presenter,
 			}
 
 		});
+	}
+
+	@Override
+	public void onNewTagButtonClicked() {
+		newTagDialog().center();
 	}
 }

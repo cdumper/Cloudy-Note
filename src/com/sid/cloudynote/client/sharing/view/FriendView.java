@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -140,7 +141,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		this.searchBox.addKeyUpHandler(new KeyUpHandler() {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
-				presenter.findFriend(searchBox.getText());
+				presenter.SearchFriend(searchBox.getText());
 			}
 		});
 	}
@@ -252,25 +253,8 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 			@Override
 			public void onClick(ClickEvent event) {
-				UserServiceAsync service = GWT.create(UserService.class);
-				service.addFriend(email.getText(), new AsyncCallback<String>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
-
-					@Override
-					public void onSuccess(String result) {
-						if ("Fail".equals(result)) {
-							System.out
-									.println("User does not exist! Invitation has been sent");
-						} else if ("Success".equals(result)) {
-							System.out.println("Successfully added friend");
-						}
-						dialog.hide();
-					}
-				});
+				presenter.addFriend(email.getText());
+				dialog.hide();
 			}
 		});
 

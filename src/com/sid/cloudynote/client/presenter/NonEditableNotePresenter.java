@@ -10,12 +10,16 @@ import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.service.BlobService;
 import com.sid.cloudynote.client.service.BlobServiceAsync;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.interfaces.INonEditableNoteView;
 import com.sid.cloudynote.shared.InfoNote;
+import com.sid.cloudynote.shared.User;
 
 public class NonEditableNotePresenter implements Presenter, INonEditableNoteView.Presenter{
 	private INonEditableNoteView view;
@@ -74,6 +78,20 @@ public class NonEditableNotePresenter implements Presenter, INonEditableNoteView
 				eventBus.fireEvent(new NotebookChangedEvent());
 				eventBus.fireEvent(new NoteChangedEvent(DataManager
 						.getCurrentNotebook()));
+				UserServiceAsync service = GWT.create(UserService.class);
+				service.getUser(note.getUser().getEmail(), new AsyncCallback<User>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Failed to get user info");
+					}
+
+					@Override
+					public void onSuccess(User result) {
+						eventBus.fireEvent(new UserInfoChangedEvent(result));
+					}
+					
+				});
 			}
 		});
 	}

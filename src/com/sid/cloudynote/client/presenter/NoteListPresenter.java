@@ -15,6 +15,7 @@ import com.sid.cloudynote.client.event.NoNotesExistEvent;
 import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NoteSelectionChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.service.AccessRightService;
 import com.sid.cloudynote.client.service.AccessRightServiceAsync;
 import com.sid.cloudynote.client.service.GroupService;
@@ -115,7 +116,7 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 	}
 
 	@Override
-	public void deleteNote(InfoNote note) {
+	public void deleteNote(final InfoNote note) {
 		InfoNoteServiceAsync service = GWT.create(InfoNoteService.class);
 		service.delete(note, new AsyncCallback<Void>() {
 			@Override
@@ -127,6 +128,20 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 			public void onSuccess(Void result) {
 				eventBus.fireEvent(new NotebookChangedEvent());
 				loadNoteList(DataManager.getCurrentNotebook());
+				UserServiceAsync service = GWT.create(UserService.class);
+				service.getUser(note.getUser().getEmail(), new AsyncCallback<User>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Failed to get user info");
+					}
+
+					@Override
+					public void onSuccess(User result) {
+						eventBus.fireEvent(new UserInfoChangedEvent(result));
+					}
+					
+				});
 			}
 		});
 	}

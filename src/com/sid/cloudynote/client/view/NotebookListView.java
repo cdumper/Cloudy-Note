@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.cell.client.AbstractCell;
-import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -40,6 +39,7 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DisclosurePanelImages;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -270,9 +270,9 @@ public class NotebookListView extends ResizeComposite implements
 					if ("click".equals(event.getType())) {
 						notebookContextMenu.hide();
 						if ("Rename".equals(value)) {
-							showRenamePanel();
+							showRenamePanel(notebookContextMenu.selectedNotebook);
 						} else if ("Delete".equals(value)) {
-							showDeletePanel();
+							showDeletePanel(notebookContextMenu.selectedNotebook);
 						} else if ("Properties".equals(value)) {
 							// TODO show notebook properties
 							// showpRropertiesPanel();
@@ -293,13 +293,19 @@ public class NotebookListView extends ResizeComposite implements
 			content.add(operationList);
 		}
 
-		public void showRenamePanel() {
+		public void showRenamePanel(Notebook notebook) {
 			final DialogBox dialog = new DialogBox();
+			dialog.setAnimationEnabled(true);
+			dialog.setGlassEnabled(true);
 			dialog.setText("Rename Notebook");
-			VerticalPanel content = new VerticalPanel();
+			HTMLPanel content = new HTMLPanel("");
+			content.setWidth("250px");
 			dialog.setWidget(content);
 
+			Label label = new Label("Rename \""+notebook.getName()+"\" to:");
 			final TextBox name = new TextBox();
+			name.setWidth("200px");
+			content.add(label);
 			content.add(name);
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 			buttonPanel.add(new Button("Cancel", new ClickHandler() {
@@ -314,17 +320,19 @@ public class NotebookListView extends ResizeComposite implements
 				}
 			}));
 			content.add(buttonPanel);
-			dialog.show();
 			dialog.center();
 		}
 
-		public void showDeletePanel() {
+		public void showDeletePanel(Notebook notebook) {
 			final DialogBox dialog = new DialogBox();
+			dialog.setAnimationEnabled(true);
+			dialog.setGlassEnabled(true);
 			dialog.setText("Delete Notebook");
-			VerticalPanel content = new VerticalPanel();
+			HTMLPanel content = new HTMLPanel("");
 			dialog.setWidget(content);
 
-			final Label name = new Label();
+			final Label name = new Label("Sure to delete \""+notebook.getName()+"\"?");
+			name.setWidth("250px");
 			content.add(name);
 
 			HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -340,8 +348,6 @@ public class NotebookListView extends ResizeComposite implements
 				}
 			}));
 			content.add(buttonPanel);
-
-			dialog.show();
 			dialog.center();
 		}
 
@@ -433,9 +439,9 @@ public class NotebookListView extends ResizeComposite implements
 					if ("click".equals(event.getType())) {
 						tagContextMenu.hide();
 						if ("Rename".equals(value)) {
-							showRenamePanel();
+							showRenamePanel(tagContextMenu.selectedTag);
 						} else if ("Delete".equals(value)) {
-							showDeletePanel();
+							showDeletePanel(tagContextMenu.selectedTag);
 						}
 					}
 				}
@@ -445,13 +451,19 @@ public class NotebookListView extends ResizeComposite implements
 			content.add(operationList);
 		}
 
-		public void showRenamePanel() {
+		public void showRenamePanel(Tag tag) {
 			final DialogBox dialog = new DialogBox();
+			dialog.setAnimationEnabled(true);
+			dialog.setGlassEnabled(true);
 			dialog.setText("Rename Tag");
-			VerticalPanel content = new VerticalPanel();
+			HTMLPanel content = new HTMLPanel("");
+			content.setWidth("250px");
 			dialog.setWidget(content);
 
+			Label label = new Label("Rename \""+tag.getName()+"\" to:");
 			final TextBox name = new TextBox();
+			name.setWidth("200px");
+			content.add(label);
 			content.add(name);
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 			buttonPanel.add(new Button("Cancel", new ClickHandler() {
@@ -471,13 +483,16 @@ public class NotebookListView extends ResizeComposite implements
 			dialog.center();
 		}
 
-		public void showDeletePanel() {
+		public void showDeletePanel(Tag tag) {
 			final DialogBox dialog = new DialogBox();
+			dialog.setAnimationEnabled(true);
+			dialog.setGlassEnabled(true);
 			dialog.setText("Delete Tag");
-			VerticalPanel content = new VerticalPanel();
+			HTMLPanel content = new HTMLPanel("");
 			dialog.setWidget(content);
 
-			final Label name = new Label();
+			final Label name = new Label("Sure to delete \""+tag.getName()+"\"?");
+			name.setWidth("250px");
 			content.add(name);
 
 			HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -557,8 +572,7 @@ public class NotebookListView extends ResizeComposite implements
 					panel.add(new Button("Add Notebook", new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							createNewDialog(true, false, "Create New Notebook")
-									.center();
+							presenter.onNewNotebookButtonClicked();
 							popup.hide();
 						}
 					}));
@@ -566,8 +580,7 @@ public class NotebookListView extends ResizeComposite implements
 					panel.add(new Button("Add Tag", new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							createNewDialog(false, true, "Create New Tag")
-									.center();
+							presenter.onNewTagButtonClicked();
 							popup.hide();
 						}
 					}));
@@ -577,42 +590,6 @@ public class NotebookListView extends ResizeComposite implements
 			}
 		}
 
-	}
-
-	private DialogBox createNewDialog(final boolean isNotebook,
-			final boolean isTag, String title) {
-		final DialogBox dialog = new DialogBox();
-		final TextBox name = new TextBox();
-		Button confirm = new Button("Confirm");
-		Button cancel = new Button("Cancel");
-		dialog.setTitle(title);
-		VerticalPanel panel = new VerticalPanel();
-		dialog.add(panel);
-		panel.add(name);
-		panel.add(cancel);
-		panel.add(confirm);
-		panel.setSize("200", "200");
-
-		confirm.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (isNotebook) {
-					presenter.createNewNotebook(name.getText());
-					dialog.hide();
-				} else if (isTag) {
-					presenter.createNewTag(name.getText());
-					dialog.hide();
-				}
-			}
-		});
-
-		cancel.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				dialog.hide();
-			}
-		});
-		return dialog;
 	}
 
 	@SuppressWarnings("deprecation")

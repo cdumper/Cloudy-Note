@@ -238,7 +238,7 @@ public class NonEditableNoteView extends ResizeComposite implements
 		this.datetime.setText("Created Time: " + note.getCreatedTime()
 				+ "	Last Modified Time: " + note.getLastModifiedTime());
 		this.notebook.setText(note.getNotebook().getName());
-		this.noteContent.setHTML(note.getContent());
+		this.noteContent.setHTML(note.getContent().getValue());
 	}
 
 	public void presentNote() {
@@ -250,7 +250,7 @@ public class NonEditableNoteView extends ResizeComposite implements
 			datetime.setText("Created Time: " + note.getCreatedTime()
 					+ "	Last Modified Time: " + note.getLastModifiedTime());
 			notebook.setText(note.getNotebook().getName());
-			noteContent.setHTML(note.getContent());
+			noteContent.setHTML(note.getContent().getValue());
 			noteContent.setWidth("90%");
 		} else {
 			this.editButton.setVisible(false);

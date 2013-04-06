@@ -1,10 +1,7 @@
 package com.sid.cloudynote.server.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -24,8 +21,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	 * 
 	 */
 	private static final long serialVersionUID = 2751853380762343814L;
-	private static final String[] FAKE_USER_DATA = { "jackie@jiang.com",
-			"chris@xue.com", "elena@chen.com", "shane@sheng.com" };
 	private com.google.appengine.api.users.User loginInfo;
 
 	/**
@@ -39,12 +34,10 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 		User user;
 		if (loginInfo != null) {
-			this.createFakeUsersIfNotExist();
 			user = getUser(loginInfo.getEmail());
 			if (user == null) {
 				user = createUser(getUser().getEmail());
 			}
-
 			user.setLoggedIn(true);
 			user.setLogoutUrl(userService.createLogoutURL(requestUri));
 		} else {
@@ -58,10 +51,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	private User createUser(String email) {
 		User user = new User();
 		user.setEmail(email);
-		// user.setNickname(loginInfo.getNickname().split("@")[0]);
 		user.setNickname(email.split("@")[0]);
-		Map<String, Date> friends = getFakeFriendsData();
-		user.setFriends(friends);
 		// create a default notebook for the user
 		Notebook defaultNotebook = new Notebook(user.getNickname()
 				+ "'s notebook");
@@ -107,23 +97,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 			pm.close();
 		}
 		return user;
-	}
-
-	private Map<String, Date> getFakeFriendsData() {
-		Map<String, Date> friends = new LinkedHashMap<String, Date>();
-		Date currentDate = new Date();
-		for (String email : FAKE_USER_DATA) {
-			friends.put(email, currentDate);
-		}
-		return friends;
-	}
-
-	private void createFakeUsersIfNotExist() {
-		for (String email : FAKE_USER_DATA) {
-			if (getUser(email) == null) {
-				createUser(email);
-			}
-		}
 	}
 
 	private com.google.appengine.api.users.User getUser() {

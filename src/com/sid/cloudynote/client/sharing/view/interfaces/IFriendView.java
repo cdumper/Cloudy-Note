@@ -13,7 +13,9 @@ public interface IFriendView {
 		 * It will try to match the text with email AND nickname 
 		 * @param string
 		 */
-		void findFriend(String string);
+		void SearchFriend(String email);
+		
+		void addFriend(String email);
 
 		/**
 		 * Retrieve the group list of user with given email

@@ -8,6 +8,7 @@ import com.axeiya.gwtckeditor.client.CKConfig.TOOLBAR_OPTIONS;
 import com.axeiya.gwtckeditor.client.CKEditor;
 import com.axeiya.gwtckeditor.client.Toolbar;
 import com.axeiya.gwtckeditor.client.ToolbarLine;
+import com.google.appengine.api.datastore.Text;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -188,7 +189,7 @@ public class SharingView extends Composite implements ISharingView,
 			sb.appendHtmlConstant("</div></th></tr>");
 
 			sb.appendHtmlConstant("<tr><td colspan=\"2\" height=\"50px\"><p style=\"max-height: 50px;overflow: hidden;\">");
-			sb.appendEscaped(note.getContent().replaceAll("\\<.*?>", ""));
+			sb.appendEscaped(note.getContent().getValue().replaceAll("\\<.*?>", ""));
 			sb.appendHtmlConstant("</td></tr>");
 
 			sb.appendHtmlConstant("<tr><td align=\"left\">Author:");
@@ -325,12 +326,13 @@ public class SharingView extends Composite implements ISharingView,
 		viewPanel.setVisible(true);
 		this.titleLabel.setText(note.getTitle());
 		// this.createdTimeLabel.setText(note.getCreatedTime().toString());
-		this.viewContent.setHTML(note.getContent());
-		this.userLink.setText(note.getUser().getNickname());
+		this.viewContent.setHTML(note.getContent().getValue());
+		this.userLink.setText(note.getUser().getEmail());
 		this.userLink.addClickHandler(new ClickHandler(){
 
 			@Override
 			public void onClick(ClickEvent event) {
+				System.out.println(note.getUser().getEmail());
 				presenter.viewUserProfile(note.getUser().getEmail());
 			}
 			
@@ -341,7 +343,7 @@ public class SharingView extends Composite implements ISharingView,
 	@Override
 	public void editNote(InfoNote note) {
 		this.editTitle.setText(note.getTitle());
-		this.ckeditor.setData(note.getContent());
+		this.ckeditor.setHTML(note.getContent().getValue());
 		notePanel.showWidget(1);
 	}
 
@@ -411,7 +413,7 @@ public class SharingView extends Composite implements ISharingView,
 	public InfoNote getModifiedNoteData() {
 		InfoNote note = selectionModel.getSelectedObject();
 		note.setTitle(this.editTitle.getText());
-		note.setContent(this.ckeditor.getHTML());
+		note.setContent(new Text(this.ckeditor.getHTML()));
 		return note;
 	}
 

@@ -12,6 +12,7 @@ import javax.jdo.Query;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.PutException;
@@ -148,14 +149,14 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		checkLoggedIn();
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		String title = note.getTitle();
-		String content = note.getContent();
+		String content = note.getContent().getValue();
 		List<String> attachments = note.getAttachments();
 		try {
 			pm.currentTransaction().begin();
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
-				InfoNote entity = new InfoNote(notebook, title, content,
+				InfoNote entity = new InfoNote(notebook, title, new Text(content),
 						attachments);
 				entity.setCreatedTime(note.getCreatedTime());
 				entity.setLastModifiedTime(new Date());
@@ -471,7 +472,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 								.setText(note.getTitle()))
 				.addField(
 						Field.newBuilder().setName("content")
-								.setHTML(note.getContent()))
+								.setHTML(note.getContent().getValue()))
 				.addField(
 						Field.newBuilder().setName("owner")
 								.setText(note.getUser().getEmail())).build();
