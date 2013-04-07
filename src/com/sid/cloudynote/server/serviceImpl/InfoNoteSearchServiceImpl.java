@@ -23,7 +23,6 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.InfoNoteSearchService;
-import com.sid.cloudynote.server.DocumentManager;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.NotLoggedInException;

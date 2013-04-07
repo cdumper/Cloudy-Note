@@ -63,17 +63,17 @@
 									<g:HTMLPanel ui:field="titlePanel" addStyleNames="{style.titlePanel}">
 										<g:Label text="Title" ui:field="titleLabel"
 											addStyleNames="{style.title}" />
-										<span>From:</span>
+										<span style="font-size: 11px;">From:</span>
 										<g:Anchor ui:field="userLink"></g:Anchor>
 										<g:Button text="Edit" ui:field="editButton"
 											addStyleNames="{style.right-button}" />
 									</g:HTMLPanel>
 								</g:north>
 								<g:center>
-									<g:HTMLPanel width="100%" height="100%" ui:field="viewCenterPanel">
+									<g:ScrollPanel ui:field="viewCenterPanel" addStyleNames="{style.viewContentPanel}">
 										<g:HTML wordWrap="true" width="100%" height="100%"
 											ui:field="viewContent" />
-									</g:HTMLPanel>
+									</g:ScrollPanel>
 								</g:center>
 
 							</g:DockLayoutPanel>

@@ -22,20 +22,26 @@
 				</g:HTMLPanel>
 			</g:north>
 			<g:center>
-				<g:HTMLPanel height="100%" width="100%" addStyleNames='{style.container}'>
-					<div class="{style.titlePanel}">
-						<g:Label ui:field="title" text='title' />
-					</div>
-					<div class="{style.titlePanel}">
-						<g:Label ui:field="notebook" text='notebook' />
-					</div>
-					<div class="{style.propertyPanel}">
-						<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
-					</div>
-					<div class="{style.viewContent}">
-						<g:HTML ui:field="noteContent" text="content" />
-					</div>
-				</g:HTMLPanel>
+				<g:DockLayoutPanel unit="PX" addStyleNames='{style.container}'>
+					<g:north size="96">
+						<g:HTMLPanel height="100%" width="100%">
+							<div class="{style.titlePanel}">
+								<g:Label ui:field="title" text='title' />
+							</div>
+							<div class="{style.titlePanel}">
+								<g:Label ui:field="notebook" text='notebook' />
+							</div>
+							<div class="{style.propertyPanel}">
+								<g:Label ui:field="datetime" text='Created Time:	Last Updated Time:' />
+							</div>
+						</g:HTMLPanel>
+					</g:north>
+					<g:center>
+						<g:ScrollPanel addStyleNames="{style.viewContent}" ui:field="scrollPanel">
+							<g:HTML ui:field="noteContent" text="content" />
+						</g:ScrollPanel>
+					</g:center>
+				</g:DockLayoutPanel>
 			</g:center>
 		</g:DockLayoutPanel>
 	</cn:Container>

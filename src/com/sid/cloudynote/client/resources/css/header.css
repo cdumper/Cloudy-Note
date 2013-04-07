@@ -37,7 +37,7 @@ div.logo img {
 }
 
 .header .nav .button {
-	margin: 5px 0px;
+	height: 100%;
 	border: 0px solid #006699;
 	background: #006699;
 	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
@@ -57,7 +57,8 @@ div.logo img {
 }
 
 .header .nav .divider {
-	display: inline;
+	display: inline-block;
+	height: 0px;
 	vertical-align: middle;
 	border-left: 1px solid #308b26;
 	border-right: 1px solid #7abc72;

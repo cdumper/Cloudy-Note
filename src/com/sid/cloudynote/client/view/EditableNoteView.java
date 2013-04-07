@@ -139,8 +139,12 @@ public class EditableNoteView extends ResizeComposite implements
 //		ckf.setUiColor("#EAEDEF");
 //		ckf.setWidth("100%");
 		//TODO ckeditor height
+//		ckf.setHeight("100%");
 		ckf.setHeight("326px");
+//		ckf.setWidth("100%");
 		ckf.setResizeEnabled(false);
+//		ckf.setResizeMinWidth(ckf.getHeight());
+//		ckf.setResizeMinHeight(326);
 
 		// Creating personalized toolbar
 		ToolbarLine line = new ToolbarLine();

@@ -242,6 +242,8 @@ public class NoteListView extends ResizeComposite implements
 		public void showSharePanel() {
 			// TODO add cross for closing the dialog
 			final DialogBox dialog = new DialogBox();
+			dialog.setAnimationEnabled(true);
+			dialog.setGlassEnabled(true);
 			dialog.setText("Share Note: "+noteContextMenu.getSelectedNote().getTitle());
 
 			showChooseWayToSharePanel(dialog);
@@ -253,7 +255,7 @@ public class NoteListView extends ResizeComposite implements
 			InfoNote note = noteContextMenu.getSelectedNote();
 
 			HTMLPanel content = new HTMLPanel("");
-			content.setHeight("300px");
+//			content.setHeight("300px");
 			content.setWidth("380px");
 			dialog.setWidget(content);
 			ScrollPanel scrollPanel = new ScrollPanel();
@@ -264,6 +266,7 @@ public class NoteListView extends ResizeComposite implements
 			List<Group> groupsList = new ArrayList<Group>(DataManager
 					.getAllGroups().values());
 			if (groupsList != null && groupsList.size() != 0) {
+				scrollPanel.setHeight("200px");
 				scrollContent.add(new Label("Groups:"));
 				for (Group g : groupsList) {
 					GrantAccessItem item;
@@ -289,6 +292,7 @@ public class NoteListView extends ResizeComposite implements
 			List<User> friendsList = new ArrayList<User>(DataManager
 					.getAllFriends().values());
 			if (friendsList != null && friendsList.size() != 0) {
+				scrollPanel.setHeight("200px");
 				scrollContent.add(new Label("Friends:"));
 				for (User user : friendsList) {
 					GrantAccessItem item;

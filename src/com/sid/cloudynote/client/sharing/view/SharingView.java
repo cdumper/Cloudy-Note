@@ -45,7 +45,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -118,7 +117,7 @@ public class SharingView extends Composite implements ISharingView,
 	@UiField
 	HTMLPanel editContent;
 	@UiField
-	HTMLPanel viewCenterPanel;
+	ScrollPanel viewCenterPanel;
 	@UiField
 	HTML viewContent;
 	@UiField
