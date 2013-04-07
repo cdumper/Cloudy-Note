@@ -133,8 +133,7 @@ select {
 	background: #F0F0F0;
 }
 
-.gwt-DialogBox .gwt-Label {
-	font-size: 16px;
+.gwt-DialogBox .gwt-Label, .gwt-DialogBox img, .gwt-DialogBox a {
 	margin: 15px 0px;
 }
 

@@ -6,10 +6,18 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sid.cloudynote.client.service.LoginService;
+import com.sid.cloudynote.server.DocumentManager;
 import com.sid.cloudynote.server.PMF;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.User;
@@ -62,6 +70,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 			pm.makePersistent(user);
 			pm.makePersistent(defaultNotebook);
 			user = pm.detachCopy(user);
+			createDocumentForUser(user);
 			pm.currentTransaction().commit();
 		} catch (Exception e) {
 
@@ -102,5 +111,34 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	private com.google.appengine.api.users.User getUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		return userService.getCurrentUser();
+	}
+	
+	private void createDocumentForUser(User user) {
+		Document document = Document
+				.newBuilder()
+				.setId(user.getEmail())
+				.addField(
+						Field.newBuilder().setName("userName")
+								.setText(user.getNickname()))
+				.addField(
+						Field.newBuilder().setName("fullName")
+								.setHTML(user.getFullName())).build();
+		try {
+			IndexSpec indexSpec = IndexSpec.newBuilder().setName("user-index").build();
+		    SearchServiceFactory.getSearchService().getIndex(indexSpec).put(document);
+		} catch (PutException e) {
+			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
+					.getCode())) {
+				DocumentManager.getIndex().put(document);
+			}
+		}
+	}
+
+	private void deleteDocumentForUser(User user) {
+		try {
+			SearchServiceFactory.getSearchService().getIndex(IndexSpec.newBuilder().setName("user-index").build()).delete(user.getEmail());
+		} catch (RuntimeException e) {
+			GWT.log("Failed to delete document");
+		}
 	}
 }

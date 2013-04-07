@@ -351,7 +351,8 @@ public class SharingView extends Composite implements ISharingView,
 	public void showAccessDeniedPanel() {
 		final DialogBox dialog = new DialogBox();
 		dialog.setText("Access Denied!");
-		VerticalPanel content = new VerticalPanel();
+		HTMLPanel content = new HTMLPanel("");
+		content.setWidth("300px");
 		dialog.setWidget(content);
 
 		content.add(new Label("You do not have the access to edit this note."));

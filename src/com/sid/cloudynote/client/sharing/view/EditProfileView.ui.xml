@@ -22,7 +22,7 @@
 							<g:TextBox ui:field="fullName" addStyleNames="{style.input}"></g:TextBox>
 						</div>
 						<div class="{style.row}">
-							<g:Label text="Nick Name" addStyleNames="{style.sublabel}"></g:Label>
+							<g:Label text="User Name" addStyleNames="{style.sublabel}"></g:Label>
 							<g:TextBox ui:field="nickName" addStyleNames="{style.input}"></g:TextBox>
 						</div>
 						<div class="{style.row}">

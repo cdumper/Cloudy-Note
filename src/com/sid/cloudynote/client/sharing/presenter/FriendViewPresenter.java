@@ -234,4 +234,10 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 		});
 	}
 
+	//TODO findUser in FriendPresenter
+	@Override
+	public User findUser(String searchText) {
+		return null;
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.appengine.api.datastore.Key;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.shared.Group;
+import com.sid.cloudynote.shared.User;
 
 public interface IFriendView {
 	public interface Presenter {
@@ -15,6 +16,17 @@ public interface IFriendView {
 		 */
 		void SearchFriend(String email);
 		
+		/**
+		 * Search a user by full email address or user name
+		 * @param searchText
+		 */
+		User findUser(String searchText);
+		
+		/**
+		 * Add a user a friend
+		 * @param email
+		 * @return
+		 */
 		void addFriend(String email);
 
 		/**

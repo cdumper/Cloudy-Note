@@ -15,7 +15,6 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -33,10 +32,10 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
@@ -72,12 +71,21 @@ public class FriendView extends ResizeComposite implements IFriendView,
 	public interface Resources extends ClientBundle {
 		@Source("../../resources/images/allusers.png")
 		ImageResource allUser();
-		
+
 		@Source("../../resources/images/search.png")
 		ImageResource findUser();
 
 		@Source("../../resources/images/group.png")
 		ImageResource group();
+
+		@Source("../../resources/images/user-icon.png")
+		ImageResource userIcon();
+
+		@Source("../../resources/images/plus.png")
+		ImageResource plus();
+		
+		@Source("../../resources/images/minus.png")
+		ImageResource minus();
 	}
 
 	private static FriendViewUiBinder uiBinder = GWT
@@ -170,8 +178,9 @@ public class FriendView extends ResizeComposite implements IFriendView,
 			}
 		});
 		findFriendsDiv.setClassName(style.rowDiv());
-		findFriendsDiv.setInnerHTML(AbstractImagePrototype.create(res.findUser())
-				.getHTML() + "Find Firend");
+		findFriendsDiv.setInnerHTML(AbstractImagePrototype.create(
+				res.findUser()).getHTML()
+				+ "Find Firend");
 
 		this.friendsPanel.getElement().appendChild(allFriendsDiv);
 		this.friendsPanel.getElement().appendChild(findFriendsDiv);
@@ -242,19 +251,83 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 	private void showFindFriendsDialog() {
 		final DialogBox dialog = new DialogBox();
-		VerticalPanel content = new VerticalPanel();
+		dialog.setText("Find Friend");
+		dialog.setAnimationEnabled(true);
+		dialog.setGlassEnabled(true);
+		HTMLPanel content = new HTMLPanel("");
+		content.setWidth("300px");
 		dialog.setWidget(content);
 
-		Label label = new Label("Find a friend by e-mail:");
+		Label label = new Label("Please enter the user name or email address:");
 		final TextBox email = new TextBox();
-
+		email.setWidth("250px");
+		final HTMLPanel userListPanel = new HTMLPanel("");
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		Button submit = new Button("Submit", new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				presenter.addFriend(email.getText());
-				dialog.hide();
+				UserServiceAsync service = GWT.create(UserService.class);
+				service.findUser(email.getText(), 5,
+						new AsyncCallback<List<User>>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								GWT.log("Failed to find user");
+							}
+
+							@Override
+							public void onSuccess(List<User> result) {
+								userListPanel.clear();
+								if (result.size() == 0) {
+									userListPanel.add(new Label(
+											"Sorry, no users were found"));
+								}
+								for (final User user : result) {
+									final HorizontalPanel userItem = new HorizontalPanel();
+									userListPanel.add(userItem);
+									Image image = new Image();
+									image.setSize("32px", "32px");
+									if (user.getProfileImageUrl() == null) {
+										image.setResource(res.userIcon());
+									} else {
+										image.setUrl(user.getProfileImageUrl());
+									}
+									userItem.add(image);
+									
+									Label anchor = new Label(user.getNickname());
+									anchor.addClickHandler(new ClickHandler(){
+
+										@Override
+										public void onClick(ClickEvent event) {
+											AppController.get().viewUserProfile(user.getEmail());
+											dialog.hide();
+										}
+										
+									});
+									userItem.add(anchor);
+									
+									final Image plus = new Image(res.plus());
+									final Image minus = new Image(res.minus());
+									plus.addClickHandler(new ClickHandler() {
+										@Override
+										public void onClick(ClickEvent event) {
+											presenter.addFriend(user
+													.getEmail());
+											userItem.remove(plus);
+										}
+									});
+									
+									if (!AppController.get().getLoginInfo()
+											.getFriends()
+											.containsKey(user.getEmail())) {
+										userItem.add(plus);
+									} else {
+										userItem.add(minus);
+									}
+								}
+							}
+						});
 			}
 		});
 
@@ -271,6 +344,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 
 		content.add(label);
 		content.add(email);
+		content.add(userListPanel);
 		content.add(buttonPanel);
 
 		dialog.center();

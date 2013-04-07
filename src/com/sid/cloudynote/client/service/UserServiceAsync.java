@@ -26,4 +26,6 @@ public interface UserServiceAsync {
 
 	void modifyUserProfileImage(User user, AsyncCallback<User> asyncCallback);
 
+	void findUser(String text, int i, AsyncCallback<List<User>> asyncCallback);
+
 }

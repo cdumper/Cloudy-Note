@@ -213,7 +213,9 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	@Override
 	public void showUploadDialog(String title, String url) {
 		DialogBox dialog = new DialogBox();
-		dialog.setTitle(title);
+		dialog.setText(title);
+		dialog.setAnimationEnabled(true);
+		dialog.setGlassEnabled(true);
 		createUploadDialog(dialog, url);
 		dialog.center();
 	}

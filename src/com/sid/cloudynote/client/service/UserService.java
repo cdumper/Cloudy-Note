@@ -19,4 +19,5 @@ public interface UserService extends RemoteService{
 	void inviteUser(String email) throws NotLoggedInException;
 	void addUserToGroups(String email, List<Key> groups) throws NotLoggedInException;
 	User modifyUserProfileImage(User user);
+	List<User> findUser(String text, int i);
 }

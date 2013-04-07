@@ -8,11 +8,13 @@ import javax.jdo.PersistenceManager;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchException;
+import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.SortExpression;
 import com.google.appengine.api.search.SortOptions;
 import com.google.appengine.api.search.StatusCode;
@@ -103,7 +105,7 @@ public class InfoNoteSearchServiceImpl extends RemoteServiceServlet implements
 					.setSortOptions(sortOptions).setCursor(cursor).build();
 			Query query = Query.newBuilder().setOptions(options)
 					.build(queryString);
-			return DocumentManager.getIndex().search(query);
+			return SearchServiceFactory.getSearchService().getIndex(IndexSpec.newBuilder().setName("note-index").build()).search(query);
 		} catch (SearchException e) {
 			return null;
 		}

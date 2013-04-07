@@ -15,7 +15,9 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.StatusCode;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -162,7 +164,9 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				entity.setLastModifiedTime(new Date());
 				entity.setUser(getUser());
 				pm.deletePersistent(note);
+				deleteDocumentForNote(note);
 				pm.makePersistent(entity);
+				createDocumentForNote(entity);
 			}
 			pm.currentTransaction().commit();
 			note = pm.detachCopy(note);
@@ -477,7 +481,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 						Field.newBuilder().setName("owner")
 								.setText(note.getUser().getEmail())).build();
 		try {
-			DocumentManager.getIndex().put(document);
+			IndexSpec indexSpec = IndexSpec.newBuilder().setName("note-index").build();
+		    SearchServiceFactory.getSearchService().getIndex(indexSpec).put(document);
 		} catch (PutException e) {
 			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
 					.getCode())) {
@@ -488,7 +493,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 
 	private void deleteDocumentForNote(InfoNote note) {
 		try {
-			DocumentManager.getIndex().delete(KeyFactory.keyToString(note.getKey()));
+			SearchServiceFactory.getSearchService().getIndex(IndexSpec.newBuilder().setName("note-index").build()).delete(KeyFactory.keyToString(note.getKey()));
 		} catch (RuntimeException e) {
 			GWT.log("Failed to delete document");
 		}
