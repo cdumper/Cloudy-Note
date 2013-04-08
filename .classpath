@@ -12,5 +12,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EasyMock"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GWT Test Util"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SyncProxy"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-dev.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-user.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

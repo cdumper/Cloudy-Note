@@ -164,6 +164,17 @@ public class EditableNotePresenter implements Presenter, IEditableNoteView.Prese
 						eventBus.fireEvent(new NoteChangedEvent(DataManager
 								.getCurrentNotebook()));
 						eventBus.fireEvent(new EditNoteDoneEvent());
+						UserServiceAsync service = GWT.create(UserService.class);
+						service.getUser(AppController.get().getLoginInfo().getEmail(), new AsyncCallback<User>(){
+							@Override
+							public void onFailure(Throwable caught) {
+							}
+
+							@Override
+							public void onSuccess(User result) {
+								eventBus.fireEvent(new UserInfoChangedEvent(result));
+							}
+						});
 						GWT.log("Note updated successfully!");
 					}
 				});

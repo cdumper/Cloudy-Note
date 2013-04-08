@@ -210,24 +210,6 @@ public class NotebookListView extends ResizeComposite implements
 					}
 				});
 			}
-
-			public void deleteNotebook() {
-				// TODO need to take into account the CASSCADE DELETE (deleting
-				// all the notes in the notebook)
-				NotebookServiceAsync service = GWT
-						.create(NotebookService.class);
-				service.delete(selectedNotebook, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						GWT.log("Delete notebook failed!");
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						presenter.loadNotebookList();
-					}
-				});
-			}
 		}
 
 		List<String> OPERATION_LIST = new ArrayList<String>(Arrays.asList(
@@ -343,7 +325,7 @@ public class NotebookListView extends ResizeComposite implements
 			}));
 			buttonPanel.add(new Button("OK", new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					notebookContextMenu.deleteNotebook();
+					presenter.deleteNotebook(notebookContextMenu.selectedNotebook);
 					dialog.hide();
 				}
 			}));
@@ -360,7 +342,7 @@ public class NotebookListView extends ResizeComposite implements
 
 			sb.appendHtmlConstant("<div style=\"padding:5px 5px 0px;\">");
 			sb.appendHtmlConstant(imageHtml);
-			sb.appendHtmlConstant("<div style=\"margin-left:10px;vertical-align:middle;display:inline;\">");
+			sb.appendHtmlConstant("<div style=\"padding-left:10px;position: absolute;vertical-align:middle;display:inline;\">");
 			sb.appendEscaped(notebook.getName()+" ("+notebook.getTotalNotes()+")");
 			sb.appendHtmlConstant("</div>");
 			sb.appendHtmlConstant("</div>");

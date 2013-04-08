@@ -23,17 +23,21 @@ import com.sid.cloudynote.client.event.NoteChangedEvent;
 import com.sid.cloudynote.client.event.NotebookChangedEvent;
 import com.sid.cloudynote.client.event.PresentNotesEvent;
 import com.sid.cloudynote.client.event.TagChangedEvent;
+import com.sid.cloudynote.client.event.UserInfoChangedEvent;
 import com.sid.cloudynote.client.service.InfoNoteService;
 import com.sid.cloudynote.client.service.InfoNoteServiceAsync;
 import com.sid.cloudynote.client.service.NotebookService;
 import com.sid.cloudynote.client.service.NotebookServiceAsync;
 import com.sid.cloudynote.client.service.TagService;
 import com.sid.cloudynote.client.service.TagServiceAsync;
+import com.sid.cloudynote.client.service.UserService;
+import com.sid.cloudynote.client.service.UserServiceAsync;
 import com.sid.cloudynote.client.view.NotebookListView;
 import com.sid.cloudynote.client.view.interfaces.INotebookListView;
 import com.sid.cloudynote.shared.InfoNote;
 import com.sid.cloudynote.shared.Notebook;
 import com.sid.cloudynote.shared.Tag;
+import com.sid.cloudynote.shared.User;
 
 public class NotebookListPresenter implements Presenter,
 		INotebookListView.Presenter {
@@ -207,7 +211,7 @@ public class NotebookListPresenter implements Presenter,
 		});
 		return dialog;
 	}
-	
+
 	private DialogBox newTagDialog() {
 		final DialogBox dialog = new DialogBox();
 		dialog.setAnimationEnabled(true);
@@ -301,5 +305,37 @@ public class NotebookListPresenter implements Presenter,
 	@Override
 	public void onNewTagButtonClicked() {
 		newTagDialog().center();
+	}
+
+	@Override
+	public void deleteNotebook(final Notebook selectedNotebook) {
+		// TODO need to take into account the CASSCADE DELETE (deleting
+		// all the notes in the notebook)
+		NotebookServiceAsync service = GWT.create(NotebookService.class);
+		service.delete(selectedNotebook, new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Delete notebook failed!");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				loadNotebookList();
+				UserServiceAsync service = GWT.create(UserService.class);
+				service.getUser(selectedNotebook.getUser().getEmail(), new AsyncCallback<User>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("Failed to get user info");
+					}
+
+					@Override
+					public void onSuccess(User result) {
+						eventBus.fireEvent(new UserInfoChangedEvent(result));
+					}
+					
+				});
+			}
+		});
 	}
 }

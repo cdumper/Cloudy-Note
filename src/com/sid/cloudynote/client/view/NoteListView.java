@@ -397,11 +397,12 @@ public class NoteListView extends ResizeComposite implements
 		public void showDeletePanel() {
 			final DialogBox dialog = new DialogBox();
 			dialog.setWidth("200px");
-			dialog.setText("Delete Note: "+noteContextMenu.getSelectedNote().getTitle());
-			VerticalPanel content = new VerticalPanel();
+			dialog.setText("Delete Note");
+			HTMLPanel content = new HTMLPanel("");
 			dialog.setWidget(content);
 
-			final Label name = new Label();
+			final Label name = new Label("Sure to delete \""+noteContextMenu.getSelectedNote().getTitle()+"\"");
+			name.setWidth("200px");
 			content.add(name);
 
 			HorizontalPanel buttonPanel = new HorizontalPanel();

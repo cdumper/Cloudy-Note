@@ -225,19 +225,14 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			@Override
 			public void onSuccess(User result) {
 				if (result==null) {
-					System.out.println("User does not exist! Invitation has been sent");
 				} else {
-					System.out.println("Successfully added friend");
 					eventBus.fireEvent(new UserInfoChangedEvent(result));
+					loadMyGroupList(AppController.get().getLoginInfo()
+							.getEmail());
+					loadAllFriendsList(AppController.get().getLoginInfo()
+							.getEmail());
 				}
 			}
 		});
 	}
-
-	//TODO findUser in FriendPresenter
-	@Override
-	public User findUser(String searchText) {
-		return null;
-	}
-
 }

@@ -123,8 +123,8 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		PersistenceManager pm = PMF.getInstance().getPersistenceManager();
 		try {
 			pm.currentTransaction().begin();
-			if (!note.getUser().equals(getUser())) {
-				GWT.log("You don't have the access to delete since you're not the ower of the note");
+			if (!verifyEditAccess(note)) {
+				return null;
 			} else {
 				note.setLastModifiedTime(new Date());
 				pm.makePersistent(note);
@@ -153,23 +153,29 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		String title = note.getTitle();
 		String content = note.getContent().getValue();
 		List<String> attachments = note.getAttachments();
+		InfoNote entity = new InfoNote(notebook, title, new Text(content),
+				attachments);
 		try {
 			pm.currentTransaction().begin();
 			if (!note.getUser().equals(getUser())) {
 				GWT.log("You don't have the access to delete since you're not the ower of the note");
 			} else {
-				InfoNote entity = new InfoNote(notebook, title, new Text(content),
-						attachments);
 				entity.setCreatedTime(note.getCreatedTime());
 				entity.setLastModifiedTime(new Date());
 				entity.setUser(getUser());
+				note = pm.getObjectById(InfoNote.class, note.getKey());
+				Notebook originNotebook = note.getNotebook();
+				originNotebook.setTotalNotes(originNotebook.getTotalNotes()-1);
+				pm.makePersistent(originNotebook);
 				pm.deletePersistent(note);
 				deleteDocumentForNote(note);
 				pm.makePersistent(entity);
+				notebook.setTotalNotes(notebook.getTotalNotes()+1);
+				pm.makePersistent(notebook);
 				createDocumentForNote(entity);
 			}
+			entity = pm.detachCopy(entity);
 			pm.currentTransaction().commit();
-			note = pm.detachCopy(note);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -177,7 +183,7 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
-		return note;
+		return entity;
 	}
 
 	/**
@@ -327,7 +333,6 @@ public class InfoNoteServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-	// TODO verify user access in NoteService
 	/**
 	 * Verify the current logged in user whether or not has the edit access to a
 	 * note

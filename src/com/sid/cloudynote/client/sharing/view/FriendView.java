@@ -295,7 +295,8 @@ public class FriendView extends ResizeComposite implements IFriendView,
 									}
 									userItem.add(image);
 									
-									Label anchor = new Label(user.getNickname());
+									Label anchor = new Label();
+									anchor.setText(user.getNickname()+"("+user.getEmail()+")");
 									anchor.addClickHandler(new ClickHandler(){
 
 										@Override
@@ -315,8 +316,10 @@ public class FriendView extends ResizeComposite implements IFriendView,
 											presenter.addFriend(user
 													.getEmail());
 											userItem.remove(plus);
+											userItem.add(minus);
 										}
 									});
+									
 									
 									if (!AppController.get().getLoginInfo()
 											.getFriends()

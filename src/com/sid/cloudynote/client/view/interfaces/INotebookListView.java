@@ -19,6 +19,7 @@ public interface INotebookListView {
 		void deleteTag(Tag tag);
 		void loadNotesByTag(Tag tag);
 		void onNewTagButtonClicked();
+		void deleteNotebook(Notebook selectedNotebook);
 	}
 	
 	void setPresenter(Presenter presenter);
