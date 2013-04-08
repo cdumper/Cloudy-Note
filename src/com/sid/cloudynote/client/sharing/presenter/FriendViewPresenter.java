@@ -235,4 +235,23 @@ public class FriendViewPresenter implements Presenter, IFriendView.Presenter {
 			}
 		});
 	}
+
+	@Override
+	public void inviteUser(final String email) {
+		UserServiceAsync service = GWT.create(UserService.class);
+		service.inviteUser(email, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log(caught.getMessage());
+				caught.printStackTrace();
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Successfully sent invitation to "+email);
+			}
+			
+		});
+	}
 }

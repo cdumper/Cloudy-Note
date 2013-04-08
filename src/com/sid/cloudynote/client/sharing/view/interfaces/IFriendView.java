@@ -69,6 +69,8 @@ public interface IFriendView {
 		 */
 		void editGroup(Group currentGroup);
 
+		void inviteUser(String text);
+
 	}
 
 	void setPresenter(Presenter presenter);

@@ -233,6 +233,7 @@ public class EditProfileView extends Composite implements IEditProfileView {
 	private void showMessage(String text){
 		final DialogBox dialog = new DialogBox();
 		HTMLPanel content = new HTMLPanel("");
+		content.setWidth("250px");
 		content.add(new Label(text));
 		content.add(new Button("OK",new ClickHandler(){
 

@@ -261,7 +261,7 @@ public class FriendView extends ResizeComposite implements IFriendView,
 		Label label = new Label("Please enter the user name or email address:");
 		final TextBox email = new TextBox();
 		email.setWidth("250px");
-		final HTMLPanel userListPanel = new HTMLPanel("");
+		final HorizontalPanel userListPanel = new HorizontalPanel();
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		Button submit = new Button("Submit", new ClickHandler() {
 
@@ -282,6 +282,15 @@ public class FriendView extends ResizeComposite implements IFriendView,
 								if (result.size() == 0) {
 									userListPanel.add(new Label(
 											"Sorry, no users were found"));
+									userListPanel.add(new Button("Invite",new ClickHandler(){
+
+										@Override
+										public void onClick(ClickEvent event) {
+											presenter.inviteUser(email.getText());
+											((Button)event.getSource()).setEnabled(false);
+										}
+										
+									}));
 								}
 								for (final User user : result) {
 									final HorizontalPanel userItem = new HorizontalPanel();
