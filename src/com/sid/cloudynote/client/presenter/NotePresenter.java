@@ -60,8 +60,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 	@Override
 	public void editNote(InfoNote note) {
-		if(editView==null)	editView = new EditableNoteView();
-		if(editablePresenter==null)	editablePresenter = new EditableNotePresenter(editView,eventBus);
+		editView = new EditableNoteView();
+		editablePresenter = new EditableNotePresenter(editView,eventBus);
 		editView.setPresenter(editablePresenter);
 		editView.setNote(note);
 		editView.presentNote();
@@ -74,8 +74,8 @@ public class NotePresenter extends SimplePanel implements Presenter,
 
 	@Override
 	public void showNewNote() {
-		if(editView==null)	editView = new EditableNoteView();
-		if(editablePresenter==null)	editablePresenter = new EditableNotePresenter(editView,eventBus);
+		editView = new EditableNoteView();
+		editablePresenter = new EditableNotePresenter(editView,eventBus);
 		editView.setPresenter(editablePresenter);
 		editView.newNote();
 		editView.setNew(true);

@@ -77,6 +77,10 @@ select {
 	display: block;
 }
 
+.gwt-CheckBox {
+	display: inline-block;
+}
+
 /* styles for dialog boxes*/
 .gwt-DialogBox {
 	background: #F0F0F0;

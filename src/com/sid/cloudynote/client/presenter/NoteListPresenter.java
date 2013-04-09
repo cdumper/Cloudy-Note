@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.sid.cloudynote.client.AppController;
 import com.sid.cloudynote.client.DataManager;
 import com.sid.cloudynote.client.event.EditNoteEvent;
 import com.sid.cloudynote.client.event.NoNotesExistEvent;
@@ -219,7 +220,6 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 					@Override
 					public void onFailure(Throwable caught) {
 						GWT.log("Failed to share note to users and groups");
-
 					}
 
 					@Override
@@ -227,6 +227,19 @@ public class NoteListPresenter implements Presenter, INoteListView.Presenter {
 						GWT.log("Successfully update sharing settings of note to users and groups");
 						eventBus.fireEvent(new NoteChangedEvent(DataManager
 								.getCurrentNotebook()));
+						UserServiceAsync service = GWT.create(UserService.class);
+						service.getUser(AppController.get().getLoginInfo().getEmail(), new AsyncCallback<User>(){
+
+							@Override
+							public void onFailure(Throwable caught) {
+								GWT.log("Failed to get user");
+							}
+
+							@Override
+							public void onSuccess(User result) {
+								eventBus.fireEvent(new UserInfoChangedEvent(result));
+							}
+						});
 					}
 
 				});

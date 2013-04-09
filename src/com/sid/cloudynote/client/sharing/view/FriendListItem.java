@@ -97,7 +97,6 @@ public class FriendListItem extends ResizeComposite implements Comparable<Friend
 
 			@Override
 			public void onClick(ClickEvent event) {
-				System.out.println(user.getEmail());
 				AppController.get().viewUserProfile(user.getEmail());
 			}
 			

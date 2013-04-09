@@ -291,7 +291,7 @@ public class AdminView extends Composite implements IAdminView,
 		this.userAccessContentPanel.setVisible(true);
 		this.userAccessTable.removeAllRows();
 
-		this.userLabel.setText(user.getEmail() + " Access");
+		this.userLabel.setText(user.getNickname() + " Access");
 		// generate the header
 		CheckBox allRead = new CheckBox("Read");
 		CheckBox allWrite = new CheckBox("Write");
@@ -752,7 +752,7 @@ public class AdminView extends Composite implements IAdminView,
 			}
 
 			sb.appendHtmlConstant("<div style=\"padding:5px 20px;\">");
-			sb.appendEscaped(user.getEmail());
+			sb.appendEscaped(user.getNickname()+"("+user.getEmail()+")");
 			sb.appendHtmlConstant("</div>");
 		}
 	});
